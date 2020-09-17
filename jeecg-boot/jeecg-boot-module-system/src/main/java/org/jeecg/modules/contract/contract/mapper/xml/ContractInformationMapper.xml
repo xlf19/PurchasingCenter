@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jeecg.modules.contract.contract.mapper.ContractInformationMapper">
+
+    <select id="findpzh" resultType="java.lang.Integer">
+              select top(1) isnull(voucher_no,0)+1 from contract_information
+             order by voucher_no desc
+    </select>
+</mapper>

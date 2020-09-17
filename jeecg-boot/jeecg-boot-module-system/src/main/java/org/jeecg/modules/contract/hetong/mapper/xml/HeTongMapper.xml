@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jeecg.modules.contract.hetong.mapper.HeTongMapper">
+    <select id="findListHt" resultType="map">
+        SELECT top(30) HeTongBianHao FROM G_HeTong
+        where 1=1
+        <if test="hth !=null and  hth !='' ">
+            and HeTongBianHao like '%'+#{hth}+'%'
+        </if>
+        order by QianDingRiQi desc
+    </select>
+
+    <select id="findshdw" resultType="map">
+        SELECT DISTINCT ShouHuoDanWeiName FROM G_ShouHuoDanWei
+    </select>
+
+    <select id="findOne" resultType="map">
+          SELECT  HeTongBianHao,  WZName, WZCode, DanWeiName  FROM   V_合同物资单价供需方
+          where HeTongBianHao =#{hth}
+    </select>
+
+    <!--
+    生铁合同信息查询
+    HanShuiBiaoJi:HS
+    HeTongBianHao:合同编号
+    WZCode：BZBM
+    WZDanJia：物资单价
+    ShuiLv:SL
+    WZName:物资名称
+    DanWeiName:供货单位
+    -->
+    <select id="finOnehtxx" resultType="map">
+     select  top(1) HanShuiBiaoJi, HeTongBianHao,WZCode,WZDanJia,CAST(SUBSTRING(m.ShuiLv, 0, LEN(m.ShuiLv)) AS int) AS ShuiLv ,
+     WZName, DanWeiName  from G_HeTong m,G_WuZiMingXi n,G_WZBMB s,
+     G_GongSiXinXi t where HeTongBianHao =#{hth}   and m.Id=n.HTId and n.WZId = s.Id  and t.Id = m.GongFangId
+    </select>
+    <!--
+ 精粉信息查询
+ HanShuiBiaoJi:HS
+ HeTongBianHao:合同编号
+ WZCode：BZBM
+ WZDanJia：物资单价
+ ShuiLv:SL
+ WZName:物资名称
+ DanWeiName:供货单位
+ -->
+    <select id="finhtxxjf" resultType="map">
+      select  WZCode,WZDanJia,WZShuiJin,CAST(SUBSTRING(m.ShuiLv, 0, LEN(m.ShuiLv)) AS int) AS ShuiLv,
+      HuoKuan,HanShuiBiaoJi
+      from G_HeTong m,
+      G_WuZiMingXi n,G_WZBMB s where HeTongBianHao = #{hth} and m.Id=n.HTId and n.WZId = s.Id
+    </select>
+
+    <!--    辅料 物资合同 -->
+    <select id="findListHtwz" resultType="map">
+        select top(30)合同编号 as HeTongBianHao from sbgl.dbo.设备管理_合同_主表
+        where 1=1
+        <if test="hth !=null and  hth !='' ">
+            and 合同编号 like '%'+#{hth}+'%'
+        </if>
+        order by 合同编号 desc
+    </select>
+
+    <!--    辅料 原炉料合同 获取供货单位、物资名称-->
+    <select id="findyllht" resultType="map">
+          SELECT  HeTongBianHao,  WZName, WZCode, DanWeiName  FROM   V_合同物资单价供需方
+          where HeTongBianHao =#{hth}
+          and WZName in ('石灰石','熟白云石粉','硅石','萤石','熟白云石块')
+    </select>
+
+    <!--   辅料  物资合同 获取供货单位、物资名称-->
+    <select id="findwzht" resultType="map">
+          select top(1) 合同编号 as HeTongBianHao,业务员,税率,物资编码,数量,单价,总金额,物资名称 as WZName,规格型号,物资编码 as WZCode,
+          计量单位,供应商名称  as DanWeiName
+          from sbgl.dbo.A_查询_合同物资
+          where 合同编号=#{hth} and 物资名称 in ('石灰石','熟白云石粉','硅石','萤石','熟白云石块')
+    </select>
+    <!--    获取辅料合同信息 物资合同-->
+    <select id="finhtwzxx" resultType="map">
+     select top(1) 合同编号,业务员,税率,物资编码,数量,单价,总金额,物资名称,规格型号,物资编码,计量单位,供应商名称
+     from sbgl.dbo.A_查询_合同物资
+     where 合同编号 = #{hth} and 物资名称 in ('石灰石','熟白云石粉','硅石','萤石','熟白云石块')
+    </select>
+    <!--    获取辅料合同信息  原炉料合同-->
+    <select id="finhtyllxx" resultType="map">
+      SELECT  HeTongBianHao as 合同编号, WZCode as 物资编码, WZName as 物资名称, DanWeiName as 供应商名称,ShuiLv as 税率,
+      WZDanJia as 单价, WZGGXH  as 规格型号
+      FROM   V_合同物资单价供需方
+      where HeTongBianHao = #{hth} and WZName in ('石灰石','熟白云石粉','硅石','萤石','熟白云石块')
+    </select>
+
+    <!--    获取耐材合同号  物资合同-->
+    <select id="findhtncwz" resultType="map">
+        select top(30)合同编号 as HeTongBianHao
+        from sbgl.dbo.设备管理_合同_主表
+        where 1=1
+        <if test="hth !=null and  hth !='' ">
+            and 合同编号 like '%'+#{hth}+'%'
+        </if>
+        order by 合同编号 desc
+    </select>
+
+    <!--    获取耐材供货单位  物资合同-->
+    <select id="finhtwzxxnc" resultType="map">
+     select top(1) 合同编号,业务员,税率,物资编码,数量,单价,总金额,物资名称,规格型号,物资编码,计量单位,供应商名称 as DanWeiName
+     from sbgl.dbo.A_查询_合同物资
+     where 合同编号 =#{hth} and (物资名称 like '%覆盖剂%' or 物资名称 like '%化渣剂%' or 物资名称 like '%型煤%' or 物资名称 like '%轻烧镁球%')
+    </select>
+
+    <!--    获取耐材供货单位  原炉料合同-->
+    <select id="finhtyllxxnc" resultType="map">
+ 	SELECT  HeTongBianHao,  WZName, WZCode, DanWeiName
+ 	FROM   V_合同物资单价供需方
+ 	where HeTongBianHao =#{hth}  and (WZName like '%覆盖剂%' or WZName like '%化渣剂%' or WZName like '%型煤%' or WZName like '%轻烧镁球%')
+    </select>
+
+
+    <!--   耐材 物资名称 物资合同-->
+    <select id="findhtncwzname" resultType="map">
+     select distinct 物资名称 as WZName
+     from sbgl.dbo.A_查询_合同物资
+     where 合同编号 =#{hth}
+    </select>
+
+    <!--    获取耐材物资名称 原炉料合同-->
+    <select id="findhtncyllname" resultType="map">
+ 	select distinct WZName
+ 	from  V_合同物资单价供需方 where HeTongBianHao =#{hth}
+    </select>
+
+
+    <!--      耐材 物资编码 物资合同-->
+    <select id="findwznamewz" resultType="java.lang.String">
+ 	select top(1) 物资编码 as WZCode from sbgl.dbo.A_查询_合同物资
+ 	where 合同编号 = #{hth} and 物资名称 = #{wzname}
+    </select>
+
+    <!--      耐材 物资编码 原炉料合同-->
+    <select id="findwznameyll" resultType="java.lang.String">
+ 	select top(1) WZCode  from V_合同物资单价供需方
+ 	where HeTongBianHao = #{hth} and WZName =#{wzname}
+    </select>
+
+    <!--    获取耐材合同信息 物资合同-->
+    <select id="findhtncwzxx" resultType="map">
+     select top(1) 合同编号,业务员,税率,物资编码,数量,单价,总金额,物资名称,规格型号,物资编码,计量单位,供应商名称
+     from sbgl.dbo.A_查询_合同物资
+     where 合同编号 =#{hth} and 物资编码 =#{wzcode}
+    </select>
+
+    <!--    获取耐材合同信息 原炉料合同-->
+    <select id="findhtncyllxx" resultType="map">
+     SELECT  HeTongBianHao as 合同编号,  WZName as 物资名称, DanWeiName as 供应商名称,ShuiLv/100.00 as 税率,WZDanJia as 单价, WZGGXH  as 规格型号
+     FROM   V_合同物资单价供需方
+     where HeTongBianHao =#{hth} and WZCode =#{wzcode}
+    </select>
+
+
+    <!--    合金 原炉料合同 获取供货单位-->
+    <select id="findyllhthj" resultType="map">
+          SELECT  HeTongBianHao,  WZName, WZCode, DanWeiName  FROM   V_合同物资单价供需方
+          where HeTongBianHao =#{hth}
+    </select>
+
+    <!--   合金  物资合同 获取供货单位-->
+    <select id="findwzhthj" resultType="map">
+          select top(1) 合同编号 as HeTongBianHao,业务员,税率,物资编码,数量,单价,总金额,物资名称 as WZName,规格型号,物资编码 as WZCode,
+          计量单位,供应商名称  as DanWeiName
+          from sbgl.dbo.A_查询_合同物资
+          where 合同编号=#{hth}
+    </select>
+</mapper>

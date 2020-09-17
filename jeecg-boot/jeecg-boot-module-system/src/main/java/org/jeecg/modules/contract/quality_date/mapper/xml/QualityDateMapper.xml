@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jeecg.modules.contract.quality_date.mapper.QualityDateMapper">
+    <select id="queryPageListjf" resultType="map">
+        SELECT  *,CONVERT(varchar(100),qy_date, 23)  as riqi
+        FROM quality_date
+        where contract_no = #{htbh}
+    </select>
+</mapper>

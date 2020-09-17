@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jeecg.modules.contract.elements.mapper.ContractElementsMapper">
+
+    <select id="elementlist" resultType="org.jeecg.modules.contract.elements.entity.ContractElements">
+          select distinct element
+          from [PurchasingCenter].[dbo].[contract_elements]
+          where contract_no=#{htbh}
+    </select>
+</mapper>

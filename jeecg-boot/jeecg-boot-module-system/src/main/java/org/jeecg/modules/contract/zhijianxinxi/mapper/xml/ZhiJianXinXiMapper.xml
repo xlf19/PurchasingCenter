@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jeecg.modules.contract.zhijianxinxi.mapper.ZhiJianXinXiMapper">
+
+    <select id="listzjxx" resultType="map">
+       SELECT   类别, 是否录入数据,供货单位,使用单位,派工单号, CONVERT(varchar(100),取样日期, 23) as 取样日期, 化验时间, 化验人, C, Si, Mn, S, P, 化验备注,名称,检验量
+       FROM 质量管理_查询_外购铁
+       where 检验量 > 0
+        <if test="startTime !=null and  startTime !='' ">
+            and CONVERT(varchar(100),取样日期, 23)  >= CONVERT(varchar(100),#{startTime}, 23)
+        </if>
+        <if test="endTime !=null and  endTime !='' ">
+            and CONVERT(varchar(100),取样日期, 23)  &lt;= CONVERT(varchar(100),#{endTime}, 23)
+        </if>
+        <if test="supplier !=null and  supplier !='' ">
+            and 供货单位 = #{supplier}
+        </if>
+        and ((委托单位 = '监控部' and 审核人 is not null) or (委托单位!='监控部'))
+        order by 派工单号 desc
+    </select>
+
+    <select id="listzjjf" resultType="map" statementType="CALLABLE">
+	   {call dbo.ht_zhijianjingfen(
+	    #{startTime,jdbcType=VARCHAR,mode=IN},
+	    #{endTime,jdbcType=VARCHAR,mode=IN},
+	    #{supplier,jdbcType=VARCHAR,mode=IN}
+	    )}
+	</select>
+
+    <select id="listzjjfxx" resultType="map">
+         select  HeTongBianHao,ShuiLv, WZDanJia, HanShuiBiaoJi, WZName, WZCode,DanWeiName,#{voucherno} as voucherno,#{receiving} as receiving
+         from V_合同物资单价供需方
+         where HeTongBianHao = #{htbh}
+    </select>
+
+    <select id="listzjrl" resultType="map">
+        SELECT CONVERT(varchar(100),取样日期, 23)  as 取样日期,类别, Ad, Vdaf, Std, Mt, G, Xmm, Ymm, 密度, Q,
+        结算单号, 检验量,  制样编号, H2O, 派工单号, 名称, 供货单位, 使用单位, 委托单位,M25, M10,  取样日期时间
+        FROM 质量管理_查询_燃料
+        where  检验量 > 0
+
+        <if test="startTime !=null and  startTime !='' ">
+            and CONVERT(varchar(100),取样日期, 23)  >= CONVERT(varchar(100),#{startTime}, 23)
+        </if>
+        <if test="endTime !=null and  endTime !='' ">
+            and CONVERT(varchar(100),取样日期, 23)  &lt;= CONVERT(varchar(100),#{endTime}, 23)
+        </if>
+        <if test="supplier !=null and  supplier !='' ">
+            and 供货单位 = #{supplier}
+        </if>
+        <if test="materialName !=null and  materialName !='' ">
+            and 名称 = #{materialName}
+        </if>
+        and ((委托单位 = '监控部' and 审核人 is not null) or (委托单位!='监控部'))
+    </select>
+
+    <select id="listzjfl" resultType="map" statementType="CALLABLE">
+	   {call dbo.ht_zhijianfuliao(
+	    #{startTime,jdbcType=VARCHAR,mode=IN},
+	    #{endTime,jdbcType=VARCHAR,mode=IN},
+	    #{supplier,jdbcType=VARCHAR,mode=IN},
+	    #{materialName,jdbcType=VARCHAR,mode=IN}
+	    )}
+	</select>
+
+    <select id="listzjncxm" resultType="map">
+        SELECT  CONVERT(varchar(100),取样日期时间, 23)as riqi,名称  as 物资名称, 供货单位, 使用单位, 委托单位,派工单号,制样备注,
+        检验量 as JJ,类别, Ad, Vdaf, Std, Mt, G, Xmm, Ymm, 密度, Q,结算单号,制样编号, H2O,   M25, M10
+        FROM 质量管理_查询_燃料
+        where  检验量 > 0  and ((委托单位 = '监控部' and 审核人 is not null) or (委托单位!='监控部'))
+        <if test="startTime !=null and  startTime !='' ">
+            and CONVERT(varchar(100),取样日期, 23)  >= CONVERT(varchar(100),#{startTime}, 23)
+        </if>
+        <if test="endTime !=null and  endTime !='' ">
+            and CONVERT(varchar(100),取样日期, 23)  &lt;= CONVERT(varchar(100),#{endTime}, 23)
+        </if>
+        <if test="supplier !=null and  supplier !='' ">
+            and 供货单位 = #{supplier}
+        </if>
+        <if test="materialName !=null and  materialName !='' ">
+            and 名称 = #{materialName}
+        </if>
+    </select>
+
+    <select id="listzjnc" resultType="map" statementType="CALLABLE">
+        {call dbo.ht_zhijiannaicai(
+	    #{startTime,jdbcType=VARCHAR,mode=IN},
+	    #{endTime,jdbcType=VARCHAR,mode=IN},
+	    #{supplier,jdbcType=VARCHAR,mode=IN},
+	    #{materialName,jdbcType=VARCHAR,mode=IN}
+	    )}
+    </select>
+
+    <select id="listzjfg" resultType="map">
+        select   HeTongBianHao,WZCode,WZDanJia,(case when HanShuiBiaoJi=1 then '含税' else '不含税' end ) HanShuiBiaoJi ,WZShuiJin,CAST(SUBSTRING(m.ShuiLv, 0, LEN(m.ShuiLv)) AS int) AS ShuiLv,
+        HuoKuan , WZName, DanWeiName,#{shdw} as shdw
+        from G_HeTong m,G_WuZiMingXi n,G_WZBMB s, G_GongSiXinXi t
+        where HeTongBianHao = #{htbh}  and m.Id=n.HTId and n.WZId = s.Id  and t.Id = m.GongFangId
+    </select>
+</mapper>

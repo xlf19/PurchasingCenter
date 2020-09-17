@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jeecg.modules.contract.shengtie.mapper.ShengTieMapper">
+    <select id="findList" resultType="org.jeecg.modules.contract.elements.entity.ContractElements">
+        SELECT * FROM contract_elements
+        where ci_id=#{cid} and is_delete =0
+    </select>
+
+    <select id="updateElelist" resultType="java.lang.String">
+        update contract_elements
+        set is_delete=1
+        where ci_id=#{cid}
+    </select>
+</mapper>
