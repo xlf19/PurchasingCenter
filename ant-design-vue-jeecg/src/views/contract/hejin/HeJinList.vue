@@ -22,6 +22,7 @@
                   allowClear
                   @search="htSearch"
                   @change="findOne"
+                  @focus="checkend"
                 >
                   <a-select-option
                     placeholder="请选择合同号"
@@ -39,14 +40,17 @@
             </a-col>
             <a-col :xl="6" :lg="8" :md="8" :sm="24">
               <a-form-item label="供货单位">
-                <a-input placeholder="请输入供货单位" v-model="supplier"></a-input>
+                <a-input placeholder="请输入供货单位" v-model="supplier" disabled></a-input>
               </a-form-item>
             </a-col>
           </a-row>
           <a-row :gutter="24">
             <a-col :xl="6" :lg="8" :md="8" :sm="24">
               <a-form-item label="物资名称">
-                <a-select v-model="materialName" @change="finwzcode">
+                <a-select
+                  v-decorator="['materialName', validatorRules.materialName]"
+                  @change="finwzcode"
+                >
                   <a-select-option
                     placeholder="请选择物资名称"
                     :value="item.WZName"
@@ -95,7 +99,7 @@
           <a-row :gutter="24">
             <a-col :xl="6" :lg="8" :md="8" :sm="24">
               <a-form-item label="筛上">
-                <a-select v-model="wzshang">
+                <a-select v-model="wzshang" @focus="checkshang">
                   <a-select-option
                     :value="item.name"
                     v-for="(item,index) in wzshanglist"
@@ -106,7 +110,7 @@
             </a-col>
             <a-col :xl="6" :lg="8" :md="8" :sm="24">
               <a-form-item label="筛下">
-                <a-select v-model="wzxia">
+                <a-select v-model="wzxia" @focus="checkxia">
                   <a-select-option
                     :value="item.name"
                     v-for="(item,index) in wzxialist"
@@ -176,7 +180,7 @@ export default {
   },
   data() {
     return {
-      description: '生铁结算管理页面',
+      description: '合金结算管理页面',
       disableMixinCreated: true,
       form: this.$form.createForm(this),
       /* 查询条件-请不要在queryParam中声明非字符串值的属性 */
@@ -246,8 +250,11 @@ export default {
       rangeDate: '',
       startTime: '',
       endTime: '',
+
       // 表头
-      columns: [
+      columns: [],
+
+      columnsone: [
         {
           title: '序号',
           dataIndex: '',
@@ -427,14 +434,108 @@ export default {
           dataIndex: 'pgdh',
         },
       ],
+
+      columnstwo: [
+        {
+          title: '序号',
+          dataIndex: '',
+          key: 'rowIndex',
+          width: 60,
+          align: 'center',
+          customRender: function (t, r, index) {
+            return parseInt(index) + 1
+          },
+        },
+        {
+          title: '供货单位',
+          align: 'center',
+          dataIndex: 'ghdw',
+        },
+        // {
+        //   title: '收货单位',
+        //   align: 'center',
+        //   dataIndex: 'shdw',
+        // },
+        {
+          title: '物资名称',
+          align: 'center',
+          dataIndex: 'wzname',
+        },
+        {
+          title: '取样日期',
+          align: 'center',
+          dataIndex: 'riqi',
+          customRender: function (text) {
+            return !text ? '' : text.length > 10 ? text.substr(0, 10) : text
+          },
+        },
+        {
+          title: '检验量',
+          align: 'center',
+          dataIndex: 'JJ',
+        },
+        {
+          title: '筛上',
+          align: 'center',
+          dataIndex: 'wzshang',
+        },
+        {
+          title: '筛下',
+          align: 'center',
+          dataIndex: 'wzxia',
+        },
+        {
+          title: 'P',
+          align: 'center',
+          dataIndex: 'P',
+        },
+        {
+          title: 'S',
+          align: 'center',
+          dataIndex: 'S',
+        },
+        {
+          title: 'SiC',
+          align: 'center',
+          dataIndex: 'SiC',
+        },
+        {
+          title: 'C',
+          align: 'center',
+          dataIndex: 'C',
+        },
+        {
+          title: 'H2O',
+          align: 'center',
+          dataIndex: 'H2O',
+        },
+        {
+          title: 'N',
+          align: 'center',
+          dataIndex: 'N',
+        },
+        {
+          title: '化验备注',
+          align: 'center',
+          dataIndex: 'hybz',
+        },
+        {
+          title: '派工单号',
+          align: 'center',
+          dataIndex: 'pgdh',
+        },
+      ],
+
       validatorRules: {
         contractNo: { rules: [{ required: true, message: '请选择合同号!' }] },
         receivingUnit: { rules: [{ required: true, message: '请选择收货单位!' }] },
+        materialName: { rules: [{ required: true, message: '请选择物资名称!' }] },
         rangeDate: {
           rules: [{ required: true, message: '请输入取样日期!' }],
           initialValue: [moment(this.date), moment(this.date)],
         },
       },
+
       url: {
         findpzh: '/contract/contractInformation/findpzh',
         findHt: '/hetong/hetong/findListHt',
@@ -456,6 +557,7 @@ export default {
     }
   },
   created() {
+    this.columns = this.columnstwo
     this.findpzh()
     this.findshdw()
   },
@@ -466,6 +568,24 @@ export default {
   },
   methods: {
     initDictConfig() {},
+
+    //判断合同来源是否选中
+    checkend() {
+      let ly = this.hetongly
+      if (ly === null || ly === '') {
+        this.$message.warning('请选择合同来源')
+        return
+      }
+    },
+
+    //筛上
+    checkshang() {
+
+    },
+     //筛上
+    checkxia() {
+
+    },
     //获取凭证号
     findpzh() {
       getAction(this.url.findpzh).then((res) => {
@@ -582,6 +702,7 @@ export default {
     //获取物资编码
     finwzcode(wzname) {
       let hth = this.htbh
+      this.materialName = wzname
       let httpye = this.hetongly
       let finwzname = this.url.finwzname
       getAction(finwzname, { hth: hth, wzname: wzname, httpye: httpye }).then((res) => {
@@ -600,12 +721,15 @@ export default {
     //物资大类
     finwztype(wztype) {
       if (wztype === '合金') {
+        this.columns = this.columnsone
         this.wzshanglist = this.wzshanglisthj
         this.wzxialist = this.wzxialisthj
       } else if (wztype === '辅料') {
+        this.columns = this.columnsone
         this.wzshanglist = this.wzshanglistfl
         this.wzxialist = this.wzxialistfl
       } else if (wztype === '燃料') {
+        this.columns = this.columnstwo
         this.wzshanglist = this.wzshanglistrl
         this.wzxialist = this.wzxialistrl
       }
@@ -709,6 +833,7 @@ export default {
         this.loading = false
       })
     },
+
     //获取选中行数据
     onSelectChange(selectedRowKeys, selectionRows) {
       this.selectedRowKeys = selectedRowKeys

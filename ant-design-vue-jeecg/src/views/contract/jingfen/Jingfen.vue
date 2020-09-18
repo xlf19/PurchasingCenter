@@ -8,7 +8,10 @@
           <a-row :gutter="24">
             <a-col :xl="6" :lg="7" :md="8" :sm="24">
               <a-form-item label="物资类别">
-                <a-select v-decorator="['material_type', validatorRules.material_type]">
+                <a-select
+                  v-decorator="['material_type', validatorRules.material_type]"
+                  @change="listcolumn"
+                >
                   <a-select-option value="精粉">精粉</a-select-option>
                   <a-select-option value="球团">球团</a-select-option>
                   <a-select-option value="富粉">富粉</a-select-option>
@@ -176,7 +179,7 @@ export default {
       //物资名称
       materialName: '',
       // 表头
-      columns: [
+      settingColumns: [
         {
           title: '序号',
           dataIndex: '',
@@ -312,11 +315,142 @@ export default {
           dataIndex: 'granularity',
         },
       ],
+
+      columns: [],
+
+      columnstwo: [
+        {
+          title: '序号',
+          dataIndex: '',
+          key: 'rowIndex',
+          width: 60,
+          align: 'center',
+          customRender: function (t, r, index) {
+            return parseInt(index) + 1
+          },
+        },
+        {
+          title: '供货单位',
+          align: 'center',
+          dataIndex: 'supplier',
+        },
+        {
+          title: '收货单位',
+          align: 'center',
+          dataIndex: 'receivingunit',
+        },
+        {
+          title: '物资名称',
+          align: 'center',
+          dataIndex: 'material_name',
+        },
+        {
+          title: '取样日期',
+          align: 'center',
+          dataIndex: 'riqi',
+          customRender: function (text) {
+            return !text ? '' : text.length > 10 ? text.substr(0, 10) : text
+          },
+        },
+        {
+          title: '检验量',
+          align: 'center',
+          dataIndex: 'weighing',
+        },
+
+        {
+          title: 'S',
+          align: 'center',
+          dataIndex: 'ss',
+        },
+        {
+          title: 'P',
+          align: 'center',
+          dataIndex: 'pp',
+        },
+        {
+          title: 'FEO',
+          align: 'center',
+          dataIndex: 'feo',
+        },
+        {
+          title: 'H2O',
+          align: 'center',
+          dataIndex: 'h2o',
+        },
+        {
+          title: 'Al2O3',
+          align: 'center',
+          dataIndex: 'al2o3',
+        },
+        {
+          title: 'MnO',
+          align: 'center',
+          dataIndex: 'mno',
+        },
+        {
+          title: 'TiO2',
+          align: 'center',
+          dataIndex: 'tio2',
+        },
+        {
+          title: 'Cr',
+          align: 'center',
+          dataIndex: 'cr',
+        },
+        {
+          title: 'Cu',
+          align: 'center',
+          dataIndex: 'cu',
+        },
+        {
+          title: 'TFE',
+          align: 'center',
+          dataIndex: 'tfe',
+        },
+        {
+          title: 'MGO',
+          align: 'center',
+          dataIndex: 'mgo',
+        },
+        {
+          title: 'Pb',
+          align: 'center',
+          dataIndex: 'pb',
+        },
+        {
+          title: '[As]',
+          align: 'center',
+          dataIndex: 'as1',
+        },
+        {
+          title: 'CaO',
+          align: 'center',
+          dataIndex: 'cao',
+        },
+        {
+          title: 'K2O',
+          align: 'center',
+          dataIndex: 'k2o',
+        },
+        {
+          title: 'SiO2',
+          align: 'center',
+          dataIndex: 'sio2',
+        },
+        {
+          title: 'Zn',
+          align: 'center',
+          dataIndex: 'zn',
+        },
+      ],
+
       validatorRules: {
         contractNo: { rules: [{ required: true, message: '请选择合同号!' }] },
         material_type: { rules: [{ required: true, message: '请选择物资类别!' }] },
         receivingUnit: { rules: [{ required: true, message: '请选择收货单位!' }] },
       },
+
       url: {
         list: '/qualitydate/qualityDate/listjf',
         findpzh: '/contract/contractInformation/findpzh',
@@ -325,16 +459,12 @@ export default {
         findOne: '/hetong/hetong/findOne',
         htadd: '/jingfen/jingfen/htadd',
       },
+
       dictOptions: {},
     }
   },
   created() {
-    // //初始化字典 - 物资类别
-    // initDictOptions('material_type').then((res) => {
-    //   if (res.success) {
-    //     this.materialtypes = res.result
-    //   }
-    // }),
+    this.columns = this.columnstwo
     this.findpzh()
     this.findHt('')
     this.findshdw()
@@ -346,6 +476,16 @@ export default {
   },
   methods: {
     initDictConfig() {},
+    
+    //表头更换
+    listcolumn(type) {
+      if (type === '球团') {
+        this.columns = this.settingColumns
+      } else {
+        this.columns = this.columnstwo
+      }
+    },
+
     //手动添加结算单
     htAddOne() {
       this.form.validateFields((err, values) => {
@@ -372,6 +512,7 @@ export default {
         this.loading = false
       })
     },
+
     //获取合同号
     findHt(hth) {
       getAction(this.url.findHt, { hth: hth }).then((res) => {
@@ -384,10 +525,12 @@ export default {
         this.loading = false
       })
     },
+
     //获取合同号
     htSearch(value) {
       this.findHt(value)
     },
+
     //获取收货单位
     findshdw(hth) {
       getAction(this.url.findshdw).then((res) => {
@@ -400,6 +543,7 @@ export default {
         this.loading = false
       })
     },
+
     //合同编号改变发生
     findOne(hth) {
       this.finghuandwzmc(hth)
@@ -500,6 +644,7 @@ export default {
         this.loading = false
       })
     },
+
     modalFormOk() {
       // 新增/修改 成功时，重载列表
       let htbh = {
@@ -507,6 +652,7 @@ export default {
       }
       this.loadData(0, htbh)
     },
+
     //获取选中行数据
     onSelectChange(selectedRowKeys, selectionRows) {
       this.selectedRowKeys = selectedRowKeys

@@ -23,6 +23,7 @@
                   allowClear
                   @search="htSearch"
                   @change="findOne"
+                  @focus="checkend"
                 >
                   <a-select-option
                     placeholder="请选择合同号"
@@ -71,7 +72,7 @@
             </a-col>
             <a-col :xl="6" :lg="7" :md="8" :sm="24">
               <a-form-item label="供货单位">
-                <a-input placeholder="请输入供货单位" v-model="supplier"></a-input>
+                <a-input placeholder="请输入供货单位" v-model="supplier" disabled></a-input>
               </a-form-item>
             </a-col>
             <a-col :xl="6" :lg="7" :md="8" :sm="24">
@@ -318,6 +319,14 @@ export default {
   },
   methods: {
     initDictConfig() {},
+    //判断合同来源是否选中
+    checkend() {
+      let ly = this.hetongly
+      if (ly === null || ly === '') {
+        this.$message.warning('请选择合同来源')
+        return
+      }
+    },
     //获取凭证号
     findpzh() {
       getAction(this.url.findpzh).then((res) => {
@@ -393,6 +402,7 @@ export default {
       }
       getAction(urlht, { hth: hth }).then((res) => {
         if (res.success) {
+          debugger
           if (res.result != null && res.result != '') {
             this.supplier = res.result[0].DanWeiName
             this.materialName = res.result[0].WZName

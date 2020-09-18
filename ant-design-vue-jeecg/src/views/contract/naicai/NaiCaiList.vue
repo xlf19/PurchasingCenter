@@ -23,6 +23,7 @@
                   allowClear
                   @search="htSearch"
                   @change="findOne"
+                  @focus="checkend"
                 >
                   <a-select-option
                     placeholder="请选择合同号"
@@ -58,7 +59,7 @@
           <a-row :gutter="24">
             <a-col :xl="6" :lg="7" :md="8" :sm="24">
               <a-form-item label="物资名称">
-                <a-select v-model="materialName" @change="finwzcode">
+                <a-select  v-decorator="['materialName', validatorRules.materialName]"  @change="finwzcode">
                   <a-select-option
                     placeholder="请选择物资名称"
                     :value="item.WZName"
@@ -78,7 +79,7 @@
             </a-col>
             <a-col :xl="6" :lg="7" :md="8" :sm="24">
               <a-form-item label="供货单位">
-                <a-input placeholder="请输入供货单位" v-model="supplier"></a-input>
+                <a-input placeholder="请输入供货单位" v-model="supplier" disabled></a-input>
               </a-form-item>
             </a-col>
             <a-col :xl="6" :lg="7" :md="8" :sm="24">
@@ -332,6 +333,7 @@ export default {
       validatorRules: {
         contractNo: { rules: [{ required: true, message: '请选择合同号!' }] },
         receivingUnit: { rules: [{ required: true, message: '请选择收货单位!' }] },
+        materialName:{ rules: [{ required: true, message: '请选择物资名称!' }] },
         rangeDate: {
           rules: [{ required: true, message: '请输入取样日期!' }],
           initialValue: [moment(this.date), moment(this.date)],
@@ -366,6 +368,14 @@ export default {
   methods: {
     initDictConfig() {},
 
+    //判断合同来源是否选中
+    checkend() {
+      let ly = this.hetongly
+      if (ly === null || ly === '') {
+        this.$message.warning('请选择合同来源')
+        return
+      }
+    },
     //获取凭证号
     findpzh() {
       getAction(this.url.findpzh).then((res) => {
@@ -453,7 +463,7 @@ export default {
     getghdw(hth, urldw) {
       getAction(urldw, { hth: hth }).then((res) => {
         if (res.success) {
-          console.log(res)
+          debugger
           if (res.result != null && res.result != '') {
             this.supplier = res.result.DanWeiName
           }
@@ -484,6 +494,7 @@ export default {
     finwzcode(wzname) {
       let hth = this.htbh
       let httpye = this.hetongly
+      this.materialName=wzname
       getAction(this.url.finwzname, { hth: hth, wzname: wzname, httpye: httpye }).then((res) => {
         if (res.success) {
           if (res.result != '' && res.result != null) {

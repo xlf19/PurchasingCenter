@@ -129,7 +129,145 @@ export default {
       fangshi: '可选',
       //合同编号
       htbh: '',
+
       // 表头
+      settingColumns: [
+        {
+          title: '序号',
+          dataIndex: '',
+          key: 'rowIndex',
+          width: 60,
+          align: 'center',
+          customRender: function (t, r, index) {
+            return parseInt(index) + 1
+          },
+        },
+        {
+          title: '供货单位',
+          align: 'center',
+          dataIndex: 'supplier',
+        },
+        {
+          title: '收货单位',
+          align: 'center',
+          dataIndex: 'receivingunit',
+        },
+        {
+          title: '物资名称',
+          align: 'center',
+          dataIndex: 'material_name',
+        },
+        {
+          title: '取样日期',
+          align: 'center',
+          dataIndex: 'riqi',
+          customRender: function (text) {
+            return !text ? '' : text.length > 10 ? text.substr(0, 10) : text
+          },
+        },
+        {
+          title: '检验量',
+          align: 'center',
+          dataIndex: 'weighing',
+        },
+
+        {
+          title: 'S',
+          align: 'center',
+          dataIndex: 'ss',
+        },
+        {
+          title: 'P',
+          align: 'center',
+          dataIndex: 'pp',
+        },
+        {
+          title: 'FEO',
+          align: 'center',
+          dataIndex: 'feo',
+        },
+        {
+          title: 'H2O',
+          align: 'center',
+          dataIndex: 'h2o',
+        },
+        {
+          title: 'Al2O3',
+          align: 'center',
+          dataIndex: 'al2o3',
+        },
+        {
+          title: 'MnO',
+          align: 'center',
+          dataIndex: 'mno',
+        },
+        {
+          title: 'TiO2',
+          align: 'center',
+          dataIndex: 'tio2',
+        },
+        {
+          title: 'Cr',
+          align: 'center',
+          dataIndex: 'cr',
+        },
+        {
+          title: 'Cu',
+          align: 'center',
+          dataIndex: 'cu',
+        },
+        {
+          title: 'TFE',
+          align: 'center',
+          dataIndex: 'tfe',
+        },
+        {
+          title: 'MGO',
+          align: 'center',
+          dataIndex: 'mgo',
+        },
+        {
+          title: 'Pb',
+          align: 'center',
+          dataIndex: 'pb',
+        },
+        {
+          title: '[As]',
+          align: 'center',
+          dataIndex: 'as1',
+        },
+        {
+          title: 'CaO',
+          align: 'center',
+          dataIndex: 'cao',
+        },
+        {
+          title: 'K2O',
+          align: 'center',
+          dataIndex: 'k2o',
+        },
+        {
+          title: 'SiO2',
+          align: 'center',
+          dataIndex: 'sio2',
+        },
+        {
+          title: 'Zn',
+          align: 'center',
+          dataIndex: 'zn',
+        },
+        {
+          title: '抗压',
+          align: 'center',
+          dataIndex: 'compressive',
+        },
+        {
+          title: '[粒度<5mm]',
+          align: 'center',
+          dataIndex: 'granularity',
+        },
+      ],
+
       columns: [
         {
           title: '序号',
@@ -270,6 +408,134 @@ export default {
           dataIndex: '[粒度<5mm]',
         },
       ],
+
+      columnstwo: [
+        {
+          title: '序号',
+          dataIndex: '',
+          key: 'rowIndex',
+          width: 60,
+          align: 'center',
+          customRender: function (t, r, index) {
+            return parseInt(index) + 1
+          },
+        },
+        {
+          title: '供货单位',
+          align: 'center',
+          dataIndex: 'supplier',
+        },
+        {
+          title: '收货单位',
+          align: 'center',
+          dataIndex: 'receivingunit',
+        },
+        {
+          title: '物资名称',
+          align: 'center',
+          dataIndex: 'material_name',
+        },
+        {
+          title: '取样日期',
+          align: 'center',
+          dataIndex: 'riqi',
+          customRender: function (text) {
+            return !text ? '' : text.length > 10 ? text.substr(0, 10) : text
+          },
+        },
+        {
+          title: '检验量',
+          align: 'center',
+          dataIndex: 'weighing',
+        },
+
+        {
+          title: 'S',
+          align: 'center',
+          dataIndex: 'ss',
+        },
+        {
+          title: 'P',
+          align: 'center',
+          dataIndex: 'pp',
+        },
+        {
+          title: 'FEO',
+          align: 'center',
+          dataIndex: 'feo',
+        },
+        {
+          title: 'H2O',
+          align: 'center',
+          dataIndex: 'h2o',
+        },
+        {
+          title: 'Al2O3',
+          align: 'center',
+          dataIndex: 'al2o3',
+        },
+        {
+          title: 'MnO',
+          align: 'center',
+          dataIndex: 'mno',
+        },
+        {
+          title: 'TiO2',
+          align: 'center',
+          dataIndex: 'tio2',
+        },
+        {
+          title: 'Cr',
+          align: 'center',
+          dataIndex: 'cr',
+        },
+        {
+          title: 'Cu',
+          align: 'center',
+          dataIndex: 'cu',
+        },
+        {
+          title: 'TFE',
+          align: 'center',
+          dataIndex: 'tfe',
+        },
+        {
+          title: 'MGO',
+          align: 'center',
+          dataIndex: 'mgo',
+        },
+        {
+          title: 'Pb',
+          align: 'center',
+          dataIndex: 'pb',
+        },
+        {
+          title: '[As]',
+          align: 'center',
+          dataIndex: 'as1',
+        },
+        {
+          title: 'CaO',
+          align: 'center',
+          dataIndex: 'cao',
+        },
+        {
+          title: 'K2O',
+          align: 'center',
+          dataIndex: 'k2o',
+        },
+        {
+          title: 'SiO2',
+          align: 'center',
+          dataIndex: 'sio2',
+        },
+        {
+          title: 'Zn',
+          align: 'center',
+          dataIndex: 'zn',
+        },
+      ],
+
       validatorRules: {
         rangeDate: {
           rules: [{ required: true, message: '请输入取样日期!' }],
@@ -283,12 +549,17 @@ export default {
     }
   },
   computed: {},
-  methods: {
+ 
+ methods: {
     guhw(shdw, wzmc, htbh) {
       this.supplier = shdw
-      this.supplier = '安徽省泽乾冶金科技有限公司'
       this.wzmc = wzmc
       this.htbh = htbh
+      if (wzmc === '球团') {
+        this.columns = this.settingColumns
+      } else {
+        this.columns = this.columnstwo
+      }
     },
     //查询质检数据
     searchList() {

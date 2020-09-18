@@ -114,32 +114,9 @@ export default {
           dataIndex: 'weighing',
         },
         {
-          title: '备注',
-          align: 'center',
-          dataIndex: 'remarks',
-        },
-        {
-          title: '结算日期',
-          align: 'center',
-          dataIndex: 'settlementDate',
-          customRender: function (text) {
-            return !text ? '' : text.length > 10 ? text.substr(0, 10) : text
-          },
-        },
-        {
           title: '合同单价',
           align: 'center',
           dataIndex: 'contractPrice',
-        },
-        {
-          title: '运费',
-          align: 'center',
-          dataIndex: 'shipping',
-        },
-        {
-          title: '点收',
-          align: 'center',
-          dataIndex: 'accept',
         },
         {
           title: '结算单价',
@@ -157,12 +134,27 @@ export default {
           dataIndex: 'settlementResults',
         },
         {
-          title: '过磅日期',
+          title: '运费',
           align: 'center',
-          dataIndex: 'weighingDate',
+          dataIndex: 'shipping',
+        },
+        {
+          title: '备注',
+          align: 'center',
+          dataIndex: 'remarks',
+        },
+        {
+          title: '结算日期',
+          align: 'center',
+          dataIndex: 'settlementDate',
           customRender: function (text) {
             return !text ? '' : text.length > 10 ? text.substr(0, 10) : text
           },
+        },
+        {
+          title: '贷款',
+          align: 'center',
+          dataIndex: 'loan',
         },
         {
           title: '结算人',

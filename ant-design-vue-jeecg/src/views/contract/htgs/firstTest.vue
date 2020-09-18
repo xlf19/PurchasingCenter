@@ -112,7 +112,7 @@ export default {
     contrac: {
       type: String,
       // required: true,
-      default: 'WX20200900031',
+      // default: 'WX20200900031',
     },
   },
   watch: {
@@ -303,7 +303,7 @@ export default {
         sm: { span: 16 },
       },
       //关闭mixins的加载
-      disableMixinCreated: false,
+      disableMixinCreated: true,
       //唯一验证
       validatorRules: {
         templatename: {
@@ -328,7 +328,7 @@ export default {
     }
   },
   created() {
-    this.loadData()
+    // this.loadData()
     this.setSysbolOptions()
   },
   methods: {
