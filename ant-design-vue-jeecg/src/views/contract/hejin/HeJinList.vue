@@ -580,11 +580,19 @@ export default {
 
     //筛上
     checkshang() {
-
+      let type = this.wztype
+      if (type === null || type === '') {
+        this.$message.warning('请选择物资大类')
+        return
+      }
     },
-     //筛上
+    //筛上
     checkxia() {
-
+      let type = this.wztype
+      if (type === null || type === '') {
+        this.$message.warning('请选择物资大类')
+        return
+      }
     },
     //获取凭证号
     findpzh() {
