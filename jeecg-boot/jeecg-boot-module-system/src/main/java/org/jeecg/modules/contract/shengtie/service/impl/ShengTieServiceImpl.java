@@ -13,17 +13,5 @@ import java.util.List;
 @Service
 public class ShengTieServiceImpl extends ServiceImpl<ContractElementsMapper, ContractElements> implements IShengTieService {
 
-    @Autowired
-    ShengTieMapper sh;
-
-    public List<ContractElements> findList(String cid) {
-        return sh.findList(cid);
-    }
-
-    public void updateElelist(String cid){
-         sh.updateElelist(cid);
-    }
-
-
 
 }

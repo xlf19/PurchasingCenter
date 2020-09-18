@@ -2,9 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.jeecg.modules.contract.elements.mapper.ContractElementsMapper">
 
-    <select id="elementlist" resultType="org.jeecg.modules.contract.elements.entity.ContractElements">
-          select distinct element
-          from [PurchasingCenter].[dbo].[contract_elements]
-          where contract_no=#{htbh}
+    <select id="findList" resultType="org.jeecg.modules.contract.elements.entity.ContractElements">
+        SELECT * FROM contract_elements
+        where ci_id=#{cid} and is_delete =0
+    </select>
+
+    <select id="updateElelist" resultType="java.lang.String">
+        update contract_elements
+        set is_delete=1
+        where ci_id=#{cid}
     </select>
 </mapper>

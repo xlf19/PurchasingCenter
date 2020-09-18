@@ -31,4 +31,14 @@ public interface IZhiJianXinXiService extends IService<T> {
     //获取废钢质检信息
     IPage<Map<Object, String>> listzjfg(IPage<Map<Object, String>> page,String htbh,String shdw);
 
+
+    //获取合金质检信息 合金
+    IPage<Map<Object, String>> listzjhjhj(IPage<Map<Object, String>> page, String startTime, String endTime, String supplier, String materialName,  String wzshang, String wzxia);
+
+    //获取合金质检信息 辅料
+    IPage<Map<Object, String>> listzjhjfl(IPage<Map<Object, String>> page, String startTime, String endTime, String supplier, String materialName,  String wzshang, String wzxia);
+
+    //获取合金质检信息 燃料
+    IPage<Map<Object, String>> listzjhjrl(IPage<Map<Object, String>> page, String startTime, String endTime, String supplier, String materialName,  String wzshang, String wzxia);
+
 }

@@ -97,4 +97,42 @@
         from G_HeTong m,G_WuZiMingXi n,G_WZBMB s, G_GongSiXinXi t
         where HeTongBianHao = #{htbh}  and m.Id=n.HTId and n.WZId = s.Id  and t.Id = m.GongFangId
     </select>
+
+<!--    合金 合金-->
+    <select id="listzjhjhj" resultType="map" statementType="CALLABLE">
+         {call dbo.ht_zhijianhejinhj(
+	    #{startTime,jdbcType=VARCHAR,mode=IN},
+	    #{endTime,jdbcType=VARCHAR,mode=IN},
+	    #{supplier,jdbcType=VARCHAR,mode=IN},
+	    #{materialName,jdbcType=VARCHAR,mode=IN},
+	    #{wzshang,jdbcType=VARCHAR,mode=IN},
+	    #{wzxia,jdbcType=VARCHAR,mode=IN}
+	    )}
+    </select>
+
+    <!--    合金 辅料-->
+    <select id="listzjhjfl" resultType="map" statementType="CALLABLE">
+ {call dbo.ht_zhijianhejinfl(
+	    #{startTime,jdbcType=VARCHAR,mode=IN},
+	    #{endTime,jdbcType=VARCHAR,mode=IN},
+	    #{supplier,jdbcType=VARCHAR,mode=IN},
+	    #{materialName,jdbcType=VARCHAR,mode=IN},
+	    #{wzshang,jdbcType=VARCHAR,mode=IN},
+	    #{wzxia,jdbcType=VARCHAR,mode=IN}
+	    )}
+
+    </select>
+
+    <!--    合金 燃料-->
+    <select id="listzjhjrl" resultType="map" statementType="CALLABLE">
+        {call dbo.ht_zhijianhejinrl(
+	    #{startTime,jdbcType=VARCHAR,mode=IN},
+	    #{endTime,jdbcType=VARCHAR,mode=IN},
+	    #{supplier,jdbcType=VARCHAR,mode=IN},
+	    #{materialName,jdbcType=VARCHAR,mode=IN},
+	    #{wzshang,jdbcType=VARCHAR,mode=IN},
+	    #{wzxia,jdbcType=VARCHAR,mode=IN}
+	    )}
+    </select>
+
 </mapper>

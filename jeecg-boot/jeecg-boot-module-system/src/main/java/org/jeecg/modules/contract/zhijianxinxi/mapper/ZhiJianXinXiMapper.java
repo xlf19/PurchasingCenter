@@ -31,4 +31,12 @@ public interface ZhiJianXinXiMapper extends BaseMapper<T> {
     //获取废钢质检信息
     IPage<Map<Object, String>> listzjfg(IPage<Map<Object, String>> page, @Param("htbh")String htbh,@Param("shdw")String shdw);
 
+    //获取合金质检信息 合金
+    IPage<Map<Object, String>> listzjhjhj(IPage<Map<Object, String>> page, @Param("startTime") String startTime, @Param("endTime") String endTime, @Param("supplier") String supplier,@Param("materialName") String materialName, @Param("wzshang") String wzshang,@Param("wzxia") String wzxia);
+
+    //获取合金质检信息 辅料
+    IPage<Map<Object, String>> listzjhjfl(IPage<Map<Object, String>> page, @Param("startTime") String startTime, @Param("endTime") String endTime, @Param("supplier") String supplier,@Param("materialName") String materialName, @Param("wzshang") String wzshang,@Param("wzxia") String wzxia);
+
+    //获取合金质检信息 燃料
+    IPage<Map<Object, String>> listzjhjrl(IPage<Map<Object, String>> page, @Param("startTime") String startTime, @Param("endTime") String endTime, @Param("supplier") String supplier,@Param("materialName") String materialName, @Param("wzshang") String wzshang,@Param("wzxia") String wzxia);
 }

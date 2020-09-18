@@ -54,4 +54,16 @@ public class ZhiJianXinXiServiceImpl extends ServiceImpl<ZhiJianXinXiMapper, T> 
     public IPage<Map<Object, String>> listzjfg(IPage<Map<Object, String>> page, String htbh,String shdw) {
         return zjxx.listzjfg(page,htbh,shdw);
     }
+
+    public IPage<Map<Object, String>> listzjhjhj(IPage<Map<Object, String>> page, String startTime, String endTime, String supplier, String materialName,String wzshang, String wzxia) {
+        return zjxx.listzjhjhj(page,startTime,endTime,supplier,materialName,wzshang,wzxia);
+    }
+
+    public IPage<Map<Object, String>> listzjhjfl(IPage<Map<Object, String>> page, String startTime, String endTime, String supplier, String materialName,String wzshang, String wzxia) {
+        return zjxx.listzjhjfl(page,startTime,endTime,supplier,materialName,wzshang,wzxia);
+    }
+
+    public IPage<Map<Object, String>> listzjhjrl(IPage<Map<Object, String>> page, String startTime, String endTime, String supplier, String materialName,String wzshang, String wzxia) {
+        return zjxx.listzjhjrl(page,startTime,endTime,supplier,materialName,wzshang,wzxia);
+    }
 }

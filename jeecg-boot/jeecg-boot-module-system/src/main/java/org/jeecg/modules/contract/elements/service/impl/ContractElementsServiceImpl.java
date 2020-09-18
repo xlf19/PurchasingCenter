@@ -22,7 +22,11 @@ public class ContractElementsServiceImpl extends ServiceImpl<ContractElementsMap
     @Autowired
     ContractElementsMapper ele;
 
-    public List<ContractElements> elementlist(String htbh) {
-        return ele.elementlist(htbh);
+    public List<ContractElements> findList(String cid) {
+        return ele.findList(cid);
+    }
+
+    public void updateElelist(String cid){
+        ele.updateElelist(cid);
     }
 }

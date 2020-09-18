@@ -144,4 +144,59 @@ public class ZhiJianXinXiController extends JeecgController<T, IZhiJianXinXiServ
         IPage<Map<Object, String>> pageList = zjxxservice.listzjfg(page,htbh,shdw);
         return Result.ok(pageList);
     }
+
+    //获取合金质检信息 合金
+    @AutoLog(value = "获取合金质检信息合金")
+    @ApiOperation(value = "获取合金质检信息合金", notes = "获取合金质检信息合金")
+    @GetMapping(value = "/listzjhjhj")
+    public Result<?> listzjhjhj(
+            @RequestParam(name = "startTime", defaultValue = "") String startTime,
+            @RequestParam(name = "endTime", defaultValue = "") String endTime,
+            @RequestParam(name = "supplier", defaultValue = "") String supplier,
+            @RequestParam(name = "materialName", defaultValue = "")String materialName,
+            @RequestParam(name = "wzshang", defaultValue = "") String wzshang,
+            @RequestParam(name = "wzxia", defaultValue = "")String wzxia,
+            @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
+            @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
+            HttpServletRequest req) {
+        Page<Map<Object, String>> page = new Page<Map<Object, String>>(pageNo, pageSize);
+        IPage<Map<Object, String>> pageList = zjxxservice.listzjhjhj(page, startTime, endTime, supplier,materialName,wzshang,wzxia);
+        return Result.ok(pageList);
+    }
+    //获取合金质检信息 辅料
+    @AutoLog(value = "获取合金质检信息辅料")
+    @ApiOperation(value = "获取合金质检信息辅料", notes = "获取合金质检信息辅料")
+    @GetMapping(value = "/listzjhjfl")
+    public Result<?> listzjhjfl(
+            @RequestParam(name = "startTime", defaultValue = "") String startTime,
+            @RequestParam(name = "endTime", defaultValue = "") String endTime,
+            @RequestParam(name = "supplier", defaultValue = "") String supplier,
+            @RequestParam(name = "materialName", defaultValue = "")String materialName,
+            @RequestParam(name = "wzshang", defaultValue = "") String wzshang,
+            @RequestParam(name = "wzxia", defaultValue = "")String wzxia,
+            @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
+            @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
+            HttpServletRequest req) {
+        Page<Map<Object, String>> page = new Page<Map<Object, String>>(pageNo, pageSize);
+        IPage<Map<Object, String>> pageList = zjxxservice.listzjhjfl(page, startTime, endTime, supplier,materialName,wzshang,wzxia);
+        return Result.ok(pageList);
+    }
+    //获取合金质检信息 燃料
+    @AutoLog(value = "获取合金质检信息燃料")
+    @ApiOperation(value = "获取合金质检信息燃料", notes = "获取合金质检信息燃料")
+    @GetMapping(value = "/listzjhjrl")
+    public Result<?> listzjhjrl(
+            @RequestParam(name = "startTime", defaultValue = "") String startTime,
+            @RequestParam(name = "endTime", defaultValue = "") String endTime,
+            @RequestParam(name = "supplier", defaultValue = "") String supplier,
+            @RequestParam(name = "materialName", defaultValue = "")String materialName,
+            @RequestParam(name = "wzshang", defaultValue = "") String wzshang,
+            @RequestParam(name = "wzxia", defaultValue = "")String wzxia,
+            @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
+            @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
+            HttpServletRequest req) {
+        Page<Map<Object, String>> page = new Page<Map<Object, String>>(pageNo, pageSize);
+        IPage<Map<Object, String>> pageList = zjxxservice.listzjhjrl(page, startTime, endTime, supplier,materialName,wzshang,wzxia);
+        return Result.ok(pageList);
+    }
 }

@@ -15,6 +15,9 @@ import org.jeecg.modules.contract.elements.entity.ContractElements;
  */
 public interface ContractElementsMapper extends BaseMapper<ContractElements> {
 
-    //查询合同元素数据
-    public List<ContractElements> elementlist(@Param("htbh")String htbh);
+    //获取合同元素信息
+    public List<ContractElements> findList(@Param("cid") String cid);
+
+    //删除合同元素信息
+    public void updateElelist(@Param("cid")String cid);
 }

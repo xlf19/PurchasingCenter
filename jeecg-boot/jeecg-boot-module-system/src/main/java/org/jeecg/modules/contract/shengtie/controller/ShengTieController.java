@@ -79,27 +79,6 @@ public class ShengTieController extends JeecgController<ContractElements, ISheng
         IPage<ContractInformation> pageList = contractInformationService.page(page, queryWrapper);
         return Result.ok(pageList);
     }
-
-    @AutoLog(value = "生铁结算元素表")
-    @ApiOperation(value = "生铁结算元素表", notes = "生铁结算元素表")
-    @GetMapping(value = "/elementslist")
-    public Result<?> findList(@RequestParam(name = "cid", defaultValue = "") String cid, HttpServletRequest req) {
-        List<ContractElements> list = shengTieService.findList(cid);
-        return Result.ok(list);
-    }
-
-    //删除
-    @AutoLog(value = "合同元素表-通过id删除")
-    @ApiOperation(value = "合同元素表-通过id删除", notes = "合同元素表-通过id删除")
-    @DeleteMapping(value = "/delete")
-    public Result<?> delete(@RequestParam(name = "id", required = true) String id) {
-        ContractInformation contractInformation = contractInformationService.getById(id);
-        contractInformation.setIsDelete(1);
-        contractInformationService.updateById(contractInformation);
-        shengTieService.updateElelist(id);
-        return Result.ok("删除成功!");
-    }
-
     //导入质检数据
     @AutoLog(value = "导入质检数据")
     @ApiOperation(value = "-添加", notes = "-添加")
@@ -112,30 +91,30 @@ public class ShengTieController extends JeecgController<ContractElements, ISheng
         String shdw = ht.getString("shdw");//收货单位
         //获取合同信息
         Map<Object, Object> htonexx = htservice.finOnehtxx(htbh);
-        //HS
-        Boolean hs = (Boolean) htonexx.get("HanShuiBiaoJi");
-        //合同号
-        //String hetongbh=htonexx.get("HeTongBianHao").toString();
-        //物资单价
-        BigDecimal dj = new BigDecimal(htonexx.get("WZDanJia").toString());
-        //SL
-        BigDecimal sl = new BigDecimal(htonexx.get("ShuiLv").toString());
-        //物资名称
-        String wzname = htonexx.get("WZName").toString();
-        //物资编码
-        String wzcode = htonexx.get("WZCode").toString();
+        Boolean hs=false;//HS
+        BigDecimal dj =null; //物资单价
+        BigDecimal sl =null;//税率
+        String wzcode=""; //物资编码
+        if(htonexx!=null){
+            hs = (Boolean) htonexx.get("HanShuiBiaoJi");
+            dj=new BigDecimal(htonexx.get("WZDanJia").toString());
+            sl = new BigDecimal(htonexx.get("ShuiLv").toString());
+            wzcode = htonexx.get("WZCode").toString();
+        }
         JSONArray htarray = ht.getJSONArray("htxx");
-
         for (int i = 0; i < htarray.size(); i++) {
             JSONObject htone = htarray.getJSONObject(i);
-            BigDecimal p = htone.getBigDecimal("P");
-            BigDecimal S = htone.getBigDecimal("S");
+            String ghdw = htone.getString("供货单位");//供货单位
+
+            String wzname = htone.getString("名称");//物资名称
+            String hybz = htone.getString("化验备注");//化验备注
+            String pgdh = htone.getString("派工单号");//派工单号
+            String data = htone.getString("取样日期");
+            BigDecimal jyl = htone.getBigDecimal("检验量");
             BigDecimal Si = htone.getBigDecimal("Si");
             BigDecimal Mn = htone.getBigDecimal("Mn");
-            BigDecimal jyl = htone.getBigDecimal("检验量");
-            String data = htone.getString("取样日期");
-            String ghdw = htone.getString("supplier");//供货单位
-
+            BigDecimal p = htone.getBigDecimal("P");
+            BigDecimal S = htone.getBigDecimal("S");
             //添加合同信息表
             ContractInformation cinfo = new ContractInformation();
             String uuid = UUID.randomUUID().toString();
@@ -145,6 +124,8 @@ public class ShengTieController extends JeecgController<ContractElements, ISheng
             cinfo.setContractNo(htbh);
             cinfo.setVoucherNo(pzh);
             cinfo.setContractType("生铁");
+            cinfo.setRemarks(hybz);
+            cinfo.setWorkNumber(pgdh);
             cinfo.setMaterialCode(wzcode);
             cinfo.setContractPrice(dj);
             cinfo.setTaxRate(sl);

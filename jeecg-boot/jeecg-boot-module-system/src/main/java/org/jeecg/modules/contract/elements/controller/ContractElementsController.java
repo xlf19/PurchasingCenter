@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.util.oConvertUtils;
+import org.jeecg.modules.contract.contract.entity.ContractInformation;
+import org.jeecg.modules.contract.contract.service.IContractInformationService;
 import org.jeecg.modules.contract.elements.entity.ContractElements;
 import org.jeecg.modules.contract.elements.service.IContractElementsService;
 
@@ -49,6 +51,9 @@ import org.jeecg.common.aspect.annotation.AutoLog;
 public class ContractElementsController extends JeecgController<ContractElements, IContractElementsService> {
 	@Autowired
 	private IContractElementsService contractElementsService;
+
+	 @Autowired
+	 private IContractInformationService contractInformationService;
 	
 	/**
 	 * 分页列表查询
@@ -100,19 +105,7 @@ public class ContractElementsController extends JeecgController<ContractElements
 		return Result.ok("编辑成功!");
 	}
 	
-	/**
-	 *   通过id删除
-	 *
-	 * @param id
-	 * @return
-	 */
-	@AutoLog(value = "合同元素表-通过id删除")
-	@ApiOperation(value="合同元素表-通过id删除", notes="合同元素表-通过id删除")
-	@DeleteMapping(value = "/delete")
-	public Result<?> delete(@RequestParam(name="id",required=true) String id) {
-		contractElementsService.removeById(id);
-		return Result.ok("删除成功!");
-	}
+
 	
 	/**
 	 *  批量删除
@@ -167,11 +160,28 @@ public class ContractElementsController extends JeecgController<ContractElements
     public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
         return super.importExcel(request, response, ContractElements.class);
     }
-	 @AutoLog(value = "查询合同元素数据")
-	 @ApiOperation(value="查询合同元素数据", notes="查询合同元素数据")
-	 @GetMapping(value = "/elementlist")
-	 public Result<?> elementlist(@RequestParam(name="htbh", defaultValue="") String  htbh) {
-         List<ContractElements> list =contractElementsService.elementlist(htbh);
+
+
+	 //查询元素数据
+	 @AutoLog(value = "元素数据表")
+	 @ApiOperation(value = "元素数据表", notes = "元素数据表")
+	 @GetMapping(value = "/elementslist")
+	 public Result<?> findList(@RequestParam(name = "cid", defaultValue = "") String cid, HttpServletRequest req) {
+		 List<ContractElements> list = contractElementsService.findList(cid);
 		 return Result.ok(list);
 	 }
+
+	 //删除
+	 @AutoLog(value = "合同元素表-通过id删除")
+	 @ApiOperation(value = "合同元素表-通过id删除", notes = "合同元素表-通过id删除")
+	 @DeleteMapping(value = "/delete")
+	 public Result<?> delete(@RequestParam(name = "id", required = true) String id) {
+		 ContractInformation contractInformation = contractInformationService.getById(id);
+		 contractInformation.setIsDelete(1);
+		 contractInformationService.updateById(contractInformation);
+		 contractElementsService.updateElelist(id);
+		 return Result.ok("删除成功!");
+	 }
+
+
 }
