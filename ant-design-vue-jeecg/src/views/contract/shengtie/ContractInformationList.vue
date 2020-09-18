@@ -11,6 +11,7 @@
         :dataSource="dataSource"
         :pagination="ipagination"
         :loading="loading"
+        :expandedRowKeys="expandedRowKeys"
         class="j-table-force-nowrap"
         @change="handleTableChange"
         @expand="handleExpand"
@@ -21,13 +22,13 @@
           </a-popconfirm>
         </span>
         <a-card style="margin: 0" slot="expandedRowRender" :bordered="false">
-          <detail-list title="生铁合同元素数据" >
-            <detail-list-item
-              :term="item.element"
-              v-for="(item,index) in stelements"
+          <a-descriptions title="生铁合同元素数据" :column="8">
+            <a-descriptions-item
+              :label="item.element"
               :key="index"
-            >{{item.elelmentDate}}</detail-list-item>
-          </detail-list>
+              v-for="(item,index) in stelements"
+            >{{item.elelmentDate}}</a-descriptions-item>
+          </a-descriptions>
         </a-card>
       </a-table>
     </div>
@@ -74,6 +75,7 @@ export default {
       },
       //合同号
       hthone: '',
+      expandedRowKeys: [],
       // 表头
       columns: [
         {
@@ -178,8 +180,8 @@ export default {
       stelements: [],
       url: {
         list: '/shengtie/shengtie/list',
-        lists: '/shengtie/shengtie/elementslist',
-        delete: '/shengtie/shengtie/delete',
+        lists: '/elements/contractElements/elementslist',
+        delete: '/elements/contractElements/delete',
       },
       dictOptions: {},
     }
@@ -194,15 +196,19 @@ export default {
     initDictConfig() {},
     //展开行信息
     handleExpand(expanded, record) {
-      getAction(this.url.lists, { cid: record.id }).then((res) => {
-        if (res.success) {
-          this.stelements = res.result
-        }
-        if (res.code === 510) {
-          this.$message.warning(res.message)
-        }
-        this.loading = false
-      })
+      this.expandedRowKeys = []
+      if (expanded === true) {
+        this.expandedRowKeys.push(record.id)
+        getAction(this.url.lists, { cid: record.id }).then((res) => {
+          if (res.success) {
+            this.stelements = res.result
+          }
+          if (res.code === 510) {
+            this.$message.warning(res.message)
+          }
+          this.loading = false
+        })
+      }
     },
     //查询合同信息
     htlist(hth) {
@@ -231,7 +237,7 @@ export default {
         this.isorter.order = 'ascend' == sorter.order ? 'asc' : 'desc'
       }
       this.ipagination = pagination
-      let hth =this.hthone
+      let hth = this.hthone
       this.htlist(hth)
     },
     //删除

@@ -11,9 +11,9 @@
         :dataSource="dataSource"
         :pagination="ipagination"
         :loading="loading"
+        :expandedRowKeys="expandedRowKeys"
         class="j-table-force-nowrap"
         @change="handleTableChange"
-        :expandedRowKeys="expandedRowKeys"
         @expand="handleExpand"
       >
         <span slot="action" slot-scope="text, record">
@@ -22,7 +22,7 @@
           </a-popconfirm>
         </span>
         <a-card style="margin: 0" slot="expandedRowRender" :bordered="false">
-          <a-descriptions title="燃料合同元素数据" :column="8">
+          <a-descriptions title="合金合同元素数据" :column="8">
             <a-descriptions-item
               :label="item.element"
               :key="index"
@@ -32,7 +32,6 @@
         </a-card>
       </a-table>
     </div>
-    <contract-inform-modal ref="modalForm" @ok="modalFormOk"></contract-inform-modal>
   </a-card>
 </template>
 
@@ -43,7 +42,6 @@ import { mixinDevice } from '@/utils/mixin'
 import DetailList from '@/components/tools/DetailList'
 import { JeecgListMixin } from '@/mixins/JeecgListMixin'
 import { filterObj } from '@/utils/util'
-import ContractInformModal from './modules/ContractInformModal'
 const DetailListItem = DetailList.Item
 
 export default {
@@ -52,7 +50,6 @@ export default {
   components: {
     DetailList,
     DetailListItem,
-    ContractInformModal,
   },
 
   data() {
@@ -182,10 +179,9 @@ export default {
       ],
       stelements: [],
       url: {
-        list: '/ranliao/ranliao/list',
+        list: '/hejin/hejin/list',
         lists: '/elements/contractElements/elementslist',
         delete: '/elements/contractElements/delete',
-        jiesuandan: '/ranliao/ranliao/listzjjfxx',
       },
       dictOptions: {},
     }
@@ -253,25 +249,6 @@ export default {
           that.$message.warning(res.message)
         }
       })
-    },
-    //手工结算单
-    addsgjsd(htbhs, voucherNo, receiving) {
-      this.hthone = htbhs
-      let jsdd = {}
-      getAction(this.url.jiesuandan, { htbh: htbhs, voucherno: voucherNo, receiving: receiving }).then((res) => {
-        if (res.success) {
-          this.$refs.modalForm.edit(res.result)
-          this.$refs.modalForm.title = '手工结算单'
-          this.$refs.modalForm.disableSubmit = false
-        }
-        if (res.code === 510) {
-          this.$message.warning(res.message)
-        }
-      })
-    },
-    modalFormOk() {
-      let hth = this.hthone
-      this.htlist(hth)
     },
   },
 }

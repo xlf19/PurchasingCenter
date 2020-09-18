@@ -96,16 +96,22 @@
             <a-col :xl="6" :lg="8" :md="8" :sm="24">
               <a-form-item label="筛上">
                 <a-select v-model="wzshang">
-                  <a-select-option value="物资合同">物资合同</a-select-option>
-                  <a-select-option value="原炉料合同">原炉料合同</a-select-option>
+                  <a-select-option
+                    :value="item.name"
+                    v-for="(item,index) in wzshanglist"
+                    :key="index"
+                  >{{item.name}}</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
             <a-col :xl="6" :lg="8" :md="8" :sm="24">
               <a-form-item label="筛下">
                 <a-select v-model="wzxia">
-                  <a-select-option value="物资合同">物资合同</a-select-option>
-                  <a-select-option value="原炉料合同">原炉料合同</a-select-option>
+                  <a-select-option
+                    :value="item.name"
+                    v-for="(item,index) in wzxialist"
+                    :key="index"
+                  >{{item.name}}</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
@@ -158,7 +164,7 @@ import { validateDuplicateValue, randomUUID, handleStatus } from '@/utils/util'
 import { mixinDevice } from '@/utils/mixin'
 import { JeecgListMixin } from '@/mixins/JeecgListMixin'
 import JDate from '@/components/jeecg/JDate.vue'
-import ContractList from '../fuliao/ContractInformationList'
+import ContractList from '../hejin/ContractInformationList'
 import moment from 'moment'
 
 export default {
@@ -218,8 +224,24 @@ export default {
       wztype: '',
       //筛上
       wzshang: '',
+      wzshanglist: [],
       //筛下
       wzxia: '',
+      wzxialist: [],
+      //筛上数组 合金
+      wzshanglisthj: [{ name: '粒度>50mm' }, { name: '粒度>60mm' }, { name: '粒度>70mm' }],
+      //筛上数组 辅
+      wzshanglistfl: [{ name: '粒度>5mm' }, { name: '粒度>50mm' }, { name: '粒度>60mm' }],
+      //筛上数组 燃料
+      wzshanglistrl: [{ name: '粒度>5mm' }, { name: '粒度>60mm' }],
+
+      //筛下数组 合金
+      wzxialisthj: [{ name: '粒度<=3mm' }, { name: '粒度<5mm' }, { name: '粒度<10mm' }],
+      //筛下数组 辅料
+      wzxialistfl: [{ name: '粒度<0.5mm' }, { name: '粒度<1mm' }, { name: '粒度<5mm' }, { name: '粒度<10mm' }],
+      //筛下数组 燃料
+      wzxialistrl: [{ name: '粒度<1mm' }, { name: '粒度<10mm' }],
+
       //取样日期
       rangeDate: '',
       startTime: '',
@@ -239,22 +261,22 @@ export default {
         {
           title: '供货单位',
           align: 'center',
-          dataIndex: '供货单位',
+          dataIndex: 'ghdw',
         },
-        {
-          title: '收货单位',
-          align: 'center',
-          dataIndex: '使用单位',
-        },
+        // {
+        //   title: '收货单位',
+        //   align: 'center',
+        //   dataIndex: 'shdw',
+        // },
         {
           title: '物资名称',
           align: 'center',
-          dataIndex: '物资名称',
+          dataIndex: 'wzname',
         },
         {
           title: '取样日期',
           align: 'center',
-          dataIndex: '取样日期',
+          dataIndex: 'riqi',
           customRender: function (text) {
             return !text ? '' : text.length > 10 ? text.substr(0, 10) : text
           },
@@ -265,29 +287,24 @@ export default {
           dataIndex: 'JJ',
         },
         {
-          title: 'LD1',
+          title: '筛上',
           align: 'center',
-          dataIndex: 'LD1',
+          dataIndex: 'wzshang',
         },
         {
-          title: 'LD2',
+          title: '筛下',
           align: 'center',
-          dataIndex: 'LD2',
+          dataIndex: 'wzxia',
         },
         {
-          title: 'CaO',
+          title: 'SIO2',
           align: 'center',
-          dataIndex: 'CaO',
+          dataIndex: 'SIO2',
         },
         {
-          title: 'MgO',
+          title: 'Ca',
           align: 'center',
-          dataIndex: 'MgO',
-        },
-        {
-          title: 'SiO2',
-          align: 'center',
-          dataIndex: 'SiO2',
+          dataIndex: 'Ca',
         },
         {
           title: 'P',
@@ -300,24 +317,39 @@ export default {
           dataIndex: 'S',
         },
         {
-          title: 'CaF2',
+          title: 'SiC',
           align: 'center',
-          dataIndex: 'CaF2',
+          dataIndex: 'SiC',
         },
         {
-          title: 'Al2O3',
+          title: 'Cu',
           align: 'center',
-          dataIndex: 'Al2O3',
+          dataIndex: 'Cu',
         },
         {
-          title: 'TFe',
+          title: 'C',
           align: 'center',
-          dataIndex: 'TFe',
+          dataIndex: 'C',
         },
         {
-          title: 'TMn',
+          title: 'Fe',
           align: 'center',
-          dataIndex: 'TMn',
+          dataIndex: 'Fe',
+        },
+        {
+          title: 'Al',
+          align: 'center',
+          dataIndex: 'Al',
+        },
+        {
+          title: 'Te',
+          align: 'center',
+          dataIndex: 'Te',
+        },
+        {
+          title: 'Ba',
+          align: 'center',
+          dataIndex: 'Ba',
         },
         {
           title: 'H2O',
@@ -325,9 +357,74 @@ export default {
           dataIndex: 'H2O',
         },
         {
+          title: 'TFE',
+          align: 'center',
+          dataIndex: 'TFE',
+        },
+        {
+          title: 'AL2O3',
+          align: 'center',
+          dataIndex: 'AL2O3',
+        },
+        {
+          title: 'MnO',
+          align: 'center',
+          dataIndex: 'MnO',
+        },
+        {
+          title: 'TiO2',
+          align: 'center',
+          dataIndex: 'TiO2',
+        },
+        {
+          title: 'CaF2',
+          align: 'center',
+          dataIndex: 'CaF2',
+        },
+        {
+          title: 'MgO',
+          align: 'center',
+          dataIndex: 'MgO',
+        },
+        {
+          title: 'CAO',
+          align: 'center',
+          dataIndex: 'CAO',
+        },
+        {
+          title: 'AD',
+          align: 'center',
+          dataIndex: 'Ad',
+        },
+        {
+          title: 'STD',
+          align: 'center',
+          dataIndex: 'Std',
+        },
+        {
+          title: 'VDAF',
+          align: 'center',
+          dataIndex: 'Vdaf',
+        },
+        {
+          title: 'Q',
+          align: 'center',
+          dataIndex: 'Q',
+        },
+        {
+          title: 'N',
+          align: 'center',
+          dataIndex: 'N',
+        },
+        {
+          title: '化验备注',
+          align: 'center',
+          dataIndex: 'hybz',
+        },
+        {
           title: '派工单号',
           align: 'center',
-          dataIndex: '派工单号',
+          dataIndex: 'pgdh',
         },
       ],
       validatorRules: {
@@ -339,19 +436,21 @@ export default {
         },
       },
       url: {
-        list: '/zhijianxingxi/zhijianxingxi/listzjfl',
         findpzh: '/contract/contractInformation/findpzh',
         findHt: '/hetong/hetong/findListHt',
         findHtwz: '/hetong/hetong/findListHtwz',
         findshdw: '/hetong/hetong/findshdw',
         findyllht: '/hetong/hetong/findyllhthj',
         findwzht: '/hetong/hetong/findwzhthj',
-        htadd: '/feiliao/feiliao/htadd',
+        htadd: '/hejin/hejin/htadd',
         finwzname: '/hetong/hetong/finwzname',
         finhtyllxxhj: '/hetong/hetong/findyllhthj',
         finhtwzxxhj: '/hetong/hetong/findwzhthj',
         findhtwznamehj: '/hetong/hetong/findhtncwzname',
         findhtyllnamehj: '/hetong/hetong/findhtncyllname',
+        listzjhjhj: '/zhijianxingxi/zhijianxingxi/listzjhjhj',
+        listzjhjfl: '/zhijianxingxi/zhijianxingxi/listzjhjfl',
+        listzjhjrl: '/zhijianxingxi/zhijianxingxi/listzjhjrl',
       },
       dictOptions: {},
     }
@@ -500,8 +599,18 @@ export default {
 
     //物资大类
     finwztype(wztype) {
-      alert(wztype)
+      if (wztype === '合金') {
+        this.wzshanglist = this.wzshanglisthj
+        this.wzxialist = this.wzxialisthj
+      } else if (wztype === '辅料') {
+        this.wzshanglist = this.wzshanglistfl
+        this.wzxialist = this.wzxialistfl
+      } else if (wztype === '燃料') {
+        this.wzshanglist = this.wzshanglistrl
+        this.wzxialist = this.wzxialistrl
+      }
     },
+
     //合同信息
     finlist(hth) {
       this.$refs.ContractList.htlist(hth)
@@ -509,6 +618,11 @@ export default {
 
     //导入质检数据
     htAdd() {
+      let length = this.selectedRowKeys.length
+      if (length === 0) {
+        this.$message.warning('请选择数据。')
+        return
+      }
       let htxx = JSON.stringify(this.selectionRows)
       let hetongly = this.hetongly
       //凭证号
@@ -517,54 +631,62 @@ export default {
         if (!err) {
           let shdw = values.receivingUnit
           let htbhs = values.contractNo
-          postAction(this.url.htadd, { htxx: htxx, htbhs: htbhs, pzh: pzh, shdw: shdw, hetongly: hetongly }).then(
-            (res) => {
-              if (res.success) {
-                this.$message.warning(res.message)
-                this.$refs.ContractList.htlist(htbhs)
-              }
-              if (res.code === 510) {
-                this.$message.warning(res.message)
-              }
-              this.loading = false
+          let wzcode = this.wzcode
+          postAction(this.url.htadd, {
+            htxx: htxx,
+            htbhs: htbhs,
+            pzh: pzh,
+            shdw: shdw,
+            hetongly: hetongly,
+            wzcode: wzcode,
+          }).then((res) => {
+            if (res.success) {
+              this.$message.success(res.message)
+              this.$refs.ContractList.htlist(htbhs)
             }
-          )
+            if (res.code === 510) {
+              this.$message.warning(res.message)
+            }
+            this.loading = false
+          })
         }
       })
     },
 
     //查询质检数据
     searchList() {
-      let materialName = this.materialName
-      if (
-        materialName != '石灰石' &&
-        materialName != '熟白云石粉' &&
-        materialName != '硅石' &&
-        materialName != '萤石' &&
-        materialName != '熟白云石块'
-      ) {
-        this.$message.warning('物资名称只能是石灰石、熟白云石粉/块、硅石、萤石查询,请重新选择')
-        return
-      }
       this.form.validateFields((err, values) => {
         if (!err) {
-          this.startTime = moment(values.rangeDate[0]).format('YYYY-MM-DD')
-          this.endTime = moment(values.rangeDate[1]).format('YYYY-MM-DD')
-          let shdw = this.supplier
-
+          let startTime = moment(values.rangeDate[0]).format('YYYY-MM-DD')
+          let endTime = moment(values.rangeDate[1]).format('YYYY-MM-DD')
+          let materialName = this.materialName
+          let ghdw = this.supplier
+          let wzshang = this.wzshang
+          let wzxia = this.wzxia
           let datas = {
-            startTime: this.startTime,
-            endTime: this.endTime,
-            supplier: shdw,
+            startTime: startTime,
+            endTime: endTime,
+            supplier: ghdw,
             materialName: materialName,
+            wzshang: wzshang,
+            wzxia: wzxia,
           }
-          this.loadData(this.arg, datas)
+          let wztype = this.wztype
+          let urllist = ''
+          if (wztype === '合金') {
+            urllist = this.url.listzjhjhj
+          } else if (wztype === '辅料') {
+            urllist = this.url.listzjhjfl
+          } else if (wztype === '燃料') {
+            urllist = this.url.listzjhjrl
+          }
+          this.loadData(this.arg, datas, urllist)
         }
       })
     },
 
-    loadData(arg, datas) {
-      if (!this.url.list) {
+    loadData(arg, datas, urllist) {
+      if (!urllist) {
         this.$message.error('请设置url.list属性!')
         return
       }
@@ -572,10 +694,11 @@ export default {
       if (arg === 1) {
         this.ipagination.current = 1
       }
+
       var params = this.getQueryParams() //查询条件
       params = Object.assign(params, datas)
       this.loading = true
-      getAction(this.url.list, params).then((res) => {
+      getAction(urllist, params).then((res) => {
         if (res.success) {
           this.dataSource = res.result.records
           this.ipagination.total = res.result.total
@@ -603,17 +726,30 @@ export default {
         }
         this.ipagination = pagination
         if (!err) {
-          this.startTime = moment(values.rangeDate[0]).format('YYYY-MM-DD')
-          this.endTime = moment(values.rangeDate[1]).format('YYYY-MM-DD')
+          let startTime = moment(values.rangeDate[0]).format('YYYY-MM-DD')
+          let endTime = moment(values.rangeDate[1]).format('YYYY-MM-DD')
           let shdw = this.supplier
           let materialName = this.materialName
+          let wzshang = this.wzshang
+          let wzxia = this.wzxia
           let datas = {
-            startTime: this.startTime,
-            endTime: this.endTime,
+            startTime: startTime,
+            endTime: endTime,
             supplier: shdw,
             materialName: materialName,
+            wzshang: wzshang,
+            wzxia: wzxia,
           }
-          this.loadData(this.arg, datas)
+          let wztype = this.wztype
+          let urllist = ''
+          if (wztype === '合金') {
+            urllist = this.url.listzjhjhj
+          } else if (wztype === '辅料') {
+            urllist = this.url.listzjhjfl
+          } else if (wztype === '燃料') {
+            urllist = this.url.listzjhjrl
+          }
+          this.loadData(this.arg, datas, urllist)
         }
       })
     },

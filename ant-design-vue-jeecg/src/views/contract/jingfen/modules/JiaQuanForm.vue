@@ -360,7 +360,8 @@ export default {
     //添加质检数据
     addjflist() {
       if ((this.fangshi = '可选')) {
-        if (this.selectedRowKeys == null || this.selectedRowKeys == '') {
+        let length = this.selectedRowKeys.length
+        if (length === 0) {
           this.$message.warning('请选择数据。')
           return
         }

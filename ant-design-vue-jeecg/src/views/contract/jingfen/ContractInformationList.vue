@@ -13,6 +13,7 @@
         :loading="loading"
         class="j-table-force-nowrap"
         @change="handleTableChange"
+        :expandedRowKeys="expandedRowKeys"
         @expand="handleExpand"
       >
         <span slot="action" slot-scope="text, record">
@@ -21,13 +22,13 @@
           </a-popconfirm>
         </span>
         <a-card style="margin: 0" slot="expandedRowRender" :bordered="false">
-          <detail-list title="生铁合同元素数据">
-            <detail-list-item
-              :term="item.element"
-              v-for="(item,index) in stelements"
+          <a-descriptions title="精粉富粉球团合同元素数据" :column="8">
+            <a-descriptions-item
+              :label="item.element"
               :key="index"
-            >{{item.elelmentDate}}</detail-list-item>
-          </detail-list>
+              v-for="(item,index) in stelements"
+            >{{item.elelmentDate}}</a-descriptions-item>
+          </a-descriptions>
         </a-card>
       </a-table>
     </div>
@@ -75,6 +76,7 @@ export default {
         column: 'createTime',
         order: 'desc',
       },
+      expandedRowKeys: [],
       //合同号
       hthone: '',
       // 表头
@@ -181,8 +183,8 @@ export default {
       stelements: [],
       url: {
         list: '/jingfen/jingfen/list',
-        lists: '/shengtie/shengtie/elementslist',
-        delete: '/shengtie/shengtie/delete',
+        lists: '/elements/contractElements/elementslist',
+        delete: '/elements/contractElements/delete',
         jiesuandan: '/jingfen/jingfen/listzjjfxx',
       },
       dictOptions: {},
@@ -198,15 +200,19 @@ export default {
     initDictConfig() {},
     //展开行信息
     handleExpand(expanded, record) {
-      getAction(this.url.lists, { cid: record.id }).then((res) => {
-        if (res.success) {
-          this.stelements = res.result
-        }
-        if (res.code === 510) {
-          this.$message.warning(res.message)
-        }
-        this.loading = false
-      })
+      this.expandedRowKeys = []
+      if (expanded === true) {
+        this.expandedRowKeys.push(record.id)
+        getAction(this.url.lists, { cid: record.id }).then((res) => {
+          if (res.success) {
+            this.stelements = res.result
+          }
+          if (res.code === 510) {
+            this.$message.warning(res.message)
+          }
+          this.loading = false
+        })
+      }
     },
     //查询合同信息
     htlist(hth) {
@@ -250,7 +256,7 @@ export default {
     },
     //手工结算单
     addsgjsd(htbhs, voucherNo, receiving) {
-      this.hthone=htbhs
+      this.hthone = htbhs
       let jsdd = {}
       getAction(this.url.jiesuandan, { htbh: htbhs, voucherno: voucherNo, receiving: receiving }).then((res) => {
         if (res.success) {
@@ -264,7 +270,7 @@ export default {
       })
     },
     modalFormOk() {
-      let hth=this.hthone
+      let hth = this.hthone
       this.htlist(hth)
     },
   },

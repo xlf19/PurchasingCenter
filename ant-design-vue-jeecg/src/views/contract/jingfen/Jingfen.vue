@@ -409,10 +409,10 @@ export default {
         htbh: hth,
       }
       this.loadData(this.arg, datas)
-      this.$emit('gethtbh',hth)
+      this.$emit('gethtbh', hth)
     },
-  
-  //获取供货单位、物资名称
+
+    //获取供货单位、物资名称
     finghuandwzmc(hth) {
       getAction(this.url.findOne, { hth: hth }).then((res) => {
         if (res.success) {
@@ -426,7 +426,6 @@ export default {
         }
         this.loading = false
       })
-      
     },
 
     //合同信息
@@ -436,29 +435,30 @@ export default {
 
     //导入加权均值
     htAdd() {
-      if (this.selectedRowKeys == null || this.selectedRowKeys == '') {
+      let length = this.selectedRowKeys.length
+      if (length === 0) {
         this.$message.warning('请选择数据。')
-      } else {
-        let htxx = JSON.stringify(this.selectionRows)
-        //凭证号
-        let pzh = this.voucherNo
-        this.form.validateFields((err, values) => {
-          if (!err) {
-            let shdw = values.receivingUnit
-            let htbhs = values.contractNo
-            postAction(this.url.htadd, { htxx: htxx, htbhs: htbhs, pzh: pzh, shdw: shdw }).then((res) => {
-              if (res.success) {
-                this.$message.warning(res.message)
-                this.$refs.ContractList.htlist(htbhs)
-              }
-              if (res.code === 510) {
-                this.$message.warning(res.message)
-              }
-              this.loading = false
-            })
-          }
-        })
+        return
       }
+      let htxx = JSON.stringify(this.selectionRows)
+      //凭证号
+      let pzh = this.voucherNo
+      this.form.validateFields((err, values) => {
+        if (!err) {
+          let shdw = values.receivingUnit
+          let htbhs = values.contractNo
+          postAction(this.url.htadd, { htxx: htxx, htbhs: htbhs, pzh: pzh, shdw: shdw }).then((res) => {
+            if (res.success) {
+              this.$message.success(res.message)
+              this.$refs.ContractList.htlist(htbhs)
+            }
+            if (res.code === 510) {
+              this.$message.warning(res.message)
+            }
+            this.loading = false
+          })
+        }
+      })
     },
 
     //加权平均

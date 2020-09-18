@@ -314,6 +314,11 @@ export default {
 
     //导入质检数据
     htAdd() {
+      let length = this.selectedRowKeys.length
+      if (length === 0) {
+        this.$message.warning('请选择数据。')
+        return
+      }
       let htxx = JSON.stringify(this.selectionRows)
       //凭证号
       let pzh = this.voucherNo
@@ -398,9 +403,6 @@ export default {
         }
       })
     },
-
-
-   
   },
 }
 </script>

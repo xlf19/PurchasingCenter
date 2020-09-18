@@ -496,21 +496,26 @@ export default {
         this.loading = false
       })
     },
-   
-   //合同信息
+
+    //合同信息
     finlist(hth) {
       this.$refs.ContractList.htlist(hth)
     },
 
     //导入质检数据
     htAdd() {
+      let length = this.selectedRowKeys.length
+      if (length === 0) {
+        this.$message.warning('请选择数据。')
+        return
+      }
       let htxx = JSON.stringify(this.selectionRows)
       let hetongly = this.hetongly
       let materialName = this.materialName
-      let wzcode=this.wzcode
-      if(wzcode=="" || wzcode==null){
-         this.$message.warning('当前物资名称不规范或者该物资尚未维护到系统中。')
-         return 
+      let wzcode = this.wzcode
+      if (wzcode == '' || wzcode == null) {
+        this.$message.warning('当前物资名称不规范或者该物资尚未维护到系统中。')
+        return
       }
       //凭证号
       let pzh = this.voucherNo
@@ -525,7 +530,7 @@ export default {
             shdw: shdw,
             hetongly: hetongly,
             materialName: materialName,
-            wzcode:wzcode
+            wzcode: wzcode,
           }).then((res) => {
             if (res.success) {
               this.$message.success(res.message)
@@ -589,8 +594,8 @@ export default {
         this.loading = false
       })
     },
- 
- //获取选中行数据
+
+    //获取选中行数据
     onSelectChange(selectedRowKeys, selectionRows) {
       this.selectedRowKeys = selectedRowKeys
       this.selectionRows = selectionRows

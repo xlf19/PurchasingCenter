@@ -255,7 +255,7 @@ export default {
           key: 'basedata',
           width: '140px',
           type: FormTypes.inputNumber,
-          disabled: true,
+          // disabled: true,
         },
         {
           title: '增减款额',
@@ -561,16 +561,16 @@ export default {
 
     //绑定左符号值和基准数据值
     handleValueChange(event) {
-      if (event.row.leftnum != null) {
-        this.$refs.editableTable.setValues([
-          {
-            rowKey: event.row.id,
-            values: {
-              basedata: event.row.leftnum,
-            },
-          },
-        ])
-      }
+      // if (event.row.leftnum != null) {
+      //   this.$refs.editableTable.setValues([
+      //     {
+      //       rowKey: event.row.id,
+      //       values: {
+      //         basedata: event.row.leftnum,
+      //       },
+      //     },
+      //   ])
+      // }
     },
 
     //遍历处理数据

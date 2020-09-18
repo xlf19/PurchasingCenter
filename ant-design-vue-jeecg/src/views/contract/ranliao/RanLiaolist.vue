@@ -370,8 +370,14 @@ export default {
     finlist(hth) {
       this.$refs.ContractList.htlist(hth)
     },
+
     //导入质检数据
     htAdd() {
+      let length = this.selectedRowKeys.length
+      if (length === 0) {
+        this.$message.warning('请选择数据。')
+        return
+      }
       let htxx = JSON.stringify(this.selectionRows)
       //凭证号
       let pzh = this.voucherNo
@@ -381,7 +387,7 @@ export default {
           let htbhs = values.contractNo
           postAction(this.url.htadd, { htxx: htxx, htbhs: htbhs, pzh: pzh, shdw: shdw }).then((res) => {
             if (res.success) {
-              this.$message.warning(res.message)
+              this.$message.success(res.message)
               this.$refs.ContractList.htlist(htbhs)
             }
             if (res.code === 510) {

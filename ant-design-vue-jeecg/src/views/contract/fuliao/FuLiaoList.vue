@@ -414,6 +414,12 @@ export default {
 
     //导入质检数据
     htAdd() {
+      let length = this.selectedRowKeys.length
+      if (length === 0) {
+        this.$message.warning('请选择数据。')
+        return
+      }
+
       let htxx = JSON.stringify(this.selectionRows)
       let hetongly = this.hetongly
       //凭证号
@@ -425,7 +431,7 @@ export default {
           postAction(this.url.htadd, { htxx: htxx, htbhs: htbhs, pzh: pzh, shdw: shdw, hetongly: hetongly }).then(
             (res) => {
               if (res.success) {
-                this.$message.warning(res.message)
+                this.$message.success(res.message)
                 this.$refs.ContractList.htlist(htbhs)
               }
               if (res.code === 510) {
@@ -441,7 +447,13 @@ export default {
     //查询质检数据
     searchList() {
       let materialName = this.materialName
-      if(materialName!="石灰石" && materialName!="熟白云石粉" && materialName!="硅石" && materialName!="萤石" && materialName!="熟白云石块"){
+      if (
+        materialName != '石灰石' &&
+        materialName != '熟白云石粉' &&
+        materialName != '硅石' &&
+        materialName != '萤石' &&
+        materialName != '熟白云石块'
+      ) {
         this.$message.warning('物资名称只能是石灰石、熟白云石粉/块、硅石、萤石查询,请重新选择')
         return
       }
