@@ -89,15 +89,16 @@ public class JingFengController extends JeecgController<T, IJingFengService> {
         String shdw = ht.getString("shdw");//收货单位
         //获取合同信息
         Map<Object, Object> htonexx = htservice.finhtxxjf(htbh);
-        //HS 含税
-        Boolean hs = (Boolean) htonexx.get("HanShuiBiaoJi");
-        //物资单价
-        BigDecimal dj = new BigDecimal(htonexx.get("WZDanJia").toString());
-        //SL  税率
-        BigDecimal sl = new BigDecimal(htonexx.get("ShuiLv").toString());
-        //物资编码
-        String wzcode = htonexx.get("WZCode").toString();
-
+        Boolean hs=false;//HS
+        BigDecimal dj =null; //物资单价
+        BigDecimal sl =null;//税率
+        String wzcode=""; //物资编码
+        if(htonexx!=null){
+            hs = (Boolean) htonexx.get("HanShuiBiaoJi");
+            dj=new BigDecimal(htonexx.get("WZDanJia").toString());
+            sl = new BigDecimal(htonexx.get("ShuiLv").toString());
+            wzcode = htonexx.get("WZCode").toString();
+        }
         JSONArray htarray = ht.getJSONArray("htxx");//合同信息
         for (int i = 0; i < htarray.size(); i++) {
             JSONObject htone = htarray.getJSONObject(i);
@@ -118,8 +119,14 @@ public class JingFengController extends JeecgController<T, IJingFengService> {
             BigDecimal k2o = htone.getBigDecimal("k2o");
             BigDecimal sio2 = htone.getBigDecimal("sio2");
             BigDecimal zn = htone.getBigDecimal("zn");
-            BigDecimal compressive = htone.getBigDecimal("compressive");
-            BigDecimal granularity = htone.getBigDecimal("granularity");
+            BigDecimal compressive = null;
+            BigDecimal granularity = null;
+            if(htone.containsKey("granularity")){
+                granularity = htone.getBigDecimal("granularity");
+            }
+            if(htone.containsKey("compressive")){
+                compressive = htone.getBigDecimal("compressive");
+            }
             BigDecimal jyl = htone.getBigDecimal("检验量");
             String data = htone.getString("riqi");
             String dwname = htone.getString("supplier");//供货单位

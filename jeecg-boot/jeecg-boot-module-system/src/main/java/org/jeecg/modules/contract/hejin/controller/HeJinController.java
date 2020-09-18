@@ -95,32 +95,6 @@ public class HeJinController extends JeecgController<T, IHeJinService> {
             BigDecimal jyl = htone.getBigDecimal("JJ");//检验量
             String hybz = htone.getString("hybz");//化验备注
             String pgdh = htone.getString("pgdh");//派工单号
-            BigDecimal LD1 = htone.getBigDecimal("wzshang");
-            BigDecimal LD2 = htone.getBigDecimal("wzxia");
-            BigDecimal SIO2 = htone.getBigDecimal("SIO2");
-            BigDecimal Ca = htone.getBigDecimal("Ca");
-            BigDecimal P = htone.getBigDecimal("P");
-            BigDecimal S = htone.getBigDecimal("S");
-            BigDecimal SiC = htone.getBigDecimal("SiC");
-            BigDecimal Cu = htone.getBigDecimal("Cu");
-            BigDecimal C = htone.getBigDecimal("C");
-            BigDecimal Fe = htone.getBigDecimal("Fe");
-            BigDecimal Al = htone.getBigDecimal("Al");
-            BigDecimal Te = htone.getBigDecimal("Te");
-            BigDecimal Ba = htone.getBigDecimal("Ba");
-            BigDecimal H2O = htone.getBigDecimal("H2O");
-            BigDecimal TFE = htone.getBigDecimal("TFE");
-            BigDecimal AL2O3 = htone.getBigDecimal("AL2O3");
-            BigDecimal MnO = htone.getBigDecimal("MnO");
-            BigDecimal TiO2 = htone.getBigDecimal("TiO2");
-            BigDecimal CaF2 = htone.getBigDecimal("CaF2");
-            BigDecimal MgO = htone.getBigDecimal("MgO");
-            BigDecimal CAO = htone.getBigDecimal("CAO");
-            BigDecimal Ad = htone.getBigDecimal("Ad");
-            BigDecimal Std = htone.getBigDecimal("Std");
-            BigDecimal Vdaf = htone.getBigDecimal("Vdaf");
-            BigDecimal Q = htone.getBigDecimal("Q");
-            BigDecimal N = htone.getBigDecimal("N");
             //添加合同信息表
             ContractInformation cinfo = new ContractInformation();
             String uuid = UUID.randomUUID().toString();
@@ -142,32 +116,112 @@ public class HeJinController extends JeecgController<T, IHeJinService> {
             cinfo.setRemarks(hybz);
             contractInformationService.save(cinfo);
             //添加合同元素表
-            saveelement(uuid, htbh, pzh, "LD1", LD1);
-            saveelement(uuid, htbh, pzh, "LD2",LD2);
-            saveelement(uuid, htbh, pzh, "SIO2", SIO2);
-            saveelement(uuid, htbh, pzh, "Ca", Ca);
-            saveelement(uuid, htbh, pzh, "P", P);
-            saveelement(uuid, htbh, pzh, "S", S);
-            saveelement(uuid, htbh, pzh, "SiC", SiC);
-            saveelement(uuid, htbh, pzh, "Cu", Cu);
-            saveelement(uuid, htbh, pzh, "C", C);
-            saveelement(uuid, htbh, pzh, "Fe", Fe);
-            saveelement(uuid, htbh, pzh, "Al", Al);
-            saveelement(uuid, htbh, pzh, "Te", Te);
-            saveelement(uuid, htbh, pzh, "Ba", Ba);
-            saveelement(uuid, htbh, pzh, "H2O", H2O);
-            saveelement(uuid, htbh, pzh, "TFE", TFE);
-            saveelement(uuid, htbh, pzh, "AL2O3", AL2O3);
-            saveelement(uuid, htbh, pzh, "MnO", MnO);
-            saveelement(uuid, htbh, pzh, "TiO2", TiO2);
-            saveelement(uuid, htbh, pzh, "CaF2", CaF2);
-            saveelement(uuid, htbh, pzh, "MgO", MgO);
-            saveelement(uuid, htbh, pzh, "CAO", CAO);
-            saveelement(uuid, htbh, pzh, "Ad", Ad);
-            saveelement(uuid, htbh, pzh, "Std", Std);
-            saveelement(uuid, htbh, pzh, "Vdaf", Vdaf);
-            saveelement(uuid, htbh, pzh, "Q", Q);
-            saveelement(uuid, htbh, pzh, "N", N);
+            if(htone.containsKey("wzshang")){
+                BigDecimal  LD1 = htone.getBigDecimal("wzshang");
+                saveelement(uuid, htbh, pzh, "LD1", LD1);
+            }
+            if(htone.containsKey("wzxia")){
+                BigDecimal  LD2 = htone.getBigDecimal("wzxia");
+                saveelement(uuid, htbh, pzh, "LD2",LD2);
+            }
+            if(htone.containsKey("SIO2")){
+                BigDecimal SIO2 = htone.getBigDecimal("SIO2");
+                saveelement(uuid, htbh, pzh, "SIO2", SIO2);
+            }
+            if(htone.containsKey("Ca")){
+                BigDecimal Ca = htone.getBigDecimal("Ca");
+                saveelement(uuid, htbh, pzh, "Ca", Ca);
+            }
+            if(htone.containsKey("P")){
+                BigDecimal P = htone.getBigDecimal("P");
+                saveelement(uuid, htbh, pzh, "P", P);
+            }
+            if(htone.containsKey("S")){
+                BigDecimal S = htone.getBigDecimal("S");
+                saveelement(uuid, htbh, pzh, "S", S);
+            }
+            if(htone.containsKey("SiC")){
+                BigDecimal SiC = htone.getBigDecimal("SiC");
+                saveelement(uuid, htbh, pzh, "SiC", SiC);
+            }
+
+            if(htone.containsKey("Cu")){
+                BigDecimal Cu = htone.getBigDecimal("Cu");
+                saveelement(uuid, htbh, pzh, "Cu", Cu);
+            }
+            if(htone.containsKey("C")){
+                BigDecimal  C = htone.getBigDecimal("C");
+                saveelement(uuid, htbh, pzh, "C", C);
+            }
+
+            if(htone.containsKey("Fe")){
+                BigDecimal Fe = htone.getBigDecimal("Fe");
+                saveelement(uuid, htbh, pzh, "Fe", Fe);
+            }
+            if(htone.containsKey("Al")){
+                BigDecimal Al = htone.getBigDecimal("Al");
+                saveelement(uuid, htbh, pzh, "Al", Al);
+            }
+            if(htone.containsKey("Te")){
+                BigDecimal Te = htone.getBigDecimal("Te");
+                saveelement(uuid, htbh, pzh, "Te", Te);
+            }
+            if(htone.containsKey("Ba")){
+                BigDecimal Ba = htone.getBigDecimal("Ba");
+                saveelement(uuid, htbh, pzh, "Ba", Ba);
+            }
+            if(htone.containsKey("H2O")){
+                BigDecimal H2O = htone.getBigDecimal("H2O");
+                saveelement(uuid, htbh, pzh, "H2O", H2O);
+            }
+            if(htone.containsKey("TFE")){
+                BigDecimal TFE = htone.getBigDecimal("TFE");
+                saveelement(uuid, htbh, pzh, "TFE", TFE);
+            }
+            if(htone.containsKey("AL2O3")){
+                BigDecimal AL2O3 = htone.getBigDecimal("AL2O3");
+                saveelement(uuid, htbh, pzh, "AL2O3", AL2O3);
+            }
+            if(htone.containsKey("MnO")){
+                BigDecimal MnO = htone.getBigDecimal("MnO");
+                saveelement(uuid, htbh, pzh, "MnO", MnO);
+            }
+            if(htone.containsKey("TiO2")){
+                BigDecimal TiO2 = htone.getBigDecimal("TiO2");
+                saveelement(uuid, htbh, pzh, "TiO2", TiO2);
+            }
+            if(htone.containsKey("CaF2")){
+                BigDecimal CaF2 = htone.getBigDecimal("CaF2");
+                saveelement(uuid, htbh, pzh, "CaF2", CaF2);
+            }
+            if(htone.containsKey("MgO")){
+                BigDecimal MgO = htone.getBigDecimal("MgO");
+                saveelement(uuid, htbh, pzh, "MgO", MgO);
+            }
+            if(htone.containsKey("CAO")){
+                BigDecimal CAO = htone.getBigDecimal("CAO");
+                saveelement(uuid, htbh, pzh, "CAO", CAO);
+            }
+            if(htone.containsKey("Ad")){
+                BigDecimal Ad = htone.getBigDecimal("Ad");
+                saveelement(uuid, htbh, pzh, "Ad", Ad);
+            }
+            if(htone.containsKey("Std")){
+                BigDecimal Std = htone.getBigDecimal("Std");
+                saveelement(uuid, htbh, pzh, "Std", Std);
+            }
+            if(htone.containsKey("Vdaf")){
+                BigDecimal Vdaf = htone.getBigDecimal("Vdaf");
+                saveelement(uuid, htbh, pzh, "Vdaf", Vdaf);
+            }
+            if(htone.containsKey("Q")){
+                BigDecimal Q = htone.getBigDecimal("Q");
+                saveelement(uuid, htbh, pzh, "Q", Q);
+            }
+            if(htone.containsKey("N")){
+                BigDecimal N = htone.getBigDecimal("N");
+                saveelement(uuid, htbh, pzh, "N", N);
+            }
         }
         return Result.ok("添加成功！");
     }

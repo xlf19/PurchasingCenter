@@ -70,7 +70,7 @@
 
     <!--   辅料  物资合同 获取供货单位、物资名称-->
     <select id="findwzht" resultType="map">
-          select top(1) 合同编号 as HeTongBianHao,业务员,税率,物资编码,数量,单价,总金额,物资名称 as WZName,规格型号,物资编码 as WZCode,
+          select top(1) 合同编号 as HeTongBianHao,业务员,税率,数量,单价,总金额,物资名称 as WZName,规格型号,物资编码 as WZCode,
           计量单位,供应商名称  as DanWeiName
           from sbgl.dbo.A_查询_合同物资
           where 合同编号=#{hth} and 物资名称 in ('石灰石','熟白云石粉','硅石','萤石','熟白云石块')
