@@ -84,7 +84,7 @@
           </j-editable-table-by-cj>
         </a-tab-pane>
         <a-tab-pane key="1" tab="数量公式维护">
-          <num-formula :contrac='hetongId1'></num-formula>
+          <num-formula :contrac="hetongId1"></num-formula>
         </a-tab-pane>
       </a-tabs>
     </a-card>
@@ -104,9 +104,10 @@ import JEditableTableByCj from './table/JEditableTableByCj'
 import JSearchSelectTagSec from './table/JSearchSelectTagSec'
 import SysHetonggongshiModal from './modules/SysHetonggongshiModal'
 import NumFormula from './numFormula'
+import { createLogger } from 'vuex'
 
 export default {
-  components: { JEditableTableByCj, JSearchSelectTagSec, SysHetonggongshiModal,NumFormula },
+  components: { JEditableTableByCj, JSearchSelectTagSec, SysHetonggongshiModal, NumFormula },
   mixins: [JeecgListMixin, mixinDevice],
   props: {
     contrac: {
@@ -120,6 +121,7 @@ export default {
       this.params.hetongId = newVal
       this.hetongId1 = newVal
       this.loadData(1)
+      //this.setSyselements(newVal)
     },
   },
   data() {
@@ -131,15 +133,17 @@ export default {
       hetongId1: this.contrac,
       hetongId2: '',
       contractOptions: [{ id: 'WX20200900031' }, { id: 'WX20200900039' }, { id: 'WX20200900040' }],
+
       //元素表
       elementsOptions: [
-        { title: 'S', value: 'S' },
-        { title: 'Mn', value: 'Mn' },
-        { title: 'H2O', value: 'H2O' },
-        { title: 'CaO', value: 'CaO' },
-        { title: 'SiO2', value: 'SiO2' },
-        { title: 'MgO', value: 'MgO' },
+        // { title: 'S', value: 'S' },
+        // { title: 'Mn', value: 'Mn' },
+        // { title: 'H2O', value: 'H2O' },
+        // { title: 'CaO', value: 'CaO' },
+        // { title: 'SiO2', value: 'SiO2' },
+        // { title: 'MgO', value: 'MgO' },
       ],
+
       SysbolOptions: [
         { title: '<', value: '0' },
         { title: '≤', value: '1' },
@@ -292,6 +296,7 @@ export default {
         edit: '/Hetonggongshi/sysHetonggongshi/edit',
         queryById: '/Hetonggongshi/sysHetonggongshi/queryById',
         queryTemplateByName: '/SysTemplate/sysTemplate/list',
+        elemetslist: '/elements/contractElements/findListhth',
       },
       selectedRowIds: [],
       labelCol: {
@@ -329,9 +334,29 @@ export default {
   },
   created() {
     // this.loadData()
-    this.setSysbolOptions()
+    this.setSyselements(this.contrac)
+    // this.setSysbolOptions()
   },
   methods: {
+    //合同元素加载数据
+    setSyselements(hth) {
+      getAction(this.url.elemetslist, { hth: hth }).then((res) => {
+        if (res.success) {
+          let xdata = []
+          res.result.forEach((item) => {
+            let x = {}
+            x.title = item
+            x.value = item
+            xdata.push(x)
+          })
+          this.elementsOptions = xdata
+          this.setSysbolOptions()
+        }
+        if (res.code === 510) {
+          this.$message.warning(res.message)
+        }
+      })
+    },
     //加载数据
     loadData(arg) {
       if (!this.url.list) {
@@ -422,7 +447,7 @@ export default {
         // console.log(values)
         if (error === 0) {
           values.forEach((item, idx) => {
-              //处理数据信息展示
+            //处理数据信息展示
             if (item.leftsysbol == '<') {
               values[idx].leftsysbol = '0'
             } else if (item.leftsysbol == '≤') {
@@ -544,6 +569,7 @@ export default {
 
     //元素选择赋值
     setSysbolOptions() {
+      // debugger;
       this.columns.forEach((item, idx) => {
         if (item.key == 'elements') {
           this.columns[idx].options = this.elementsOptions
