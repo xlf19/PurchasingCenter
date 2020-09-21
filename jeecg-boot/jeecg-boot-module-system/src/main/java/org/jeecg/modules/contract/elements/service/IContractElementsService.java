@@ -15,7 +15,11 @@ import java.util.List;
 public interface IContractElementsService extends IService<ContractElements> {
     //获取生铁合同元素信息
     public List<ContractElements> findList(String cid);
+
     //删除生铁合同元素信息
     public void updateElelist(String cid);
+
+    //根据合同号获取合同元素信息
+    public List<String> findListhth( String htbh);
 
 }

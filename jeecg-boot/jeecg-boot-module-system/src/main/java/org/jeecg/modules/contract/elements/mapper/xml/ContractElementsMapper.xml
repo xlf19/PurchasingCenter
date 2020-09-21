@@ -12,4 +12,9 @@
         set is_delete=1
         where ci_id=#{cid}
     </select>
+
+    <select id="findListhth" resultType="java.lang.String">
+        SELECT distinct element FROM contract_elements
+        where contract_no=#{htbh} and is_delete =0
+    </select>
 </mapper>

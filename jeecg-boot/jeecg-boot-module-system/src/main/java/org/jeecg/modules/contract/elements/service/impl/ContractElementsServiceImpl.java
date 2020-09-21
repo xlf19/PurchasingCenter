@@ -29,4 +29,9 @@ public class ContractElementsServiceImpl extends ServiceImpl<ContractElementsMap
     public void updateElelist(String cid){
         ele.updateElelist(cid);
     }
+
+    @Override
+    public List<String> findListhth(String htbh) {
+        return ele.findListhth(htbh);
+    }
 }

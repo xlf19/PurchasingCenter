@@ -183,5 +183,12 @@ public class ContractElementsController extends JeecgController<ContractElements
 		 return Result.ok("删除成功!");
 	 }
 
-
+	 //根据合同号查询元素数据
+	 @AutoLog(value = "元素数据表")
+	 @ApiOperation(value = "元素数据表", notes = "元素数据表")
+	 @GetMapping(value = "/findListhth")
+	 public Result<?> findListhth(@RequestParam(name = "hth", defaultValue = "") String hth, HttpServletRequest req) {
+		 List<String> list = contractElementsService.findListhth(hth);
+		 return Result.ok(list);
+	 }
 }

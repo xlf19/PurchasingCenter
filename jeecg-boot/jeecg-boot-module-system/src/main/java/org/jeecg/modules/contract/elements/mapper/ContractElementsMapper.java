@@ -20,4 +20,8 @@ public interface ContractElementsMapper extends BaseMapper<ContractElements> {
 
     //删除合同元素信息
     public void updateElelist(@Param("cid")String cid);
+
+
+    //根据合同号获取合同元素信息
+    public List<String> findListhth(@Param("htbh") String htbh);
 }
