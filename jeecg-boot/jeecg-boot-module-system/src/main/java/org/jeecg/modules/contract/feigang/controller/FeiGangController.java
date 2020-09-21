@@ -136,18 +136,16 @@ public class FeiGangController extends JeecgController<T, IFeiGangService> {
      * @param contractInformation
      * @return
      */
-    //LoginUser(username=adminphone=18611111111, status=1, delFlag=0, activitiSync=1, createTime=Mon Jun 21 17:54:10 CST 2038, userIdentity=2, departIds=c6d7cb4deeac411cb3384b1b31278596, post=总经理, telephone=null, relTenantIds=)
     @AutoLog(value = "合同信息表-编辑")
     @ApiOperation(value = "合同信息表-编辑", notes = "合同信息表-编辑")
     @PutMapping(value = "/edit")
     public Result<?> edit(@RequestBody ContractInformation contractInformation) {
-        LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-
+        LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();//获取当前登录人
         contractInformation.setClearingHouse(sysUser.getUsername());//结算人
         BigDecimal dj=contractInformation.getContractPrice();//单价
         BigDecimal jz=contractInformation.getSettlementQuantity();//净重
         BigDecimal sl=contractInformation.getTaxRate();//税率
-        BigDecimal cs = new BigDecimal("100");//
+        BigDecimal cs = new BigDecimal("100");//常数
         BigDecimal cs1 = new BigDecimal("1");//常数
         BigDecimal je=dj.multiply(jz);//结算金额
         BigDecimal sj=je.multiply(sl).divide(cs);//结算税金
@@ -160,6 +158,7 @@ public class FeiGangController extends JeecgController<T, IFeiGangService> {
             contractInformation.setTaxes(sj);
         }
         contractInformation.setSettlementIdentification(1);
+        contractInformation.setAccept("已点收");
         contractInformationService.updateById(contractInformation);
         return Result.ok("编辑成功!");
     }

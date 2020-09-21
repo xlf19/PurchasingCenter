@@ -164,5 +164,11 @@ public class ContractInformation implements Serializable {
     @DateTimeFormat(pattern="yyyy-MM-dd")
     @ApiModelProperty(value = "点收日期")
     private java.util.Date acceptTime;
+    /**过磅日期*/
+    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    @ApiModelProperty(value = "过磅日期")
+    private java.util.Date weighTime;
+
 
 }
