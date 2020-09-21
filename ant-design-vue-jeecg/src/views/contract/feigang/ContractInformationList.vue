@@ -82,11 +82,6 @@ export default {
           dataIndex: 'voucherNo',
         },
         {
-          title: '物资编码',
-          align: 'center',
-          dataIndex: 'materialCode',
-        },
-        {
           title: '物资名称',
           align: 'center',
           dataIndex: 'materialName',
@@ -101,31 +96,31 @@ export default {
           align: 'center',
           dataIndex: 'receivingUnit',
         },
-        {
-          title: '点收日期',
-          align: 'center',
-          dataIndex: 'acceptTime',
-          customRender: function (text) {
-            return !text ? '' : text.length > 10 ? text.substr(0, 10) : text
-          },
-        },
-        {
-          title: '结算净重',
-          align: 'center',
-          dataIndex: 'settlementQuantity',
-        },
+
         {
           title: '合同单价',
           align: 'center',
           dataIndex: 'contractPrice',
         },
         {
-          title: '结算金额',
+          title: '含税',
           align: 'center',
-          dataIndex: 'settlementResults',
+          dataIndex: 'taxIncluded',
+          customRender: function (t, r, index) {
+            if (t) {
+              return '含税'
+            } else {
+              return '不含税'
+            }
+          },
         },
         {
-          title: '结算税金',
+          title: '税率',
+          align: 'center',
+          dataIndex: 'taxRate',
+        },
+        {
+          title: '税金',
           align: 'center',
           dataIndex: 'taxes',
         },
@@ -135,19 +130,47 @@ export default {
           dataIndex: 'accept',
         },
         {
+          title: '点收日期',
+          align: 'center',
+          dataIndex: 'acceptTime',
+          customRender: function (text) {
+            return !text ? '' : text.length > 10 ? text.substr(0, 10) : text
+          },
+        },
+        {
+          title: '过磅日期',
+          align: 'center',
+          dataIndex: 'weighTime',
+          customRender: function (text) {
+            return !text ? '' : text.length > 10 ? text.substr(0, 10) : text
+          },
+        },
+        {
           title: '备注',
           align: 'center',
           dataIndex: 'remarks',
         },
         {
-          title: '税率',
+          title: '结算状态',
           align: 'center',
-          dataIndex: 'taxRate',
+          dataIndex: 'settlementIdentification',
+          customRender: function (t, r, index) {
+            if (t === 1) {
+              return '结算'
+            } else {
+              return '未结算'
+            }
+          },
         },
         {
-          title: '含税',
+          title: '结算净重',
           align: 'center',
-          dataIndex: 'taxIncluded',
+          dataIndex: 'settlementQuantity',
+        },
+        {
+          title: '结算金额',
+          align: 'center',
+          dataIndex: 'settlementResults',
         },
         {
           title: '结算人',
@@ -222,7 +245,7 @@ export default {
       })
     },
 
-     modalFormOk() {
+    modalFormOk() {
       let hth = this.hthone
       this.htlist(hth)
     },

@@ -212,6 +212,13 @@ export default {
           title: '含税',
           align: 'center',
           dataIndex: 'HanShuiBiaoJi',
+          customRender: function (t, r, index) {
+            if (t) {
+              return '含税'
+            } else {
+              return '不含税'
+            }
+          },
         },
       ],
       validatorRules: {

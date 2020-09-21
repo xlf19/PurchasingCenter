@@ -49,6 +49,16 @@
             </a-form-item>
           </a-col>
           <a-col :span="12">
+            <a-form-item label="点收日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
+              <j-date
+                placeholder="过磅日期"
+                v-decorator="['weighTime']"
+                :trigger-change="true"
+                style="width: 100%"
+              />
+            </a-form-item>
+          </a-col>
+          <a-col :span="12">
             <a-form-item label="结算净重" :labelCol="labelCol" :wrapperCol="wrapperCol">
               <a-input-number
                 v-decorator="['settlementQuantity']"
@@ -182,7 +192,8 @@ export default {
             'settlementQuantity',
             'taxIncluded',
             'taxRate',
-            'remarks'
+            'remarks',
+            'weighTime'
           )
         )
       })
@@ -245,7 +256,8 @@ export default {
           'settlementQuantity',
           'taxIncluded',
           'taxRate',
-          'remarks'
+          'remarks',
+          'weighTime'
         )
       )
     },
