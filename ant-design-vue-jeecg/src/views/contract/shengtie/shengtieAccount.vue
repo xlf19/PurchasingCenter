@@ -75,22 +75,23 @@
         :columns="columns"
         :dataSource="dataValue"
         :loading="loading"
+        :expandedRowKeys="expandedRowKeys"
         @expand="handleExpand"
         class="j-table-force-nowrap"
         @change="handleTableChange"
       >
         <div slot="expandedRowRender" slot-scope="record" style="margin: 0">
           <a-row :gutter="24" :style="{ marginBottom: '240px' }">
-            <detail-list title="生铁合同元素数据">
-              <detail-list-item v-for="(item,index) in element" :key="index" :term="item.element">
+            <a-descriptions title="生铁合同元素数据" :column="8">
+              <detail-list-item v-for="(item,index) in element" :key="index" :term="item.element">
                 <ul>
-                  <li>元素数据</li>
+                  <li>元素数据:{{item.element}}</li>
                   <li>{{item.elelmentDate}}</li>
                   <li>扣除结果</li>
                   <li>{{item.deductionResult}}</li>
                 </ul>
               </detail-list-item>
-            </detail-list>
+            </a-descriptions>
           </a-row>
         </div>
       </a-table>
@@ -148,7 +149,7 @@ export default {
         column: 'createTime',
         order: 'desc',
       },
-
+      expandedRowKeys: [],
       // 表头
       columns: [
         {
@@ -253,6 +254,20 @@ export default {
           align: 'center',
           dataIndex: 'remarks',
         },
+        {
+          title: '结算状况',
+          dataIndex: 'settlementIdentification',
+          align: 'center',
+          customRender: function (t, r, index) {
+            if (t === 1) {
+              return '结算成功'
+            } else if (t === 2) {
+              return '结算失败'
+            } else {
+              return '未结算'
+            }
+          },
+        },
       ],
       stelements: [],
       url: {
@@ -290,34 +305,38 @@ export default {
       if (id == '' || id == undefined || id == null) {
         this.visible = true
         this.message = '请在选择合同后在结算'
-        alert(this.message)
+        this.$message.warning('请在选择合同后在结算')
       } else {
         postAction(this.url.accountSettlement, { id: id }).then((res) => {
           console.log(res.result)
-          // if (res.success) {
-          //   this.dataValue = res.result.records
-          //   this.ipagination.total = res.result.total
-          // }
-          // if (res.code === 510) {
-          //   this.$message.warning(res.message)
-          // }
-          // this.loading = false
+          if (res.success) {
+            this.dataValue = res.result //  this.ipagination.total = res.result.total
+            this.$message.success('结算成功')
+          }
+          if (res.code === 500) {
+            this.$message.warning(res.message)
+          }
+          this.loading = false
         })
       }
     },
     //展开行事件
     handleExpand(expanded, record) {
       console.log('我选中的是' + record.id)
-      postAction(this.url.findContractElement, { id: record.id }).then((res) => {
-        if (res.success) {
-          this.element = res.result
-          console.log(this.element)
-        }
-        if (res.code === 510) {
-          this.$message.warning(res.message)
-        }
-        this.loading = false
-      })
+      this.expandedRowKeys = []
+      if (expanded === true) {
+        this.expandedRowKeys.push(record.id)
+        postAction(this.url.findContractElement, { id: record.id }).then((res) => {
+          if (res.success) {
+            this.element = res.result
+            console.log(this.element)
+          }
+          if (res.code === 510) {
+            this.$message.warning(res.message)
+          }
+          this.loading = false
+        })
+      }
     },
     //选中行事件
     onSelectChange(selectedRowKeys, selectionRows) {

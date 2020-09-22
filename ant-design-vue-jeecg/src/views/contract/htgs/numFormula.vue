@@ -338,7 +338,7 @@ export default {
             } else if (item.isreduce == '增加') {
               values[idx].isreduce = '1'
             }
-            values[idx].hetongId = this.hetongId1
+            values[idx].hetongId = this.contrac
           })
           // console.log('2222', values)
           httpAction(this.url.savaHtGongShi, values, 'post').then((res) => {
