@@ -62,7 +62,7 @@ public class SysTemplate implements Serializable {
 	/**左区间值*/
 	@Excel(name = "左区间值", width = 15)
     @ApiModelProperty(value = "左区间值")
-    private java.lang.Double leftnum;
+    private java.math.BigDecimal leftnum;
 	/**左符号值*/
 	@Excel(name = "左符号值", width = 15)
     @ApiModelProperty(value = "左符号值")
@@ -70,7 +70,7 @@ public class SysTemplate implements Serializable {
 	/**右区间值*/
 	@Excel(name = "右区间值", width = 15)
     @ApiModelProperty(value = "右区间值")
-    private java.lang.Double rightnum;
+    private java.math.BigDecimal rightnum;
 	/**右符号值*/
 	@Excel(name = "右符号值", width = 15)
     @ApiModelProperty(value = "右符号值")
@@ -82,11 +82,11 @@ public class SysTemplate implements Serializable {
 	/**基准数据*/
 	@Excel(name = "基准数据", width = 15)
     @ApiModelProperty(value = "基准数据")
-    private java.lang.Double basedata;
+    private java.math.BigDecimal basedata;
 	/**扣款*/
 	@Excel(name = "扣款", width = 15)
     @ApiModelProperty(value = "扣款")
-    private java.lang.Double deductions;
+    private java.math.BigDecimal deductions;
     /**排序字段*/
     @Excel(name = "排序字段", width = 15)
     @ApiModelProperty(value = "排序字段")

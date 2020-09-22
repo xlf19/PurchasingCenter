@@ -63,7 +63,7 @@ public class SysHetonggongshi implements Serializable {
 	/**左区间值*/
 	@Excel(name = "左区间值", width = 15)
     @ApiModelProperty(value = "左区间值")
-    private java.lang.Double leftnum;
+    private java.math.BigDecimal leftnum;
 	/**左符号*/
 	@Excel(name = "左符号", width = 15)
     @ApiModelProperty(value = "左符号")
@@ -79,11 +79,11 @@ public class SysHetonggongshi implements Serializable {
 	/**右区间值*/
 	@Excel(name = "右区间值", width = 15)
     @ApiModelProperty(value = "右区间值")
-    private java.lang.Double rightnum;
+    private java.math.BigDecimal rightnum;
 	/**基准数值*/
 	@Excel(name = "基准数值", width = 15)
     @ApiModelProperty(value = "基准数值")
-    private java.lang.Double basedata;
+    private java.math.BigDecimal basedata;
 	/**是否扣款*/
 	@Excel(name = "是否扣款", width = 15)
     @ApiModelProperty(value = "是否扣款")
@@ -95,5 +95,5 @@ public class SysHetonggongshi implements Serializable {
 	/**扣款*/
 	@Excel(name = "扣款", width = 15)
     @ApiModelProperty(value = "扣款")
-    private java.lang.Double deductions;
+    private java.math.BigDecimal deductions;
 }
