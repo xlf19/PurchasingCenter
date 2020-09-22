@@ -239,6 +239,7 @@ export default {
           dataIndex: '派工单号',
         },
       ],
+   
       validatorRules: {
         contractNo: { rules: [{ required: true, message: '请选择合同号!' }] },
         receivingUnit: { rules: [{ required: true, message: '请选择收货单位!' }] },
@@ -247,6 +248,7 @@ export default {
           initialValue: [moment(this.date), moment(this.date)],
         },
       },
+  
       url: {
         list: '/zhijianxingxi/zhijianxingxi/listzjxx',
         findpzh: '/contract/contractInformation/findpzh',
@@ -255,6 +257,7 @@ export default {
         findOne: '/hetong/hetong/findOne',
         htadd: '/shengtie/shengtie/htadd',
       },
+      
       dictOptions: {},
     }
   },
