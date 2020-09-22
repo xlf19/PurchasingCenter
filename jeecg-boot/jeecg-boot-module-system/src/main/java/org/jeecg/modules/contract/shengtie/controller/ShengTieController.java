@@ -134,6 +134,7 @@ public class ShengTieController extends JeecgController<ContractElements, ISheng
             cinfo.setMaterialName(wzname);
             cinfo.setWeighing(jyl);
             cinfo.setIsDelete(0);
+            cinfo.setSettlementIdentification(0);
             contractInformationService.save(cinfo);
             //添加合同元素表
             saveelement(uuid, htbh, pzh, "P", p);

@@ -106,11 +106,10 @@ public class shengtieAccountController {
     }
 
     List<ContractInformation> contractInformations = shengtie.contractAccount(ci_id);
-
-
-
-
-    return null;
+    if(contractInformations ==null){
+      return Result.error("结算失败！");
+    }
+    return Result.ok(contractInformations);
   }
 
 

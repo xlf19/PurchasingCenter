@@ -84,12 +84,15 @@ public class shengtieAccountService extends ServiceImpl<shengtieAccountMapper, T
     //计算出每个元素要扣的最终值
     BigDecimal resultData ;
 
+    //将查询到的合同信息表中的元素添加到List集合中返回到controller层
+    List<ContractInformation> resultInformation = new ArrayList<>();
+
     Boolean flag1 = true;
     Boolean flag2 = true;
     Boolean flag3 = true;
     Boolean flag4 = true;
 
-//    List<Map<String,BigDecimal>> findElementData = null;
+    List<Map<String,BigDecimal>> findElementData = null;
 
     //此处有不同ID查询结果的集合
     for (String id:ci_id) {
@@ -120,7 +123,7 @@ public class shengtieAccountService extends ServiceImpl<shengtieAccountMapper, T
           String rightsysbol = elementGongShiMap.get(element.get(i).getElement()).get(0).getRightsysbol();
 
           BigDecimal IsReduce = new BigDecimal(elementGongShiMap.get(element.get(i).getElement()).get(0).getIsreduce());
-
+          BigDecimal basedatas = elementGongShiMap.get(element.get(i).getElement()).get(0).getBasedata();
           deductions = new BigDecimal(elementGongShiMap.get(element.get(i).getElement()).get(0).getDeductions().toString());
 
           if(1 == Integer.parseInt(leftsysbol)) {
@@ -130,25 +133,25 @@ public class shengtieAccountService extends ServiceImpl<shengtieAccountMapper, T
               if ((leftdata.compareTo(elementdata) <= 0) && (elementdata.compareTo(rightdata) <= 0)) {
 
                 disparityElementData= elementdata.subtract(leftdata);
-                  if (IsReduce.compareTo(new BigDecimal("0")) == 0){
-                    resultData = new BigDecimal("0").subtract((disparityElementData.divide(new BigDecimal(0.001),20,BigDecimal.ROUND_HALF_UP)).multiply(deductions));
-                    elementResultData.put(element.get(i).getElement(),resultData);
-                    flag1 = true;
-                    System.out.println(disparityElementData+"<= <= <= <= <= <=");
-                    System.out.println(resultData+"<= <= <= <= <= <=");
-                  }else if (IsReduce.compareTo(new BigDecimal("1")) == 0) {
-                    resultData = (disparityElementData.divide(new BigDecimal(0.001),20,BigDecimal.ROUND_HALF_UP)).multiply(deductions);
-                    elementResultData.put(element.get(i).getElement(),resultData);
-                    flag1 = true;
-                    System.out.println(disparityElementData+"<= <= <= <= <= <=");
-                    System.out.println(resultData+"<= <= <= <= <= <=");
-                  }else {
-                    System.out.println("出现系统错误");
-                  }
+                if (IsReduce.compareTo(new BigDecimal("0")) == 0){
+                  resultData = new BigDecimal("0").subtract((disparityElementData.divide(basedatas,10,BigDecimal.ROUND_HALF_UP)).multiply(deductions));
+                  elementResultData.put(element.get(i).getElement(),resultData);
+                  flag1 = true;
+                  System.out.println(disparityElementData+"<= <= <= <= <= <=");
+                  System.out.println(resultData+"<= <= <= <= <= <=");
+                }else if (IsReduce.compareTo(new BigDecimal("1")) == 0) {
+                  resultData = (disparityElementData.divide(basedatas,10,BigDecimal.ROUND_HALF_UP)).multiply(deductions);
+                  elementResultData.put(element.get(i).getElement(),resultData);
+                  flag1 = true;
+                  System.out.println(disparityElementData+"<= <= <= <= <= <=");
+                  System.out.println(resultData+"<= <= <= <= <= <=");
+                }else {
+                  System.out.println("出现系统错误");
+                }
 
               }else {
-                  flag1 = false;
-                  System.out.println("数据不在此区间中出错");
+                flag1 = false;
+                System.out.println("数据不在此区间中出错");
               }
 
             }else if (0 == Integer.parseInt(rightsysbol)) {
@@ -157,13 +160,13 @@ public class shengtieAccountService extends ServiceImpl<shengtieAccountMapper, T
 
                 disparityElementData= elementdata.subtract(leftdata);
                 if (IsReduce.compareTo(new BigDecimal("0")) == 0){
-                  resultData = new BigDecimal("0").subtract((disparityElementData.divide(new BigDecimal(0.001),20,BigDecimal.ROUND_HALF_UP)).multiply(deductions));
+                  resultData = new BigDecimal("0").subtract((disparityElementData.divide(basedatas,10,BigDecimal.ROUND_HALF_UP)).multiply(deductions));
                   elementResultData.put(element.get(i).getElement(),resultData);
                   flag2 = true;
                   System.out.println(disparityElementData+":<= <= <= <  <  < ");
                   System.out.println(resultData+":<= <= <= <  <  < ");
                 }else if (IsReduce.compareTo(new BigDecimal("1")) == 0) {
-                  resultData = (disparityElementData.divide(new BigDecimal(0.001),20,BigDecimal.ROUND_HALF_UP)).multiply(deductions);
+                  resultData = (disparityElementData.divide(basedatas,10,BigDecimal.ROUND_HALF_UP)).multiply(deductions);
                   elementResultData.put(element.get(i).getElement(),resultData);
                   flag2 = true;
                   System.out.println(disparityElementData+":<= <= <= <  <  < ");
@@ -184,13 +187,13 @@ public class shengtieAccountService extends ServiceImpl<shengtieAccountMapper, T
 
                 disparityElementData= elementdata.subtract(leftdata);
                 if (IsReduce.compareTo(new BigDecimal("0")) == 0){
-                  resultData = new BigDecimal("0").subtract((disparityElementData.divide(new BigDecimal(0.001),20,BigDecimal.ROUND_HALF_UP)).multiply(deductions));
+                  resultData = new BigDecimal("0").subtract((disparityElementData.divide(basedatas,10,BigDecimal.ROUND_HALF_UP)).multiply(deductions));
                   elementResultData.put(element.get(i).getElement(),resultData);
                   flag3 = true;
                   System.out.println(disparityElementData+":<  <  <  <= <= <=");
                   System.out.println(resultData+":<  <  <  <= <= <=");
                 }else if (IsReduce.compareTo(new BigDecimal("1")) == 0) {
-                  resultData = (disparityElementData.divide(new BigDecimal(0.001),20,BigDecimal.ROUND_HALF_UP)).multiply(deductions);
+                  resultData = (disparityElementData.divide(basedatas,10,BigDecimal.ROUND_HALF_UP)).multiply(deductions);
                   elementResultData.put(element.get(i).getElement(),resultData);
                   flag3 = true;
                   System.out.println(disparityElementData+":<  <  <  <= <= <=");
@@ -210,13 +213,13 @@ public class shengtieAccountService extends ServiceImpl<shengtieAccountMapper, T
 
                 disparityElementData= elementdata.subtract(leftdata);
                 if (IsReduce.compareTo(new BigDecimal("0")) == 0){
-                  resultData = new BigDecimal("0").subtract((disparityElementData.divide(new BigDecimal(0.001),20,BigDecimal.ROUND_HALF_UP)).multiply(deductions));
+                  resultData = new BigDecimal("0").subtract((disparityElementData.divide(basedatas,10,BigDecimal.ROUND_HALF_UP)).multiply(deductions));
                   elementResultData.put(element.get(i).getElement(),resultData);
                   flag4 = true;
                   System.out.println(disparityElementData+":< <  <  <  <  < ");
                   System.out.println(resultData+":<  <  <  <  <  < ");
                 }else if (IsReduce.compareTo(new BigDecimal("1")) == 0) {
-                  resultData = (disparityElementData.divide(new BigDecimal(0.001),20,BigDecimal.ROUND_HALF_UP)).multiply(deductions);
+                  resultData = (disparityElementData.divide(basedatas,10,BigDecimal.ROUND_HALF_UP)).multiply(deductions);
                   elementResultData.put(element.get(i).getElement(),resultData);
                   flag4 = true;
                   System.out.println(disparityElementData+":< <  <  <  <  < ");
@@ -233,151 +236,129 @@ public class shengtieAccountService extends ServiceImpl<shengtieAccountMapper, T
             }
           }
         }
-
       }
-          //获取合同数量表中的所有信息
-       List<SysNumgongshi> selectNumgongshi = shengtieHth.selectNumgongshi(element.get(0).getContractNo());
-          //获取合同信息表中所有信息
-       List<ContractInformation> ContractInformationList = shengtieHth.selectContractInformation(id);
+      //获取合同数量表中的所有信息
+      List<SysNumgongshi> selectNumgongshi = shengtieHth.selectNumgongshi(element.get(0).getContractNo());
+      //获取合同信息表中所有信息
+      List<ContractInformation> ContractInformationList = shengtieHth.selectContractInformation(id);
 
-       BigDecimal leftnum = new BigDecimal(selectNumgongshi.get(0).getLeftnum().toString());
-       String leftsysbol =  selectNumgongshi.get(0).getLeftsysbol();
-       String rightsysbol = selectNumgongshi.get(0).getRightsysbol();
-       BigDecimal rightnum = new BigDecimal(selectNumgongshi.get(0).getRightnum().toString());
-       BigDecimal basedata = new BigDecimal(selectNumgongshi.get(0).getBasedata().toString());
+      BigDecimal leftnum = new BigDecimal(selectNumgongshi.get(0).getLeftnum().toString());
+      String leftsysbol =  selectNumgongshi.get(0).getLeftsysbol();
+      String rightsysbol = selectNumgongshi.get(0).getRightsysbol();
+      BigDecimal rightnum = new BigDecimal(selectNumgongshi.get(0).getRightnum().toString());
+      BigDecimal basedata = new BigDecimal(selectNumgongshi.get(0).getBasedata().toString());
 
-       BigDecimal weighingData = null;
-       String isReduce = selectNumgongshi.get(0).getIsreduce();
-       boolean flag = false;
+      BigDecimal weighingData = null;
+      //String isReduce = selectNumgongshi.get(0).getIsreduce();
+      boolean flag = false;
 
-       BigDecimal weighing = ContractInformationList.get(0).getWeighing();
-       BigDecimal weigningDeduction = new BigDecimal(selectNumgongshi.get(0).getDeductions().toString());
+      BigDecimal weighing = ContractInformationList.get(0).getWeighing();
+      BigDecimal weigningDeduction = new BigDecimal(selectNumgongshi.get(0).getDeductions().toString());
 
-       //对合同数量值得区间判断
-         if(1 == Integer.parseInt(leftsysbol)) {
+      //对合同数量值得区间判断
+      if(1 == Integer.parseInt(leftsysbol)) {
 
-           if (1 == Integer.parseInt(rightsysbol)) {
+        if (1 == Integer.parseInt(rightsysbol)) {
 
-             if ((leftnum.compareTo(weighing) <= 0) && (weighing.compareTo(rightnum) <= 0)) {
+          if ((leftnum.compareTo(weighing) <= 0) && (weighing.compareTo(rightnum) <= 0)) {
 
-               if (isReduce.equals("0")) {
-                 weighingData = new BigDecimal("0").subtract(((weighing.subtract(leftnum)).divide(basedata,20,BigDecimal.ROUND_HALF_UP)).multiply(weigningDeduction));
-                 flag = true;
-               }else if (isReduce.equals("1")) {
-                 weighingData = ((weighing.subtract(leftnum)).divide(basedata,20,BigDecimal.ROUND_HALF_UP)).multiply(weigningDeduction);
-                 flag = true;
-               }
-               System.out.println(weighingData+"weighingData:<= <= <= <= <= <=");
-               //System.out.println(weighingData+"<= <= <= <= <= <=");
+              weighingData = new BigDecimal("0").subtract(((weighing.subtract(leftnum)).divide(basedata,10,BigDecimal.ROUND_HALF_UP)).multiply(weigningDeduction));
+              flag = true;
+            System.out.println(weighingData+"weighingData:<= <= <= <= <= <=");
 
-             }else {
-               flag = false;
-               System.out.println("数量数据不在此区间中出错");
-             }
+          }else {
+            flag = false;
+            System.out.println("数量数据不在此区间中出错");
+          }
 
-           }else if (0 == Integer.parseInt(rightsysbol)) {
+        }else if (0 == Integer.parseInt(rightsysbol)) {
 
-             if ((leftnum.compareTo(weighing) <= 0) && (weighing.compareTo(rightnum) < 0)) {
-
-               if (isReduce.equals("0")) {
-                 weighingData = new BigDecimal("0").subtract(((weighing.subtract(leftnum)).divide(basedata,20,BigDecimal.ROUND_HALF_UP)).multiply(weigningDeduction));
-                 flag = true;
-               }else if (isReduce.equals("1")) {
-                 weighingData = ((weighing.subtract(leftnum)).divide(basedata,20,BigDecimal.ROUND_HALF_UP)).multiply(weigningDeduction);
-                 flag = true;
-               }
-               System.out.println(weighingData+"weighingData:<= <= <= <  <  < ");
-
-             }else{
-               flag = false;
-               System.out.println("数量数据不在此区间中出错");
-             }
-           }
-         }else if (0 == Integer.parseInt(leftsysbol)) {
-
-           if (1 == Integer.parseInt(rightsysbol)) {
-
-             if ((leftnum.compareTo(weighing) < 0) && (weighing.compareTo(rightnum) <= 0)) {
-
-               if (isReduce.equals("0")) {
-                 weighingData = new BigDecimal("0").subtract(((weighing.subtract(leftnum)).divide(basedata,20,BigDecimal.ROUND_HALF_UP)).multiply(weigningDeduction));
-                 flag = true;
-               }else if (isReduce.equals("1")) {
-                 weighingData = ((weighing.subtract(leftnum)).divide(basedata,20,BigDecimal.ROUND_HALF_UP)).multiply(weigningDeduction);
-                 flag = true;
-               }
-                System.out.println(weighingData+"weighingData:<  <  <  <= <= <=");
-               // System.out.println(resultData+"<= <= <= <= <= <=");
-
-             } else {
-               flag = false;
-               System.out.println("数量数据不在此区间中出错");
-             }
-
-           } else if (0 == Integer.parseInt(rightsysbol)) {
-
-             if ((leftnum.compareTo(weighing) < 0) && (weighing.compareTo(rightnum) < 0)) {
-
-               if (isReduce.equals("0")) {
-                 weighingData = new BigDecimal("0").subtract(((weighing.subtract(leftnum)).divide(basedata,20,BigDecimal.ROUND_HALF_UP)).multiply(weigningDeduction));
-                 flag = true;
-               }else if (isReduce.equals("1")) {
-                 weighingData = ((weighing.subtract(leftnum)).divide(basedata,20,BigDecimal.ROUND_HALF_UP)).multiply(weigningDeduction);
-                 flag = true;
-               }
-               System.out.println(weighingData+"weighingData:<  <  <  <  <  <");
-               // System.out.println(resultData+"<= <= <= <= <= <=");
-
-             } else {
-               flag = false;
-               System.out.println("数量数据不在此区间中出错");
-             }
-
-           }
-         }
-
-          Integer tag1 = null;
-
-         if(flag&&flag1&&flag2&&flag3&&flag4) {
-           BigDecimal contractPrice = new BigDecimal("0");
-           for (Object o : elementResultData.keySet()) {
-             //将计算好的元素数据存入相应的元素表中
-             contractPrice = contractPrice.add(elementResultData.get(o));
-             tag1 = shengtieHth.depositElementData(o.toString(), id, elementResultData.get(o));
+          if ((leftnum.compareTo(weighing) <= 0) && (weighing.compareTo(rightnum) < 0)) {
 
 
-             System.out.println("tag1:"+tag1);
-             System.out.println("key" + "value" + o + elementResultData.get(o));
-             //System.out.println("sysUser" + sysUser.getUsername());
+              weighingData = new BigDecimal("0").subtract(((weighing.subtract(leftnum)).divide(basedata,10,BigDecimal.ROUND_HALF_UP)).multiply(weigningDeduction));
+              flag = true;
+              System.out.println(weighingData+"weighingData:<= <= <= <  <  < ");
 
-           }
-           //获取操作用户的信息
-           LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-           System.out.println("sysUser" + sysUser.getUsername());
+          }else{
+            flag = false;
+            System.out.println("数量数据不在此区间中出错");
+          }
+        }
+      }else if (0 == Integer.parseInt(leftsysbol)) {
 
-           contractPrice = ContractInformationList.get(0).getContractPrice().add(contractPrice);
-           System.out.println("contractPrice:" + contractPrice);
-           Date date = new Date();
-           SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-           String nowTime = sdf.format(date);//将时间格式转换成符合Timestamp要求的格式.
-           Timestamp dates = Timestamp.valueOf(nowTime);//把时间转换
-           BigDecimal settlementResults = weighingData.multiply(contractPrice);
+        if (1 == Integer.parseInt(rightsysbol)) {
 
-           System.out.println("settlementResults:"+settlementResults);
-           System.out.println("dates:"+dates);
-           System.out.println("contractPrice:"+contractPrice);
-           System.out.println("weighingData:"+weighingData);
-           System.out.println("sysUser" + sysUser.getUsername());
-           //更新合同信息表中的数据
-           Integer tag2 = shengtieHth.updataContractInformation(dates,weighingData,contractPrice,settlementResults,sysUser.getUsername(),1,id);
+          if ((leftnum.compareTo(weighing) < 0) && (weighing.compareTo(rightnum) <= 0)) {
 
-       }else {
-           System.out.println("合同结算失败！！！");
-       }
+
+              weighingData = new BigDecimal("0").subtract(((weighing.subtract(leftnum)).divide(basedata,10,BigDecimal.ROUND_HALF_UP)).multiply(weigningDeduction));
+              flag = true;
+            System.out.println(weighingData+"weighingData:<  <  <  <= <= <=");
+
+          } else {
+            flag = false;
+            System.out.println("数量数据不在此区间中出错");
+          }
+
+        } else if (0 == Integer.parseInt(rightsysbol)) {
+
+          if ((leftnum.compareTo(weighing) < 0) && (weighing.compareTo(rightnum) < 0)) {
+
+
+              weighingData = new BigDecimal("0").subtract(((weighing.subtract(leftnum)).divide(basedata,10,BigDecimal.ROUND_HALF_UP)).multiply(weigningDeduction));
+              flag = true;
+              System.out.println(weighingData+"weighingData:<  <  <  <  <  <");
+
+          } else {
+            flag = false;
+            System.out.println("数量数据不在此区间中出错");
+          }
+
+        }
+      }
+
+      Integer tag1 = null;
+
+      Date date = new Date();
+      SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+      String nowTime = sdf.format(date);//将时间格式转换成符合Timestamp要求的格式.
+      Timestamp dates = Timestamp.valueOf(nowTime);//把时间转换
+
+      //获取操作用户的信息
+      LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+
+      if(flag&&flag1&&flag2&&flag3&&flag4) {
+        BigDecimal contractPrice = new BigDecimal("0");
+        for (Object o : elementResultData.keySet()) {
+          //将计算好的元素数据存入相应的元素表中
+          contractPrice = contractPrice.add(elementResultData.get(o));
+          tag1 = shengtieHth.depositElementData(o.toString(), id, elementResultData.get(o));
+
+          System.out.println("tag1:" + tag1);
+          System.out.println("key" + "value" + o + elementResultData.get(o));
+
+        }
+
+        contractPrice = ContractInformationList.get(0).getContractPrice().add(contractPrice);
+        BigDecimal settlementQuantity = ContractInformationList.get(0).getWeighing().add(weighingData);
+        BigDecimal settlementResults =  settlementQuantity.multiply(contractPrice);
+        //更新合同信息表中的数据
+        Integer tag2 = shengtieHth.updataContractInformation(dates,settlementQuantity,contractPrice,settlementResults,sysUser.getUsername(),1,id);
+
+        if (tag2 == 1) {
+          List<ContractInformation> informations = shengtieHth.selectContractInformation(id);
+          resultInformation.addAll(informations);
+        }
+      }else {
+        shengtieHth.updataContractInformation(dates,null,null,null,sysUser.getUsername(),2,id);
+        List<ContractInformation> informations = shengtieHth.selectContractInformation(id);
+        resultInformation.addAll(informations);
+      }
     }
-
-    return null;
+    return resultInformation;
   }
+
 
 
 
