@@ -168,6 +168,7 @@ public class RanLiaoController extends JeecgController<T, IRanLiaoService> {
         cinfo.setLoan(daikuan);
         cinfo.setShipping(zyzf);
         cinfo.setIsDelete(0);
+        cinfo.setSettlementIdentification(0);
         contractInformationService.save(cinfo);
         //添加合同元素表
         //Ad
@@ -291,6 +292,7 @@ public class RanLiaoController extends JeecgController<T, IRanLiaoService> {
             String data = htone.getString("riqi");
             String dwname = htone.getString("supplier");//供货单位
             String wzname = htone.getString("material_name");//物资名称
+            String pgdh = htone.getString("派工单号");//派工单号
             //添加合同信息表
             ContractInformation cinfo = new ContractInformation();
             String uuid = UUID.randomUUID().toString();
@@ -300,7 +302,7 @@ public class RanLiaoController extends JeecgController<T, IRanLiaoService> {
             cinfo.setMaterialCode(wzcode);
             cinfo.setContractNo(htbh);
             cinfo.setVoucherNo(pzh);
-            cinfo.setContractType("精粉富粉球团");
+            cinfo.setContractType("燃料");
             cinfo.setContractPrice(dj);
             cinfo.setTaxRate(sl);
             cinfo.setReceivingUnit(shdw);
@@ -308,6 +310,8 @@ public class RanLiaoController extends JeecgController<T, IRanLiaoService> {
             cinfo.setWeighing(jyl);
             cinfo.setMaterialName(wzname);
             cinfo.setIsDelete(0);
+            cinfo.setSettlementIdentification(0);
+            cinfo.setWorkNumber(pgdh);
             contractInformationService.save(cinfo);
             //添加合同元素表
             saveelement(uuid, htbh, pzh, "Ad", Ad);

@@ -130,6 +130,7 @@ public class FeiLiaoController extends JeecgController<T, IFuLiaoService> {
             cinfo.setIsDelete(0);
             cinfo.setWorkNumber(pgdh);
             cinfo.setModel(model);
+            cinfo.setSettlementIdentification(0);
             contractInformationService.save(cinfo);
 
             //添加合同元素表

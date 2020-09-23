@@ -87,6 +87,8 @@ public class FeiGangController extends JeecgController<T, IFeiGangService> {
             BigDecimal sl = new BigDecimal(htone.get("ShuiLv").toString());
             //HS
             String hs = htone.getString("HanShuiBiaoJi");
+            //质检信息表id
+            Integer idd=htone.getInteger("id");
 
             //添加合同信息表
             ContractInformation cinfo = new ContractInformation();
@@ -108,6 +110,8 @@ public class FeiGangController extends JeecgController<T, IFeiGangService> {
                 cinfo.setTaxIncluded(false);
             }
             cinfo.setIsDelete(0);
+            cinfo.setZjId(idd);
+            cinfo.setSettlementIdentification(0);
             contractInformationService.save(cinfo);
         }
         return Result.ok("添加成功！");
@@ -159,7 +163,9 @@ public class FeiGangController extends JeecgController<T, IFeiGangService> {
         }
         contractInformation.setSettlementIdentification(1);
         contractInformation.setAccept("已点收");
+        contractInformation.setSettlementIdentification(1);
         contractInformationService.updateById(contractInformation);
+
         return Result.ok("编辑成功!");
     }
 

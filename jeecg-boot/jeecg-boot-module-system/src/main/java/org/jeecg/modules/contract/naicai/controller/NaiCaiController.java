@@ -137,6 +137,7 @@ public class NaiCaiController extends JeecgController<T, INaiCaiService> {
             cinfo.setWorkNumber(pgdh);
             cinfo.setModel(model);
             cinfo.setRemarks(beizhu);
+            cinfo.setSettlementIdentification(0);
             contractInformationService.save(cinfo);
 
             //添加合同元素表

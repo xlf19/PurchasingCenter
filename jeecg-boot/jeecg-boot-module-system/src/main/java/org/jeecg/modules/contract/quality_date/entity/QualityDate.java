@@ -237,4 +237,8 @@ public class QualityDate implements Serializable {
     @Excel(name = "凭证号标识", width = 15)
     @ApiModelProperty(value = "凭证号标识")
     private Integer voucherId;
+    /**派工单号*/
+    @Excel(name = "派工单号", width = 15)
+    @ApiModelProperty(value = "派工单号")
+    private java.lang.String workNumber;
 }

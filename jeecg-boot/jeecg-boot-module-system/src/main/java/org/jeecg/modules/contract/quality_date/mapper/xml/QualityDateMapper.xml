@@ -5,5 +5,8 @@
         SELECT  *,CONVERT(varchar(100),qy_date, 23)  as riqi
         FROM quality_date
         where contract_no = #{htbh}
+        and id not in (SELECT distinct jq_id
+        FROM contract_information
+        where contract_type='精粉富粉球团' and is_delete =0)
     </select>
 </mapper>

@@ -131,6 +131,7 @@ public class JingFengController extends JeecgController<T, IJingFengService> {
             String data = htone.getString("riqi");
             String dwname = htone.getString("supplier");//供货单位
             String wzname = htone.getString("material_name");//物资名称
+            String jqid=htone.getString("id");//加权表id
             //添加合同信息表
             ContractInformation cinfo = new ContractInformation();
             String uuid = UUID.randomUUID().toString();
@@ -148,6 +149,8 @@ public class JingFengController extends JeecgController<T, IJingFengService> {
             cinfo.setWeighing(jyl);
             cinfo.setMaterialName(wzname);
             cinfo.setIsDelete(0);
+            cinfo.setSettlementIdentification(0);
+            cinfo.setJqId(jqid);
             contractInformationService.save(cinfo);
             //添加合同元素表
             saveelement(uuid, htbh, pzh, "S", S);

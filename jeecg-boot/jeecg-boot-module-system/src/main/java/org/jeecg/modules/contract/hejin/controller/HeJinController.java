@@ -114,6 +114,7 @@ public class HeJinController extends JeecgController<T, IHeJinService> {
             cinfo.setWorkNumber(pgdh);
             cinfo.setModel(model);
             cinfo.setRemarks(hybz);
+            cinfo.setSettlementIdentification(0);
             contractInformationService.save(cinfo);
             //添加合同元素表
             if(htone.containsKey("wzshang")){

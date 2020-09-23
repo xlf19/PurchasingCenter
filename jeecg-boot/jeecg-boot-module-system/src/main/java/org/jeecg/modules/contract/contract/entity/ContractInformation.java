@@ -169,6 +169,18 @@ public class ContractInformation implements Serializable {
     @DateTimeFormat(pattern="yyyy-MM-dd")
     @ApiModelProperty(value = "过磅日期")
     private java.util.Date weighTime;
+    /**
+     * 质检信息表的外键
+     */
+    @Excel(name = "质检信息表的外键", width = 15)
+    @ApiModelProperty(value = "质检信息表的外键")
+    private java.lang.Integer zjId;
+    /**
+     * 加权信息表的外键
+     */
+    @Excel(name = "加权信息表的外键", width = 15)
+    @ApiModelProperty(value = "加权信息表的外键")
+    private java.lang.String jqId;
 
 
 }

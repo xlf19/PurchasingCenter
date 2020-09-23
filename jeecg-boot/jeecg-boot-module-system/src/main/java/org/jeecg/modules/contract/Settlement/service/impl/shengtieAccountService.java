@@ -257,59 +257,40 @@ public class shengtieAccountService extends ServiceImpl<shengtieAccountMapper, T
 
       //对合同数量值得区间判断
       if(1 == Integer.parseInt(leftsysbol)) {
-
         if (1 == Integer.parseInt(rightsysbol)) {
-
           if ((leftnum.compareTo(weighing) <= 0) && (weighing.compareTo(rightnum) <= 0)) {
-
               weighingData = new BigDecimal("0").subtract(((weighing.subtract(leftnum)).divide(basedata,10,BigDecimal.ROUND_HALF_UP)).multiply(weigningDeduction));
               flag = true;
             System.out.println(weighingData+"weighingData:<= <= <= <= <= <=");
-
           }else {
             flag = false;
             System.out.println("数量数据不在此区间中出错");
           }
-
         }else if (0 == Integer.parseInt(rightsysbol)) {
-
           if ((leftnum.compareTo(weighing) <= 0) && (weighing.compareTo(rightnum) < 0)) {
-
-
               weighingData = new BigDecimal("0").subtract(((weighing.subtract(leftnum)).divide(basedata,10,BigDecimal.ROUND_HALF_UP)).multiply(weigningDeduction));
               flag = true;
               System.out.println(weighingData+"weighingData:<= <= <= <  <  < ");
-
           }else{
             flag = false;
             System.out.println("数量数据不在此区间中出错");
           }
         }
       }else if (0 == Integer.parseInt(leftsysbol)) {
-
         if (1 == Integer.parseInt(rightsysbol)) {
-
           if ((leftnum.compareTo(weighing) < 0) && (weighing.compareTo(rightnum) <= 0)) {
-
-
               weighingData = new BigDecimal("0").subtract(((weighing.subtract(leftnum)).divide(basedata,10,BigDecimal.ROUND_HALF_UP)).multiply(weigningDeduction));
               flag = true;
             System.out.println(weighingData+"weighingData:<  <  <  <= <= <=");
-
           } else {
             flag = false;
             System.out.println("数量数据不在此区间中出错");
           }
-
         } else if (0 == Integer.parseInt(rightsysbol)) {
-
           if ((leftnum.compareTo(weighing) < 0) && (weighing.compareTo(rightnum) < 0)) {
-
-
               weighingData = new BigDecimal("0").subtract(((weighing.subtract(leftnum)).divide(basedata,10,BigDecimal.ROUND_HALF_UP)).multiply(weigningDeduction));
               flag = true;
               System.out.println(weighingData+"weighingData:<  <  <  <  <  <");
-
           } else {
             flag = false;
             System.out.println("数量数据不在此区间中出错");
@@ -317,9 +298,7 @@ public class shengtieAccountService extends ServiceImpl<shengtieAccountMapper, T
 
         }
       }
-
       Integer tag1 = null;
-
       Date date = new Date();
       SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
       String nowTime = sdf.format(date);//将时间格式转换成符合Timestamp要求的格式.
