@@ -166,6 +166,11 @@ export default {
           },
         },
         {
+          title: '派工单号',
+          align: 'center',
+          dataIndex: '派工单号',
+        },
+        {
           title: '检验量',
           align: 'center',
           dataIndex: 'weighing',
@@ -444,6 +449,11 @@ export default {
           },
         },
         {
+          title: '派工单号',
+          align: 'center',
+          dataIndex: '派工单号',
+        },
+        {
           title: '检验量',
           align: 'center',
           dataIndex: 'weighing',
@@ -549,8 +559,8 @@ export default {
     }
   },
   computed: {},
- 
- methods: {
+
+  methods: {
     guhw(shdw, wzmc, htbh) {
       this.supplier = shdw
       this.wzmc = wzmc
