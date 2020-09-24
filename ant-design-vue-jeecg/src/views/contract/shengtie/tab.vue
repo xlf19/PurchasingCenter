@@ -9,8 +9,11 @@
         <a-tab-pane tab="结算公式维护" key="2">
           <first-test ref="firstTest" :contrac="contrac"></first-test>
         </a-tab-pane>
-        <a-tab-pane tab="结算" key="3" >
+        <a-tab-pane tab="结算" key="3">
           <sheng-tie-account ref="shengtieaccount"></sheng-tie-account>
+        </a-tab-pane>
+        <a-tab-pane tab="打印" key="4">
+          <sheng-tie-print ref="shengtieprint" :contrac="contrac"></sheng-tie-print>
         </a-tab-pane>
       </a-tabs>
     </div>
@@ -22,14 +25,15 @@ import '@/assets/less/TableExpand.less'
 import shengTie from '../shengtie/shengtie'
 import firstTest from '../htgs/firstTest'
 import shengTieAccount from '../shengtie/shengtieAccount'
-
+import shengTiePrint from '../shengtie/shengtiePrint'
 export default {
   name: 'shengtie',
 
   components: {
     firstTest,
     shengTie,
-    shengTieAccount
+    shengTieAccount,
+    shengTiePrint,
   },
   data() {
     return {

@@ -187,7 +187,7 @@ export default {
           width: '140px',
           type: FormTypes.select,
           options: [],
-          defaultValue: '<',
+          // defaultValue: '<',
           placeholder: '请选择${title}',
           validateRules: [
             // { required: true, message: '请选择${title}' }
@@ -211,7 +211,7 @@ export default {
           width: '140px',
           type: FormTypes.select,
           options: [],
-          defaultValue: '≤',
+          // defaultValue: '≤',
           placeholder: '请选择${title}',
           validateRules: [
             // { required: true, message: '请选择${title}' }
@@ -274,6 +274,9 @@ export default {
           width: '140px',
           type: FormTypes.inputNumber,
           // slotName: 'deductions'
+          validateRules: [
+            { required: true, message: '请选择${title}' }
+          ],
         },
         {
           title: '操作',
@@ -417,6 +420,7 @@ export default {
     searchChange(values) {
       this.params.hetongId = values
       this.loadData(1)
+      this.setSyselements(values)
     },
     //批量删除
     handleConfirmDelete() {
@@ -446,6 +450,9 @@ export default {
       this.$refs.editableTable.getValues((error, values) => {
         // console.log(values)
         if (error === 0) {
+          let id, left, right, leftFuHao, rightFuHao, element
+          //定义一个提交标志项
+          let submitMark = 1
           values.forEach((item, idx) => {
             //处理数据信息展示
             if (item.leftsysbol == '<') {
@@ -464,11 +471,117 @@ export default {
               values[idx].isreduce = '1'
             }
             values[idx].hetongId = this.hetongId1
+
+            id = item.id
+            left = item.leftnum
+            leftFuHao = item.leftsysbol
+            element = item.elements
+            right = item.rightnum
+            rightFuHao = item.rightsysbol
+            values.forEach((itxItem, index) => {
+              if (itxItem.id != id) {
+                if (itxItem.elements == element) {
+                  //第一种情况左值不为空，右值为空,左符号值为<
+                  if (left != '' && right == '' && leftFuHao == '0') {
+                    if (itxItem.leftnum >= left || itxItem.rightnum > left) {
+                      // console.log("公式有错误")
+                      this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复')
+                      submitMark = 0
+                    }
+                  }
+                  //第二种情况左值不为空，右值为空，左符号值为≤
+                  if (left != '' && right == '' && leftFuHao == '1') {
+                    if (itxItem.leftnum >= left || itxItem.rightnum > left) {
+                      // console.log("公式有错误")
+                      this.$message.error(element + '元素公式区间有重复2')
+                      submitMark = 0
+                    }
+                  }
+                  //第三种情况左值为空，右值不为空，右符号为<
+                  if (left == '' && right != '' && rightFuHao == '0') {
+                    if (itxItem.leftnum < right) {
+                      // console.log("公式有错误")
+                      this.$message.error(element + '元素公式区间有重复3')
+                      submitMark = 0
+                    }
+                  }
+                  //第四种情况左值为空，右值不为空，右符号为≤
+                  if (left == '' && right != '' && rightFuHao == '1') {
+                    if (itxItem.leftnum < right) {
+                      // console.log("公式有错误")
+                      this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复4')
+                      submitMark = 0
+                    }
+                  }
+                  //第五种情况左符号为<,右符号为<,左右值都不为空
+                  if (left != '' && right != '' && leftFuHao == '0' && rightFuHao == '0') {
+                    // console.log('left:',left)
+                    // console.log('right:',right)
+                    // console.log('leftnum:',itxItem.leftnum)
+                    // console.log('rightnum:',itxItem.rightnum)
+                    if (itxItem.leftsysbol == '0') {
+                      if (itxItem.leftnum > left && itxItem.leftnum < right) {
+                        this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复7')
+                        submitMark = 0
+                      }
+                    } else if (itxItem.leftsysbol == '1') {
+                      if (itxItem.leftnum > left && itxItem.leftnum < right) {
+                        this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复7')
+                        submitMark = 0
+                      }
+                    }
+                  }
+                  //第六种情况左符号为≤，右符号为<，左右值都不为空
+                  if (left != '' && right != '' && leftFuHao == '1' && rightFuHao == '0') {
+                    if (left >= itxItem.leftnum && left < itxItem.rightnum) {
+                      this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复6')
+                      submitMark = 0
+                    }
+                  }
+                  //第七种情况左符号为<，右符号为≤，左右值都不为空
+                  if (left != '' && right != '' && leftFuHao == '0' && rightFuHao == '1') {
+                    // console.log('left:',left)
+                    // console.log('right:',right)
+                    // console.log('leftnum:',itxItem.leftnum)
+                    // console.log('leftsysbol:',itxItem.leftsysbol)
+                    // console.log('rightnum:',itxItem.rightnum)
+                    if (itxItem.leftsysbol == '0') {
+                      if (itxItem.leftnum > left && itxItem.leftnum < right) {
+                        this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复7')
+                        submitMark = 0
+                      }
+                    } else if (itxItem.leftsysbol == '1') {
+                      if (itxItem.leftnum > left && itxItem.leftnum <= right) {
+                        this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复7')
+                        submitMark = 0
+                      }
+                    }
+                  }
+                  //第八种情况左符号为≤，右符号为≤，左右值都不为空
+                  if (left != '' && right != '' && leftFuHao == '1' && rightFuHao == '1') {
+                    if (itxItem.leftsysbol == '0') {
+                      if (itxItem.leftnum > left && itxItem.leftnum < right) {
+                        this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复8')
+                        submitMark = 0
+                      }
+                    } else if (itxItem.leftsysbol == '1') {
+                      if (itxItem.leftnum > left && itxItem.leftnum <= right) {
+                        this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复8')
+                        submitMark = 0
+                      }
+                    }
+                  }
+                }
+              }
+            })
           })
+          console.log('提交标志', submitMark)
           // console.log('2222', values)
-          httpAction(this.url.savaHtGongShi, values, 'post').then((res) => {
-            this.$message.success(res.message)
-          })
+          if(submitMark == 1){
+            // httpAction(this.url.savaHtGongShi, values, 'post').then((res) => {
+            //   this.$message.success(res.message)
+            // })
+          }
         } else {
           this.$message.error('验证未通过')
         }
