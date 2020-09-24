@@ -3,5 +3,10 @@
 <mapper namespace="org.jeecg.modules.contract.shengtie.mapper.ShengTieMapper">
 
 
-
+    <select id="selectstdy" resultType="map" statementType="CALLABLE">
+        {call dbo.ht_shengtie_dayin(
+	    #{htbh,jdbcType=VARCHAR,mode=IN},
+	    #{pzh,jdbcType=INTEGER,mode=IN}
+	    )}
+    </select>
 </mapper>

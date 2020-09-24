@@ -8,6 +8,8 @@ import org.jeecg.modules.contract.contract.service.IContractInformationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 /**
  * @Description: 合同信息表
@@ -23,5 +25,15 @@ public class ContractInformationServiceImpl extends ServiceImpl<ContractInformat
 
     public  Integer findpzh(){
         return ch.findpzh();
+    }
+
+
+    public List<String> selectHtbh(String htbh, String httype) {
+        return ch.selectHtbh(htbh,httype);
+    }
+
+
+    public List<String> selectHtpzh(String htbh, String httype) {
+        return ch.selectHtpzh(htbh,httype);
     }
 }

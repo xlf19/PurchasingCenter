@@ -10,6 +10,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.formula.functions.T;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.aspect.annotation.AutoLog;
 import org.jeecg.common.system.base.controller.JeecgController;
@@ -40,7 +41,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/shengtie/shengtie")
 @Slf4j
-public class ShengTieController extends JeecgController<ContractElements, IShengTieService> {
+public class ShengTieController extends JeecgController<T, IShengTieService> {
 
     @Autowired
     private IShengTieService shengTieService;
@@ -159,4 +160,17 @@ public class ShengTieController extends JeecgController<ContractElements, ISheng
         htelements.save(cele);
     }
 
+
+    //打印查询列表
+    @AutoLog(value = "打印查询列表")
+    @ApiOperation(value="打印查询列表", notes="打印查询列表")
+    @GetMapping(value = "/selectstdy")
+    public Result<?> selectstdy(ContractInformation contractInformation,
+                                @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
+                                @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
+                                HttpServletRequest req) {
+        Page<Map<Object, String>> page = new Page<Map<Object, String>>(pageNo, pageSize);
+        IPage<Map<Object, String>> pageList = shengTieService.selectstdy(page, contractInformation.getContractNo(),contractInformation.getVoucherNo());
+        return Result.ok(pageList);
+    }
 }
