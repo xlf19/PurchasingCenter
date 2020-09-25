@@ -22,6 +22,7 @@ import org.jeecg.modules.contract.hetong.service.IHeTongService;
 import org.jeecg.modules.contract.naicai.service.INaiCaiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
@@ -42,6 +43,8 @@ public class NaiCaiController extends JeecgController<T, INaiCaiService> {
 
     @Autowired
     private IHeTongService htservice;
+    @Autowired
+    private INaiCaiService inaiCaiService;
 
     @AutoLog(value = "合同信息表-分页列表查询")
     @ApiOperation(value = "合同信息表-分页列表查询", notes = "合同信息表-分页列表查询")
@@ -175,6 +178,30 @@ public class NaiCaiController extends JeecgController<T, INaiCaiService> {
         cele.setElelmentDate(ele);
         cele.setIsDelete(0);
         htelements.save(cele);
+    }
+
+    //打印查询列表
+    @AutoLog(value = "打印查询列表")
+    @ApiOperation(value="打印查询列表", notes="打印查询列表")
+    @GetMapping(value = "/selectncdy")
+    public Result<?> selectncdy(ContractInformation contractInformation,
+                                @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
+                                @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
+                                HttpServletRequest req) {
+        Page<Map<Object, String>> page = new Page<Map<Object, String>>(pageNo, pageSize);
+        IPage<Map<Object, String>> pageList = inaiCaiService.selectncdy(page, contractInformation.getContractNo(),contractInformation.getVoucherNo());
+        return Result.ok(pageList);
+    }
+
+    /**
+     * 导出excel
+     *
+     * @param request
+     * @param contractInformation
+     */
+    @RequestMapping(value = "/exportXls")
+    public ModelAndView exportXls(HttpServletRequest request, T contractInformation) {
+        return super.exportXls(request, contractInformation, T.class, "合同信息表");
     }
 
 }
