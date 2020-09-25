@@ -9,7 +9,9 @@
         <a-tab-pane tab="结算公式维护" key="2">
           <first-test ref="firstTest" :contrac="contrac"></first-test>
         </a-tab-pane>
-        <a-tab-pane tab="结算" key="3" >56</a-tab-pane>
+        <a-tab-pane tab="结算" key="3">
+          <set-account ref="setaccount"></set-account>
+        </a-tab-pane>
       </a-tabs>
     </div>
   </a-card>
@@ -19,13 +21,14 @@
 import '@/assets/less/TableExpand.less'
 import HeJinList from '../hejin/HeJinList'
 import firstTest from '../htgs/firstTest'
-
+import setAccount from '../settlement/setAccount'
 export default {
   name: 'shengtie',
 
   components: {
     firstTest,
     HeJinList,
+    setAccount,
   },
   data() {
     return {

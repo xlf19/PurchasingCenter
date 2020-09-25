@@ -161,7 +161,7 @@ export default {
         //   type: FormTypes.select,
         // },
         {
-          title: '扣数',
+          title: '扣数(吨)',
           key: 'deductions',
           width: '140px',
           type: FormTypes.inputNumber,

@@ -13,7 +13,7 @@
             <j-search-select-tag-sec
               placeholder="请做出你的选择"
               v-model="hetongId1"
-              style="width:160px"
+              style="width: 160px"
               dict="contract_information,contract_no,contract_no"
               :async="false"
               @change="searchChange($event)"
@@ -25,7 +25,7 @@
         </a-form>
       </div>
     </a-card>
-    <a-card id="ctxTable" title="合同公式维护" size="small" style="margin-top: 15px;">
+    <a-card id="ctxTable" title="合同公式维护" size="small" style="margin-top: 15px">
       <a-tabs @change="callback">
         <a-tab-pane key="0" tab="单价公式维护">
           <div class="mrgbottom mrgtop">
@@ -36,7 +36,7 @@
               <a-form-item>
                 <a-popconfirm
                   class="mrgright"
-                  v-if="selectedRowIds.length>0"
+                  v-if="selectedRowIds.length > 0"
                   :title="`确定要删除这 ${selectedRowIds.length} 项吗?`"
                   @confirm="handleConfirmDelete"
                 >
@@ -47,11 +47,11 @@
               <a-form-item>
                 <a-button class="mrgright" type="primary" icon="save" @click="handleTableCheck">保存</a-button>
               </a-form-item>
-              <a-form-item label="模板名称" style="margin-left:460px;">
+              <a-form-item label="模板名称" style="margin-left: 460px">
                 <j-search-select-tag-sec
                   placeholder="请选择模板"
                   v-model="hetongId2"
-                  style="width:160px"
+                  style="width: 160px"
                   dict="sys_template,templatename,templatename"
                   :async="false"
                   @change="importChange($event)"
@@ -74,12 +74,12 @@
             :rowSelection="true"
             :actionButton="true"
             :dragSort="true"
-            style="margin-top: 8px;"
+            style="margin-top: 8px"
             @selectRowChange="handleSelectRowChange"
             @valueChange="handleValueChange"
           >
             <template v-slot:action="props">
-              <a-button style="background-color: red;" type="danger" @click="handleDelete(props)">删除</a-button>
+              <a-button style="background-color: red" type="danger" @click="handleDelete(props)">删除</a-button>
             </template>
           </j-editable-table-by-cj>
         </a-tab-pane>
@@ -269,14 +269,12 @@ export default {
           type: FormTypes.select,
         },
         {
-          title: '款额',
+          title: '款额(元)',
           key: 'deductions',
           width: '140px',
           type: FormTypes.inputNumber,
           // slotName: 'deductions'
-          validateRules: [
-            { required: true, message: '请选择${title}' }
-          ],
+          validateRules: [{ required: true, message: '请选择${title}' }],
         },
         {
           title: '操作',
@@ -453,6 +451,7 @@ export default {
           let id, left, right, leftFuHao, rightFuHao, element
           //定义一个提交标志项
           let submitMark = 1
+          let elementsMarkArr = []
           values.forEach((item, idx) => {
             //处理数据信息展示
             if (item.leftsysbol == '<') {
@@ -493,7 +492,7 @@ export default {
                   if (left != '' && right == '' && leftFuHao == '1') {
                     if (itxItem.leftnum >= left || itxItem.rightnum > left) {
                       // console.log("公式有错误")
-                      this.$message.error(element + '元素公式区间有重复2')
+                      this.$message.error(element + '元素公式区间有重复')
                       submitMark = 0
                     }
                   }
@@ -501,7 +500,7 @@ export default {
                   if (left == '' && right != '' && rightFuHao == '0') {
                     if (itxItem.leftnum < right) {
                       // console.log("公式有错误")
-                      this.$message.error(element + '元素公式区间有重复3')
+                      this.$message.error(element + '元素公式区间有重复')
                       submitMark = 0
                     }
                   }
@@ -509,7 +508,7 @@ export default {
                   if (left == '' && right != '' && rightFuHao == '1') {
                     if (itxItem.leftnum < right) {
                       // console.log("公式有错误")
-                      this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复4')
+                      this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复')
                       submitMark = 0
                     }
                   }
@@ -519,14 +518,18 @@ export default {
                     // console.log('right:',right)
                     // console.log('leftnum:',itxItem.leftnum)
                     // console.log('rightnum:',itxItem.rightnum)
+                    // if((left >itxItem.leftnum && left < itxItem.rightnum)){
+                    //   this.$message.error('第'+(index+1)+'行'+element+'元素公式区间有重复')
+                    //   submitMark = 0
+                    // }
                     if (itxItem.leftsysbol == '0') {
                       if (itxItem.leftnum > left && itxItem.leftnum < right) {
-                        this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复7')
+                        this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复')
                         submitMark = 0
                       }
                     } else if (itxItem.leftsysbol == '1') {
                       if (itxItem.leftnum > left && itxItem.leftnum < right) {
-                        this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复7')
+                        this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复')
                         submitMark = 0
                       }
                     }
@@ -534,7 +537,7 @@ export default {
                   //第六种情况左符号为≤，右符号为<，左右值都不为空
                   if (left != '' && right != '' && leftFuHao == '1' && rightFuHao == '0') {
                     if (left >= itxItem.leftnum && left < itxItem.rightnum) {
-                      this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复6')
+                      this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复')
                       submitMark = 0
                     }
                   }
@@ -547,12 +550,12 @@ export default {
                     // console.log('rightnum:',itxItem.rightnum)
                     if (itxItem.leftsysbol == '0') {
                       if (itxItem.leftnum > left && itxItem.leftnum < right) {
-                        this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复7')
+                        this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复')
                         submitMark = 0
                       }
                     } else if (itxItem.leftsysbol == '1') {
                       if (itxItem.leftnum > left && itxItem.leftnum <= right) {
-                        this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复7')
+                        this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复')
                         submitMark = 0
                       }
                     }
@@ -561,26 +564,55 @@ export default {
                   if (left != '' && right != '' && leftFuHao == '1' && rightFuHao == '1') {
                     if (itxItem.leftsysbol == '0') {
                       if (itxItem.leftnum > left && itxItem.leftnum < right) {
-                        this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复8')
+                        this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复')
                         submitMark = 0
                       }
                     } else if (itxItem.leftsysbol == '1') {
                       if (itxItem.leftnum > left && itxItem.leftnum <= right) {
-                        this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复8')
+                        this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复')
                         submitMark = 0
                       }
                     }
                   }
+                  //第九种
+                  if (left == itxItem.leftnum && right == itxItem.rightnum) {
+                    this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复')
+                    submitMark = 0
+                  }
+                  //第十种
+                  if (left == itxItem.leftnum && itxItem.rightnum > left) {
+                    this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复')
+                    submitMark = 0
+                  }
                 }
               }
             })
+            this.elementsOptions.forEach((itx) => {
+              if (itx.title == item.elements) {
+                elementsMarkArr.push(item.elements)
+              }
+            })
           })
+          //数组去重
+          let arr = [...new Set(elementsMarkArr)]
+          if (values.length != 0) {
+            if (arr.length != this.elementsOptions.length) {
+              this.$message.error('还有' + (this.elementsOptions.length - arr.length) + '个元素公式未录入')
+              submitMark = 0
+            } else {
+              submitMark = 1
+            }
+          }
+          // console.log(arr)
           console.log('提交标志', submitMark)
           // console.log('2222', values)
-          if(submitMark == 1){
-            // httpAction(this.url.savaHtGongShi, values, 'post').then((res) => {
-            //   this.$message.success(res.message)
-            // })
+          if (submitMark == 1 && values.length != 0) {
+            httpAction(this.url.savaHtGongShi, values, 'post').then((res) => {
+              this.$message.success(res.message)
+            })
+          } else if (submitMark == 1 && values.length == 0) {
+            // console.log('数据不可为空')
+            this.$message.error('数据不可为空')
           }
         } else {
           this.$message.error('验证未通过')

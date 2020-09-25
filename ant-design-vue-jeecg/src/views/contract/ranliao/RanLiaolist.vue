@@ -431,7 +431,6 @@ export default {
       this.loading = true
       getAction(this.url.list, params).then((res) => {
         if (res.success) {
-          debugger
           this.dataSource = res.result.records
           this.ipagination.total = res.result.total
         }
