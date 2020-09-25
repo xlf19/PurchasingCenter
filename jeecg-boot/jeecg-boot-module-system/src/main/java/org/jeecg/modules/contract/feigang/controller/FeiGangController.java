@@ -42,6 +42,9 @@ public class FeiGangController extends JeecgController<T, IFeiGangService> {
     @Autowired
     private IContractInformationService contractInformationService;
 
+    @Autowired
+    private IFeiGangService ifeiGangService;
+
     @AutoLog(value = "合同信息表-分页列表查询")
     @ApiOperation(value = "合同信息表-分页列表查询", notes = "合同信息表-分页列表查询")
     @GetMapping(value = "/list")
@@ -156,10 +159,10 @@ public class FeiGangController extends JeecgController<T, IFeiGangService> {
         BigDecimal sll=cs1.add(sl.divide(cs));//税率1
         if(contractInformation.getTaxIncluded()){
             contractInformation.setSettlementResults(je);
-            contractInformation.setTaxes(sj.multiply(sll));
+            contractInformation.setSettlementTaxes(sj.multiply(sll));
         }else{
             contractInformation.setSettlementResults(je.multiply(sll));
-            contractInformation.setTaxes(sj);
+            contractInformation.setSettlementTaxes(sj);
         }
         contractInformation.setSettlementIdentification(1);
         contractInformation.setAccept("已点收");
@@ -167,6 +170,36 @@ public class FeiGangController extends JeecgController<T, IFeiGangService> {
         contractInformationService.updateById(contractInformation);
 
         return Result.ok("编辑成功!");
+    }
+
+
+    //打印查询列表
+//    @AutoLog(value = "打印查询列表")
+//    @ApiOperation(value="打印查询列表", notes="打印查询列表")
+//    @GetMapping(value = "/selectfgdy")
+//    public Result<?> selectfgdy(ContractInformation contractInformation,
+//                                @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
+//                                @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
+//                                HttpServletRequest req) {
+//        Page<Map<Object, String>> page = new Page<Map<Object, String>>(pageNo, pageSize);
+//        IPage<Map<Object, String>> pageList = ifeiGangService.selectfgdy(page, contractInformation.getContractNo(),contractInformation.getVoucherNo());
+//        return Result.ok(pageList);
+//    }
+
+    //打印查询列表
+    @AutoLog(value = "打印查询列表")
+    @ApiOperation(value = "打印查询列表", notes = "打印查询列表")
+    @GetMapping(value = "/selectfgdy")
+    public Result<?> selectfgdy(ContractInformation contractInformation,
+                                   @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
+                                   @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
+                                   HttpServletRequest req) {
+        contractInformation.setIsDelete(0);
+        contractInformation.setSettlementIdentification(1);
+        QueryWrapper<ContractInformation> queryWrapper = QueryGenerator.initQueryWrapper(contractInformation, req.getParameterMap());
+        Page<ContractInformation> page = new Page<ContractInformation>(pageNo, pageSize);
+        IPage<ContractInformation> pageList = contractInformationService.page(page, queryWrapper);
+        return Result.ok(pageList);
     }
 
 }

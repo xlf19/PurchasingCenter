@@ -36,6 +36,15 @@
         </if>
             and is_delete = 0
     </select>
+
+    <select id="findContractInformations" resultType="org.jeecg.modules.contract.contract.entity.ContractInformation">
+        select * from contract_information
+        where id in
+        <foreach collection="array" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+
+    </select>
     
     <!--查取元素信息列表-->
     <select id="findElements" resultType="org.jeecg.modules.contract.elements.entity.ContractElements">
@@ -75,6 +84,7 @@
         settlemen_price = #{settlemenPrice},
         settlement_results = #{settlementResults},
         clearing_house = #{clearing_house},
+        taxes = #{taxes},
         settlement_identification = #{settlement_identification}
         where id = #{id}
 

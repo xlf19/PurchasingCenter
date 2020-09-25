@@ -37,7 +37,10 @@ public interface shengtieAccountMapper extends BaseMapper<T> {
   //查取元素信息列表
   List<ContractElements> findElements(String[] ci_id);
 
-  //查取元素公式表中的数据
+  //根据唯一的id将合同信息表中的数据给取出来
+  List<ContractInformation> findContractInformations(String[] ci_id);
+
+      //查取元素公式表中的数据
   List<SysHetonggongshi> findHtGs(@Param("cno") String cno);
 
   //将计算好的元素数据存入
@@ -45,7 +48,7 @@ public interface shengtieAccountMapper extends BaseMapper<T> {
 
   //更新合同信息表中的数据
   Integer updataContractInformation(@Param("settlement_date")Date settlement_date,@Param("settlement_quantity")BigDecimal settlement_quantity,
-  @Param("settlemenPrice")BigDecimal settlemenPrice,@Param("settlementResults")BigDecimal settlementResults,
+  @Param("settlemenPrice")BigDecimal settlemenPrice,@Param("settlementResults")BigDecimal settlementResults,@Param("taxes")BigDecimal taxes,
   @Param("clearing_house")String clearing_house,@Param("settlement_identification")Integer settlement_identification,
   @Param("id") String id);
 

@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.jeecg.modules.contract.fuliao.mapper.FeiLiaoMapper">
-
+    <select id="selectfldy" resultType="map" statementType="CALLABLE">
+        {call dbo.ht_fuliao_dayin(
+	    #{htbh,jdbcType=VARCHAR,mode=IN},
+	    #{pzh,jdbcType=INTEGER,mode=IN}
+	    )}
+    </select>
 
 </mapper>

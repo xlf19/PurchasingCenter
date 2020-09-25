@@ -107,6 +107,10 @@ public class ContractInformation implements Serializable {
 	@Excel(name = "税金", width = 15)
     @ApiModelProperty(value = "税金")
     private java.math.BigDecimal taxes;
+
+    @Excel(name = "结算税金", width = 15)
+    @ApiModelProperty(value = "结算税金")
+    private java.math.BigDecimal settlementTaxes;
 	/**含税*/
 	@Excel(name = "含税", width = 15)
     @ApiModelProperty(value = "含税")
