@@ -2,11 +2,13 @@
   <a-card :bordered="false">
     <!-- table区域-begin -->
     <div>
-      <a-tabs defaultActiveKey="1" >
+      <a-tabs defaultActiveKey="1">
         <a-tab-pane tab="添加凭证号" key="1">
           <fei-gang-list ref="naicai" @gethtbh="gethtbh"></fei-gang-list>
         </a-tab-pane>
-        <a-tab-pane tab="结算" key="2">56</a-tab-pane>
+        <a-tab-pane tab="打印" key="2">
+          <fei-gang-print ref="ranliaoprint" :contrac="contrac"></fei-gang-print>
+        </a-tab-pane>
       </a-tabs>
     </div>
   </a-card>
@@ -15,13 +17,14 @@
 <script>
 import '@/assets/less/TableExpand.less'
 import FeiGangList from '../feigang/FeiGangList'
-import firstTest from '../htgs/firstTest'
+import FeiGangPrint from '../feigang/FeiGangPrint'
+
 
 export default {
   name: 'fuliao',
   components: {
-    firstTest,
     FeiGangList,
+    FeiGangPrint,
   },
   data() {
     return {

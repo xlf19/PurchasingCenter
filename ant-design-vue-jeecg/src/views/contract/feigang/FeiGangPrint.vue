@@ -3,23 +3,7 @@
     <div class="table-page-search-wrapper">
       <a-form layout="inline" @keyup.enter.native="searchQuery" :form="form">
         <a-row :gutter="24">
-          <a-col :xl="4" :lg="7" :md="8" :sm="24">
-            <a-form-item label="结算依据" placeholder="请选择结算依据">
-              <a-select v-model="settlementyj" @change="findcolumns">
-                <a-select-option value="外检">外检</a-select-option>
-                <a-select-option value="内检">内检</a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-          <a-col :xl="4" :lg="7" :md="8" :sm="24">
-            <a-form-item label="物资类别">
-              <a-select v-model="contracttype" placeholder="请选择物资类别">
-                <a-select-option value="精矿粉">精矿粉</a-select-option>
-                <a-select-option value="球团">球团</a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-          <a-col :xl="5" :lg="7" :md="8" :sm="24">
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
             <a-form-item label="合同编号">
               <a-select v-model="queryParam.contractNo" show-search allowClear @search="findHt" @change="findOne">
                 <a-select-option
@@ -32,7 +16,7 @@
               </a-select>
             </a-form-item>
           </a-col>
-          <a-col :xl="5" :lg="7" :md="8" :sm="24">
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
             <a-form-item label="凭证号">
               <a-select v-model="queryParam.voucherNo" allowClear>
                 <a-select-option
@@ -57,21 +41,25 @@
 
     <section ref="print" id="printContent" class="abcdefg">
       <div style="text-align: center">
-        <p style="font-size: 24px; font-weight: 800">精矿粉&nbsp;&nbsp;&nbsp;自动结算单</p>
+        <p style="font-size: 24px; font-weight: 800">废钢自动结算单</p>
       </div>
-      <a-row :gutter="24" style="text-align: center">
-        <a-col :span="6">
+      <a-row :gutter="24" style="text-align: left">
+        <a-col :span="6"></a-col>
+        <a-col :span="8">
           <span>执行:{{ queryParam.contractNo }} 合同标准</span>
         </a-col>
-        <a-col :span="6">
+        <a-col :span="9">
           <span>供货单位:{{ supplier }}</span>
         </a-col>
-        <a-col :span="6">
+      </a-row>
+      <a-row :gutter="24" style="text-align: left; margin-top: 10px">
+        <a-col :span="6"></a-col>
+        <a-col :span="8">
           <span>收货单位:{{ receivingUnit }}</span>
         </a-col>
-        <a-col :span="6"
-          ><span>凭证号:汇--{{ queryParam.voucherNo }}</span></a-col
-        >
+        <a-col :span="9">
+          <span>凭证号:汇--{{ queryParam.voucherNo }}</span>
+        </a-col>
       </a-row>
       <!--签字-->
       <div style="margin-top: 10px">
@@ -90,7 +78,12 @@
       <div>
         <a-row :gutter="24" style="text-align: center; margin-top: 10px">
           <a-col :span="24">
-            <span style="font-size: 18px">贷款:￥{{ loan }}+税金：￥{{ taxes }}=结算金额：￥{{ zprice }}</span>
+            <span style="font-size: 18px">检斤:{{ weighing }}</span>
+          </a-col>
+        </a-row>
+        <a-row :gutter="24" style="text-align: center; margin-top: 10px">
+          <a-col :span="24">
+            <span style="font-size: 18px">总计：贷款:￥{{ loan }}+税金:￥{{ taxes }}=结算金额：￥{{ zprice }}</span>
           </a-col>
         </a-row>
       </div>
@@ -162,173 +155,35 @@ export default {
       settlementDate: '',
       //结算人
       clearingHouse: '',
-      //结算依据
-      settlementyj: '外检',
-      //物资类别
-      contracttype: '精矿粉',
       //贷款
       loan: 0,
       //税金
       taxes: 0,
+      //检斤
+      weighing: 0,
       //总金额
       zprice: 0,
       // 表头
-      wjcolumns: [
-        {
-          title: '入库日期',
-          align: 'center',
-          dataIndex: 'rkDate',
-          customRender: function (text) {
-            return !text ? '' : text.length > 10 ? text.substr(0, 10) : text
-          },
-        },
-        {
-          title: '检斤',
-          align: 'center',
-          dataIndex: 'weighing',
-        },
-        {
-          title: '含税单价',
-          align: 'center',
-          dataIndex: 'contractPrice',
-        },
-        {
-          title: '不含税单价',
-          align: 'center',
-          dataIndex: 'settlemenPrice',
-        },
-        {
-          title: '贷款',
-          align: 'center',
-          dataIndex: 'loan',
-        },
-        {
-          title: '税率',
-          align: 'center',
-          dataIndex: 'taxRate',
-        },
-        {
-          title: '税金',
-          align: 'center',
-          dataIndex: 'taxes',
-        },
-      ],
-
       columns: [
         {
           title: '入库日期',
           align: 'center',
-          dataIndex: 'rkDate',
+          dataIndex: 'settlementDate',
           customRender: function (text) {
             return !text ? '' : text.length > 10 ? text.substr(0, 10) : text
           },
         },
         {
           title: '检斤',
-          align: 'center',
-          dataIndex: 'weighing',
-        },
-        {
-          title: '含税单价',
-          align: 'center',
-          dataIndex: 'contractPrice',
-        },
-        {
-          title: '不含税单价',
-          align: 'center',
-          dataIndex: 'settlemenPrice',
-        },
-        {
-          title: '贷款',
-          align: 'center',
-          dataIndex: 'loan',
-        },
-        {
-          title: '税率',
-          align: 'center',
-          dataIndex: 'taxRate',
-        },
-        {
-          title: '税金',
-          align: 'center',
-          dataIndex: 'taxes',
-        },
-      ],
-
-      njcolumns: [
-        {
-          title: '入库日期',
-          align: 'center',
-          dataIndex: 'rkDate',
-          customRender: function (text) {
-            return !text ? '' : text.length > 10 ? text.substr(0, 10) : text
-          },
-        },
-        {
-          title: '检斤',
-          align: 'center',
-          dataIndex: 'weighing',
-        },
-        {
-          title: '扣猛',
-          align: 'center',
-          dataIndex: 'KMnO',
-        },
-        {
-          title: '扣水',
-          align: 'center',
-          dataIndex: 'KH2O',
-        },
-        {
-          title: '扣钾',
-          align: 'center',
-          dataIndex: 'KK2O',
-        },
-        {
-          title: '扣锌',
-          align: 'center',
-          dataIndex: 'KZn',
-        },
-        // {
-        //   title: '品位价',
-        //   align: 'center',
-        // },
-        {
-          title: '扣硫',
-          align: 'center',
-          dataIndex: 'KS',
-        },
-        {
-          title: '扣铝',
-          align: 'center',
-          dataIndex: 'KAL2O3',
-        },
-        {
-          title: '扣硅',
-          align: 'center',
-          dataIndex: 'KSIO2',
-        },
-        {
-          title: '扣磷',
-          align: 'center',
-          dataIndex: 'KP',
-        },
-        {
-          title: '扣钛',
-          align: 'center',
-          dataIndex: 'KTiO2',
-        },
-        {
-          title: '结算单价',
-          align: 'center',
-          dataIndex: 'settlemenPrice',
-        },
-        {
-          title: '结算数量',
           align: 'center',
           dataIndex: 'settlementQuantity',
         },
         {
+          title: '备注',
+          align: 'center',
+          dataIndex: 'remarks',
+        },
+        {
           title: '贷款',
           align: 'center',
           dataIndex: 'loan',
@@ -341,12 +196,16 @@ export default {
         {
           title: '税金',
           align: 'center',
-          dataIndex: 'taxes',
+          dataIndex: 'settlementTaxes',
+        },
+        {
+          title: '结算金额',
+          align: 'center',
+          dataIndex: 'settlementResults',
         },
       ],
-
       url: {
-        list: '/jingfen/jingfen/selectjfdy',
+        list: '/feigang/feigang/selectfgdy',
         selectHtbh: '/contract/contractInformation/selectHtbh',
         selectHtpzh: '/contract/contractInformation/selectHtpzh',
       },
@@ -360,19 +219,13 @@ export default {
       this.findOne(hth)
     }
   },
-
+  //   mounted() {
+  //     this.tableAddTotalRow(this.columns, this.dataSource)
+  //   },
   methods: {
-    //结算依据
-    findcolumns(type) {
-      if (type === '外检') {
-        this.columns = this.wjcolumns
-      } else {
-        this.columns = this.njcolumns
-      }
-    },
     //获取合同号
     findHt(hth) {
-      getAction(this.url.selectHtbh, { htbh: hth, httype: '精粉富粉球团' }).then((res) => {
+      getAction(this.url.selectHtbh, { htbh: hth, httype: '废钢' }).then((res) => {
         if (res.success) {
           this.contractNos = res.result
         }
@@ -382,9 +235,8 @@ export default {
         this.loading = false
       })
     },
-
     findOne(hth) {
-      getAction(this.url.selectHtpzh, { htbh: hth, httype: '精粉富粉球团' }).then((res) => {
+      getAction(this.url.selectHtpzh, { htbh: hth, httype: '废钢' }).then((res) => {
         if (res.success) {
           this.voucherNos = res.result
         }
@@ -394,7 +246,6 @@ export default {
         this.loading = false
       })
     },
-
     searchHtbh() {
       let contractNo = this.queryParam.contractNo
       let voucherNo = this.queryParam.voucherNo
@@ -421,7 +272,10 @@ export default {
               return preValue + cont.loan
             }, 0)
             this.taxes = this.dataSource.reduce(function (preValue, cont) {
-              return preValue + cont.taxes
+              return preValue + cont.settlementTaxes
+            }, 0)
+            this.weighing = this.dataSource.reduce(function (preValue, cont) {
+              return preValue + cont.settlementQuantity
             }, 0)
             this.zprice = this.loan + this.taxes
             this.tableAddTotalRow(this.columns, this.dataSource)
@@ -434,10 +288,9 @@ export default {
         this.loading = false
       })
     },
-
     /** 表格增加合计行 */
     tableAddTotalRow(columns, dataSource) {
-      let numKey = 'weighingDate'
+      let numKey = 'settlementDate'
       let totalRow = { [numKey]: '合计' }
       columns.forEach((column) => {
         let { key, dataIndex } = column

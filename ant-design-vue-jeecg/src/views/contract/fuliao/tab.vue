@@ -12,6 +12,9 @@
         <a-tab-pane tab="结算" key="3">
           <set-account ref="setaccount"></set-account>
         </a-tab-pane>
+        <a-tab-pane tab="打印" key="4">
+          <fu-liao-print ref="fuliaoprint" :contrac="contrac"></fu-liao-print>
+        </a-tab-pane>
       </a-tabs>
     </div>
   </a-card>
@@ -22,12 +25,14 @@ import '@/assets/less/TableExpand.less'
 import FuLiaoList from '../fuliao/FuLiaoList'
 import firstTest from '../htgs/firstTest'
 import setAccount from '../settlement/setAccount'
+import FuLiaoPrint from '../fuliao/FuLiaoPrint'
 export default {
   name: 'fuliao',
   components: {
     firstTest,
     FuLiaoList,
     setAccount,
+    FuLiaoPrint,
   },
   data() {
     return {
