@@ -289,9 +289,9 @@ public class RanLiaoController extends JeecgController<T, IRanLiaoService> {
             BigDecimal M10 = htone.getBigDecimal("M10");
             BigDecimal M25 = htone.getBigDecimal("M25");
             BigDecimal jyl = htone.getBigDecimal("检验量");
-            String data = htone.getString("riqi");
-            String dwname = htone.getString("supplier");//供货单位
-            String wzname = htone.getString("material_name");//物资名称
+            String data = htone.getString("取样日期");
+            String dwname = htone.getString("供货单位");//供货单位
+            String wzname = htone.getString("名称");//物资名称
             String pgdh = htone.getString("派工单号");//派工单号
             //添加合同信息表
             ContractInformation cinfo = new ContractInformation();
@@ -342,4 +342,19 @@ public class RanLiaoController extends JeecgController<T, IRanLiaoService> {
         cele.setIsDelete(0);
         htelements.save(cele);
     }
+
+
+    //打印查询列表
+    @AutoLog(value = "打印查询列表")
+    @ApiOperation(value="打印查询列表", notes="打印查询列表")
+    @GetMapping(value = "/selectrldy")
+    public Result<?> selectrldy(ContractInformation contractInformation,
+                                @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
+                                @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
+                                HttpServletRequest req) {
+        Page<Map<Object, String>> page = new Page<Map<Object, String>>(pageNo, pageSize);
+        IPage<Map<Object, String>> pageList = rlservice.selectrldy(page, contractInformation.getContractNo(),contractInformation.getVoucherNo());
+        return Result.ok(pageList);
+    }
+
 }

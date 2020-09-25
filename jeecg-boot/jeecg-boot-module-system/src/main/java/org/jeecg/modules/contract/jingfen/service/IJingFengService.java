@@ -1,8 +1,10 @@
 package org.jeecg.modules.contract.jingfen.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import org.apache.ibatis.annotations.Param;
 import org.apache.poi.ss.formula.functions.T;
+
+import java.util.Map;
 
 public interface IJingFengService extends IService<T> {
     /**
@@ -18,4 +20,7 @@ public interface IJingFengService extends IService<T> {
      gudw：供货单位
      **/
     public void addjqlistat(String startTime,String endTime,String gudw,String htbh);
+
+    //精粉打印查询
+    IPage<Map<Object, String>> selectjfdy(IPage<Map<Object, String>> page,  String htbh, Integer pzh);
 }

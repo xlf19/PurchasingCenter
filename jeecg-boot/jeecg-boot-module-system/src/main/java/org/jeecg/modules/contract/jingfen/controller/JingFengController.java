@@ -452,4 +452,17 @@ public class JingFengController extends JeecgController<T, IJingFengService> {
         cele.setIsDelete(0);
         htelements.save(cele);
     }
+
+    //打印查询列表
+    @AutoLog(value = "打印查询列表")
+    @ApiOperation(value="打印查询列表", notes="打印查询列表")
+    @GetMapping(value = "/selectjfdy")
+    public Result<?> selectjfdy(ContractInformation contractInformation,
+                                @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
+                                @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
+                                HttpServletRequest req) {
+        Page<Map<Object, String>> page = new Page<Map<Object, String>>(pageNo, pageSize);
+        IPage<Map<Object, String>> pageList = jfService.selectjfdy(page, contractInformation.getContractNo(),contractInformation.getVoucherNo());
+        return Result.ok(pageList);
+    }
 }

@@ -1,8 +1,11 @@
 package org.jeecg.modules.contract.jingfen.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.apache.ibatis.annotations.Param;
 import org.apache.poi.ss.formula.functions.T;
+
+import java.util.Map;
 
 public interface JingFengMapper extends BaseMapper<T> {
 
@@ -19,4 +22,7 @@ public interface JingFengMapper extends BaseMapper<T> {
      gudw：供货单位
      **/
     public void addjqlistat(@Param("startTime")String startTime,@Param("endTime")String endTime,@Param("gudw")String gudw,@Param("htbh")String htbh);
+
+    //精粉打印查询
+    IPage<Map<Object, String>> selectjfdy(IPage<Map<Object, String>> page, @Param("htbh") String htbh, @Param("pzh") Integer pzh);
 }

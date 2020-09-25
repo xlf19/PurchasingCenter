@@ -10,21 +10,22 @@
     <select id="selectHtbh" resultType="java.lang.String">
               select distinct top(30)  contract_no
               from contract_information
-              where is_delete=0 and settlement_identification=1
+        where 1=1
+--         where is_delete=0 and settlement_identification=1
               <if test="htbh !=null and  htbh !='' ">
                  and contract_no like '%'+#{htbh}+'%'
               </if>
               <if test="httype !=null and  httype !='' ">
                   and contract_type = #{httype}
               </if>
-
               order by contract_no desc
     </select>
 
     <select id="selectHtpzh" resultType="java.lang.String">
         select distinct  voucher_no
         from contract_information
-        where is_delete=0 and settlement_identification=1
+        where 1=1
+--         where is_delete=0 and settlement_identification=1
         <if test="htbh !=null and  htbh !='' ">
             and contract_no = #{htbh}
         </if>
