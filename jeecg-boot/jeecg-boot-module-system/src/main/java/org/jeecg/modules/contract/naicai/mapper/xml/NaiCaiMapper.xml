@@ -7,4 +7,11 @@
 	    #{pzh,jdbcType=INTEGER,mode=IN}
 	    )}
     </select>
+
+    <select id="selectncylist" resultType="map" statementType="CALLABLE">
+        {call dbo.ht_naicai_dayin(
+	    #{htbh,jdbcType=VARCHAR,mode=IN},
+	    #{pzh,jdbcType=INTEGER,mode=IN}
+	    )}
+    </select>
 </mapper>

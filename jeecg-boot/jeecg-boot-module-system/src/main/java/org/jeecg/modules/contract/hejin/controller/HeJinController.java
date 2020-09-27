@@ -13,19 +13,27 @@ import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.aspect.annotation.AutoLog;
 import org.jeecg.common.system.base.controller.JeecgController;
 import org.jeecg.common.system.query.QueryGenerator;
+import org.jeecg.common.util.oConvertUtils;
 import org.jeecg.modules.contract.contract.entity.ContractInformation;
 import org.jeecg.modules.contract.contract.service.IContractInformationService;
 import org.jeecg.modules.contract.elements.entity.ContractElements;
 import org.jeecg.modules.contract.elements.service.IContractElementsService;
 import org.jeecg.modules.contract.hejin.service.IHeJinService;
 import org.jeecg.modules.contract.hetong.service.IHeTongService;
+import org.jeecgframework.poi.excel.def.MapExcelConstants;
+import org.jeecgframework.poi.excel.entity.ExportParams;
+import org.jeecgframework.poi.excel.entity.params.ExcelExportEntity;
+import org.jeecgframework.poi.excel.view.JeecgMapExcelView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -42,6 +50,9 @@ public class HeJinController extends JeecgController<T, IHeJinService> {
 
     @Autowired
     private IHeTongService htservice;
+
+    @Autowired
+    private IHeJinService iheJinService;
 
     @AutoLog(value = "合同信息表-分页列表查询")
     @ApiOperation(value = "合同信息表-分页列表查询", notes = "合同信息表-分页列表查询")
@@ -240,5 +251,104 @@ public class HeJinController extends JeecgController<T, IHeJinService> {
         cele.setElelmentDate(ele);
         cele.setIsDelete(0);
         htelements.save(cele);
+    }
+
+    //打印查询列表
+    @AutoLog(value = "打印查询列表")
+    @ApiOperation(value="打印查询列表", notes="打印查询列表")
+    @GetMapping(value = "/selecthjdy")
+    public Result<?> selecthjdy(ContractInformation contractInformation,
+                                @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
+                                @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
+                                HttpServletRequest req) {
+        Page<Map<Object, String>> page = new Page<Map<Object, String>>(pageNo, pageSize);
+        IPage<Map<Object, String>> pageList = iheJinService.selecthjdy(page, contractInformation.getContractNo(),contractInformation.getVoucherNo());
+        return Result.ok(pageList);
+    }
+    //导出
+    @RequestMapping(value = "/exportXls")
+    public ModelAndView exportXlss(HttpServletRequest request, ContractInformation con) {
+        String htbh="";
+        Integer pzh=0;
+        if(oConvertUtils.isNotEmpty(request.getParameter("contractNo"))){
+            htbh =request.getParameter("contractNo");
+        }
+        if(oConvertUtils.isNotEmpty(request.getParameter("voucherNo"))){
+            pzh =Integer.parseInt(request.getParameter("voucherNo"));
+        }
+        List<Map<String, Object>> demoData = iheJinService.selecthjdylist(htbh,pzh);
+        //导出Excel
+        ModelAndView mv = new ModelAndView(new JeecgMapExcelView());
+        // 导出文件名称
+        //mv.addObject(MapExcelConstants.FILE_NAME, "合金信息表");
+        // 设置数据
+        mv.addObject(MapExcelConstants.MAP_LIST, demoData);
+        // 设置 ExportParams
+        mv.addObject(MapExcelConstants.PARAMS, new ExportParams("合金信息表", "testExp"));
+        // 设置表头样式
+        List<ExcelExportEntity> filedsList = new ArrayList<>();
+        filedsList.add(new ExcelExportEntity("合同编号", "contractNo"));
+        filedsList.add(new ExcelExportEntity("凭证号", "voucherNo"));
+        filedsList.add(new ExcelExportEntity("物资名称", "materialName"));
+        filedsList.add(new ExcelExportEntity("供货单位", "supplier"));
+        filedsList.add(new ExcelExportEntity("使用单位", "receivingUnit"));
+        filedsList.add(new ExcelExportEntity("取样日期", "weighingDate"));
+        filedsList.add(new ExcelExportEntity("检斤", "weighing"));
+        filedsList.add(new ExcelExportEntity("结算单价", "settlemenPrice"));
+        filedsList.add(new ExcelExportEntity("结算数量", "settlementQuantity"));
+        filedsList.add(new ExcelExportEntity("结算金额", "settlementResults"));
+        filedsList.add(new ExcelExportEntity("含税标记", "taxIncluded"));
+        filedsList.add(new ExcelExportEntity("LD1", "LD1"));
+        filedsList.add(new ExcelExportEntity("KLD1", "KLD1"));
+        filedsList.add(new ExcelExportEntity("LD2", "LD2"));
+        filedsList.add(new ExcelExportEntity("KLD2", "KLD2"));
+        filedsList.add(new ExcelExportEntity("SIO2", "SIO2"));
+        filedsList.add(new ExcelExportEntity("KSIO2", "KSIO2"));
+        filedsList.add(new ExcelExportEntity("Ca", "Ca"));
+        filedsList.add(new ExcelExportEntity("KCa", "KCa"));
+        filedsList.add(new ExcelExportEntity("P", "P"));
+        filedsList.add(new ExcelExportEntity("KP", "KP"));
+        filedsList.add(new ExcelExportEntity("S", "S"));
+        filedsList.add(new ExcelExportEntity("KS", "KS"));
+        filedsList.add(new ExcelExportEntity("SiC", "SiC"));
+        filedsList.add(new ExcelExportEntity("KSiC", "KSiC"));
+        filedsList.add(new ExcelExportEntity("Cu", "Cu"));
+        filedsList.add(new ExcelExportEntity("KCu", "KCu"));
+        filedsList.add(new ExcelExportEntity("C", "C"));
+        filedsList.add(new ExcelExportEntity("KC", "KC"));
+        filedsList.add(new ExcelExportEntity("Fe", "Fe"));
+        filedsList.add(new ExcelExportEntity("KFe", "KFe"));
+        filedsList.add(new ExcelExportEntity("Al", "Al"));
+        filedsList.add(new ExcelExportEntity("KAl", "KAl"));
+        filedsList.add(new ExcelExportEntity("Te", "Te"));
+        filedsList.add(new ExcelExportEntity("KTe", "KTe"));
+        filedsList.add(new ExcelExportEntity("Ba", "Ba"));
+        filedsList.add(new ExcelExportEntity("KBa", "KBa"));
+        filedsList.add(new ExcelExportEntity("H2O", "H2O"));
+        filedsList.add(new ExcelExportEntity("KH2O", "KH2O"));
+        filedsList.add(new ExcelExportEntity("TFE", "TFE"));
+        filedsList.add(new ExcelExportEntity("KTFE", "KTFE"));
+        filedsList.add(new ExcelExportEntity("AL2O3", "AL2O3"));
+        filedsList.add(new ExcelExportEntity("KAL2O3", "KAL2O3"));
+        filedsList.add(new ExcelExportEntity("TiO2", "TiO2"));
+        filedsList.add(new ExcelExportEntity("KTiO2", "KTiO2"));
+        filedsList.add(new ExcelExportEntity("CaF2", "CaF2"));
+        filedsList.add(new ExcelExportEntity("KCaF2", "KCaF2"));
+        filedsList.add(new ExcelExportEntity("MgO", "MgO"));
+        filedsList.add(new ExcelExportEntity("KHMgO", "KMgO"));
+        filedsList.add(new ExcelExportEntity("CAO", "CAO"));
+        filedsList.add(new ExcelExportEntity("KCAO", "KCAO"));
+        filedsList.add(new ExcelExportEntity("Ad", "Ad"));
+        filedsList.add(new ExcelExportEntity("KAd", "KAd"));
+        filedsList.add(new ExcelExportEntity("Std", "Std"));
+        filedsList.add(new ExcelExportEntity("KStd", "KStd"));
+        filedsList.add(new ExcelExportEntity("Vdaf", "Vdaf"));
+        filedsList.add(new ExcelExportEntity("KVdaf", "KVdaf"));
+        filedsList.add(new ExcelExportEntity("Q", "Q"));
+        filedsList.add(new ExcelExportEntity("KQ", "KQ"));
+        filedsList.add(new ExcelExportEntity("N", "N"));
+        filedsList.add(new ExcelExportEntity("KN", "KN"));
+        mv.addObject(MapExcelConstants.ENTITY_LIST, filedsList);
+        return mv;
     }
 }

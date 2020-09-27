@@ -10,16 +10,23 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.formula.functions.T;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.aspect.annotation.AutoLog;
 import org.jeecg.common.system.base.controller.JeecgController;
 import org.jeecg.common.system.query.QueryGenerator;
+import org.jeecg.common.util.oConvertUtils;
 import org.jeecg.modules.contract.contract.entity.ContractInformation;
 import org.jeecg.modules.contract.contract.service.IContractInformationService;
 import org.jeecg.modules.contract.elements.entity.ContractElements;
 import org.jeecg.modules.contract.elements.service.IContractElementsService;
 import org.jeecg.modules.contract.hetong.service.IHeTongService;
 import org.jeecg.modules.contract.naicai.service.INaiCaiService;
+import org.jeecgframework.poi.excel.ExcelExportUtil;
+import org.jeecgframework.poi.excel.def.MapExcelConstants;
+import org.jeecgframework.poi.excel.entity.ExportParams;
+import org.jeecgframework.poi.excel.entity.params.ExcelExportEntity;
+import org.jeecgframework.poi.excel.view.JeecgMapExcelView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -28,6 +35,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -196,12 +205,77 @@ public class NaiCaiController extends JeecgController<T, INaiCaiService> {
     /**
      * 导出excel
      *
-     * @param request
-     * @param contractInformation
      */
     @RequestMapping(value = "/exportXls")
-    public ModelAndView exportXls(HttpServletRequest request, T contractInformation) {
-        return super.exportXls(request, contractInformation, T.class, "合同信息表");
+    public ModelAndView exportXlss(HttpServletRequest request, ContractInformation con) {
+        String htbh="";
+        Integer pzh=0;
+        if(oConvertUtils.isNotEmpty(request.getParameter("contractNo"))){
+            htbh =request.getParameter("contractNo");
+        }
+        if(oConvertUtils.isNotEmpty(request.getParameter("voucherNo"))){
+            pzh =Integer.parseInt(request.getParameter("voucherNo"));
+        }
+        List<Map<String, Object>> demoData = inaiCaiService.selectncylist(htbh,pzh);
+        //导出Excel
+        ModelAndView mv = new ModelAndView(new JeecgMapExcelView());
+        // 导出文件名称
+        //mv.addObject(MapExcelConstants.FILE_NAME, "耐材信息表");
+        // 设置数据
+        mv.addObject(MapExcelConstants.MAP_LIST, demoData);
+        // 设置 ExportParams
+        mv.addObject(MapExcelConstants.PARAMS, new ExportParams("耐材信息表", "testExp"));
+        // 设置表头样式
+        List<ExcelExportEntity> filedsList = new ArrayList<>();
+        filedsList.add(new ExcelExportEntity("合同编号", "contractNo"));
+        filedsList.add(new ExcelExportEntity("凭证号", "voucherNo"));
+        filedsList.add(new ExcelExportEntity("物资名称", "materialName"));
+        filedsList.add(new ExcelExportEntity("供货单位", "supplier"));
+        filedsList.add(new ExcelExportEntity("使用单位", "receivingUnit"));
+        filedsList.add(new ExcelExportEntity("取样日期", "weighingDate"));
+        filedsList.add(new ExcelExportEntity("检斤", "weighing"));
+        filedsList.add(new ExcelExportEntity("结算单价", "settlemenPrice"));
+        filedsList.add(new ExcelExportEntity("结算数量", "settlementQuantity"));
+        filedsList.add(new ExcelExportEntity("结算金额", "settlementResults"));
+        filedsList.add(new ExcelExportEntity("含税标记", "taxIncluded"));
+        filedsList.add(new ExcelExportEntity("H2O", "H2O"));
+        filedsList.add(new ExcelExportEntity("KH2O", "KH2O"));
+        filedsList.add(new ExcelExportEntity("CaO", "CaO"));
+        filedsList.add(new ExcelExportEntity("KCaO", "KCaO"));
+        filedsList.add(new ExcelExportEntity("SiO2", "SiO2"));
+        filedsList.add(new ExcelExportEntity("KSiO2", "KSiO2"));
+        filedsList.add(new ExcelExportEntity("MgO", "MgO"));
+        filedsList.add(new ExcelExportEntity("KMgO", "KMgO"));
+        filedsList.add(new ExcelExportEntity("C", "C"));
+        filedsList.add(new ExcelExportEntity("KC", "KC"));
+        filedsList.add(new ExcelExportEntity("Al2O3", "Al2O3"));
+        filedsList.add(new ExcelExportEntity("KAl2O3", "KAl2O3"));
+        filedsList.add(new ExcelExportEntity("Ad", "Ad"));
+        filedsList.add(new ExcelExportEntity("KAd", "KAd"));
+        filedsList.add(new ExcelExportEntity("Vdaf", "Vdaf"));
+        filedsList.add(new ExcelExportEntity("KVdaf", "KVdaf"));
+        filedsList.add(new ExcelExportEntity("Std", "Std"));
+        filedsList.add(new ExcelExportEntity("KStd", "KStd"));
+        filedsList.add(new ExcelExportEntity("Q", "Q"));
+        filedsList.add(new ExcelExportEntity("KQ", "KQ"));
+        filedsList.add(new ExcelExportEntity("[粒度>50mm]", "[粒度>50mm]"));
+        filedsList.add(new ExcelExportEntity("K_[粒度>50mm]", "KM50"));
+        filedsList.add(new ExcelExportEntity("[粒度<5mm]", "[粒度<5mm]"));
+        filedsList.add(new ExcelExportEntity("K_[粒度<5mm]", "KM5"));
+        filedsList.add(new ExcelExportEntity("灼减", "灼减"));
+        filedsList.add(new ExcelExportEntity("K_灼减", "Kzj"));
+        filedsList.add(new ExcelExportEntity("P", "P"));
+        filedsList.add(new ExcelExportEntity("KP", "KP"));
+        filedsList.add(new ExcelExportEntity("S", "S"));
+        filedsList.add(new ExcelExportEntity("KS", "KS"));
+        filedsList.add(new ExcelExportEntity("CaF2", "CaF2"));
+        filedsList.add(new ExcelExportEntity("KCaF2", "KCaF2"));
+        filedsList.add(new ExcelExportEntity("TFe", "TFe"));
+        filedsList.add(new ExcelExportEntity("KTFe", "KTFe"));
+        filedsList.add(new ExcelExportEntity("制样备注", "remarks"));
+        mv.addObject(MapExcelConstants.ENTITY_LIST, filedsList);
+        return mv;
     }
+
 
 }
