@@ -21,7 +21,7 @@ import FeiGangPrint from '../feigang/FeiGangPrint'
 
 
 export default {
-  name: 'fuliao',
+  name: 'feigang',
   components: {
     FeiGangList,
     FeiGangPrint,

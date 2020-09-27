@@ -10,7 +10,7 @@
           <first-test ref="firstTest" :contrac="contrac"></first-test>
         </a-tab-pane>
         <a-tab-pane tab="结算" key="3">
-          <set-account ref="setaccount"></set-account>
+          <set-account ref="setaccount" :contracttype="contracttype"></set-account>
         </a-tab-pane>
         <a-tab-pane tab="打印" key="4">
           <nai-cai-print ref="shengtieprint" :contrac="contrac"></nai-cai-print>
@@ -27,7 +27,7 @@ import firstTest from '../htgs/firstTest'
 import setAccount from '../settlement/setAccount'
 import NaiCaiPrint from '../naicai/NaiCaiPrint'
 export default {
-  name: 'fuliao',
+  name: 'naicai',
   components: {
     firstTest,
     NaiCaiList,
@@ -36,9 +36,10 @@ export default {
   },
   data() {
     return {
-      description: '辅料结算管理页面',
+      description: '耐材结算管理页面',
       dictOptions: {},
       contrac: '',
+      contracttype: '耐材',
     }
   },
   created() {},

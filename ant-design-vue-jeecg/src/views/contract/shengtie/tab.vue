@@ -10,7 +10,7 @@
           <first-test ref="firstTest" :contrac="contrac"></first-test>
         </a-tab-pane>
         <a-tab-pane tab="结算" key="3">
-          <set-account ref="setaccount"></set-account>
+          <set-account ref="setaccount" :contracttype="contracttype"></set-account>
         </a-tab-pane>
         <a-tab-pane tab="打印" key="4">
           <sheng-tie-print ref="shengtieprint" :contrac="contrac"></sheng-tie-print>
@@ -40,6 +40,7 @@ export default {
       description: '生铁结算管理页面',
       dictOptions: {},
       contrac: '',
+      contracttype:'生铁'
     }
   },
   created() {},
