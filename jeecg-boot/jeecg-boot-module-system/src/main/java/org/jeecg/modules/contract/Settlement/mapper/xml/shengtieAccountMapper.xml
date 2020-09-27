@@ -7,6 +7,9 @@
         <if test="hth !=null and  hth !='' ">
             and contract_no like  '%' +#{hth}+'%'
         </if>
+        <if test="contracttype !=null and  contracttype !='' ">
+            and contract_type =#{contracttype}
+        </if>
     </select>
 
     <select id="findVoucherNo" resultType="map">

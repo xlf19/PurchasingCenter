@@ -46,8 +46,7 @@ public class shengtieAccountController {
   public Result<?> findContractNo(@RequestBody String contractNo){
 
     JSONObject ht = JSONObject.parseObject(contractNo);
-    System.out.println(ht.getString("contractNo"));
-    List<Map<Object,String>> list = shengtie.findHthList(ht.getString("contractNo"));
+    List<Map<Object,String>> list = shengtie.findHthList(ht.getString("contractNo"),ht.getString("contracttype"));
     return Result.ok(list);
   }
 

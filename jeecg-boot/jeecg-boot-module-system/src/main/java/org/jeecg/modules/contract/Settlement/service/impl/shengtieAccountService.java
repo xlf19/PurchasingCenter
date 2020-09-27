@@ -40,9 +40,9 @@ public class shengtieAccountService extends ServiceImpl<shengtieAccountMapper, T
   shengtieAccountMapper shengtieHth;
 
   @Override
-  public List<Map<Object, String>> findHthList(String hth) {
+  public List<Map<Object, String>> findHthList(String hth,String contracttype) {
     System.out.print(hth);
-    return shengtieHth.findHthList(hth);
+    return shengtieHth.findHthList(hth,contracttype);
   }
 
   @Override

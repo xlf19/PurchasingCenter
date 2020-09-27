@@ -17,7 +17,7 @@ import java.util.Map;
  **/
 public interface IshengtieAccountService extends IService<T> {
 
-  List<Map<Object,String>> findHthList(String hth);
+  List<Map<Object,String>> findHthList(String hth,String contracttype);
 
   //通过合同号找相应的凭证号
   List<Map<Object,String>> findVoucherNo(String contractNo);

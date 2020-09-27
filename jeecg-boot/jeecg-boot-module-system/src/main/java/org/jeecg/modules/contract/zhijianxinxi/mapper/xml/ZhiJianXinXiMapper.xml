@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.jeecg.modules.contract.zhijianxinxi.mapper.ZhiJianXinXiMapper">
 
+<!--	获取生铁质检信息-->
     <select id="listzjxx" resultType="map" statementType="CALLABLE">
         {call dbo.ht_zhijianxinxi_shengtie(
         #{startTime,jdbcType=VARCHAR,mode=IN},

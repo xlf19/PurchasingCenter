@@ -21,7 +21,7 @@ import java.util.Map;
  **/
 public interface shengtieAccountMapper extends BaseMapper<T> {
 
-  List<Map<Object,String>> findHthList(@Param("hth")String hth);
+  List<Map<Object,String>> findHthList(@Param("hth")String hth,@Param("contracttype")String contracttype);
 
   //通过合同号找相应的凭证号
   List<Map<Object,String>> findVoucherNo(@Param("contractNo")String contractNo);
