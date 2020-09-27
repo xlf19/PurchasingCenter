@@ -1,7 +1,7 @@
 <!--
  * @descript: 
  * @Date: 2020-08-28 14:27:18
- * @LastEditTime: 2020-09-16 15:22:09
+ * @LastEditTime: 2020-09-27 12:53:56
  * @version: 0.0.1
 -->
 <template>
@@ -10,14 +10,20 @@
       <div class="firstTitle">
         <a-form layout="inline">
           <a-form-item label="合同编号">
-            <j-search-select-tag-sec
+            <!-- <j-search-select-tag-sec
               placeholder="请做出你的选择"
               v-model="hetongId1"
               style="width: 160px"
-              dict="contract_information,contract_no,contract_no"
-              :async="false"
+              
+              :dictOptions="dictOptions"
+              
               @change="searchChange($event)"
-            ></j-search-select-tag-sec>
+            ></j-search-select-tag-sec> -->
+            <a-select style="width: 160px" :defaultValue="hetongId1" @change="searchChange">
+              <a-select-option v-for="item in dictOptions" :key="item.value">
+                {{ item.title }}
+              </a-select-option>
+            </a-select>
           </a-form-item>
           <a-form-item>
             <!-- <a-button type="primary" icon="search" @click="searchAllHt">查询</a-button> -->
@@ -115,10 +121,14 @@ export default {
       // required: true,
       // default: 'WX20200900031',
     },
+    contractType: {
+      type: String,
+    },
   },
   watch: {
     contrac(newVal, oldVal) {
       this.params.hetongId = newVal
+      // console.log(newVal,oldVal)
       this.hetongId1 = newVal
       this.loadData(1)
       //this.setSyselements(newVal)
@@ -132,7 +142,7 @@ export default {
       //合同编号
       hetongId1: this.contrac,
       hetongId2: '',
-      contractOptions: [{ id: 'WX20200900031' }, { id: 'WX20200900039' }, { id: 'WX20200900040' }],
+      // contractOptions: [{ id: 'WX20200900031' }, { id: 'WX20200900039' }, { id: 'WX20200900040' }],
 
       //元素表
       elementsOptions: [
@@ -298,6 +308,7 @@ export default {
         queryById: '/Hetonggongshi/sysHetonggongshi/queryById',
         queryTemplateByName: '/SysTemplate/sysTemplate/list',
         elemetslist: '/elements/contractElements/findListhth',
+        queryContractType: '/contract/contractInformation/list',
       },
       selectedRowIds: [],
       labelCol: {
@@ -331,14 +342,51 @@ export default {
         hetongId: this.contrac,
       },
       templatename: '',
+      dictOptions: [
+        // {
+        //   text:"选项一",
+        //   value:"1"
+        // },
+        // {
+        //   text:"选项二",
+        //   value:"2"
+        // },
+        // {
+        //   text:"选项三",
+        //   value:"3"
+        // }
+      ],
     }
   },
   created() {
     // this.loadData()
     this.setSyselements(this.contrac)
     // this.setSysbolOptions()
+    this.queryContractType()
   },
   methods: {
+    //查询合同编号
+    queryContractType() {
+      let params = {
+        contractType:this.contractType,
+      }
+      getAction(this.url.queryContractType, params).then((res) => {
+        // console.log(res.result)
+        let hetongIdArr = []
+        res.result.records.forEach((item) => {
+          hetongIdArr.push(item.contractNo)
+        })
+        let arr = [...new Set(hetongIdArr)]
+        let dictItem = []
+        arr.forEach((item) => {
+          let itx = {}
+          ;(itx.text = item), (itx.value = item), (itx.title = item), dictItem.push(itx)
+        })
+        // debugger;
+        this.dictOptions = dictItem
+      })
+    },
+
     //合同元素加载数据
     setSyselements(hth) {
       getAction(this.url.elemetslist, { hth: hth }).then((res) => {
@@ -416,6 +464,7 @@ export default {
     // },
     //下拉选择搜索
     searchChange(values) {
+      // console.log(values+'---------')
       this.params.hetongId = values
       this.loadData(1)
       this.setSyselements(values)

@@ -7,7 +7,7 @@
           <ran-liao-list ref="ranliao" @gethtbh="gethtbh"></ran-liao-list>
         </a-tab-pane>
         <a-tab-pane tab="结算公式维护" key="2">
-          <first-test ref="firstTest" :contrac="contrac"></first-test>
+          <first-test ref="firstTest" :contrac="contrac" :contracttype="contracttype"></first-test>
         </a-tab-pane>
         <a-tab-pane tab="结算" key="3">
           <set-account ref="setaccount" :contrac="contrac" :contracttype="contracttype"></set-account>

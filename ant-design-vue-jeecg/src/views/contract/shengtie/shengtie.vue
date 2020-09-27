@@ -18,9 +18,10 @@
                   <a-select-option
                     placeholder="请选择合同号"
                     :value="item.HeTongBianHao"
-                    v-for="(item,index) in contractNos"
+                    v-for="(item, index) in contractNos"
                     :key="index"
-                  >{{item.HeTongBianHao}}</a-select-option>
+                    >{{ item.HeTongBianHao }}</a-select-option
+                  >
                 </a-select>
               </a-form-item>
             </a-col>
@@ -31,17 +32,14 @@
             </a-col>
             <a-col :xl="6" :lg="7" :md="8" :sm="24">
               <a-form-item label="收货单位">
-                <a-select
-                  show-search
-                  allowClear
-                  v-decorator="['receivingUnit', validatorRules.receivingUnit]"
-                >
+                <a-select show-search allowClear v-decorator="['receivingUnit', validatorRules.receivingUnit]">
                   <a-select-option
                     placeholder="请选择收货单位"
                     :value="item.ShouHuoDanWeiName"
-                    v-for="(item,index) in receivingUnits"
+                    v-for="(item, index) in receivingUnits"
                     :key="index"
-                  >{{item.ShouHuoDanWeiName}}</a-select-option>
+                    >{{ item.ShouHuoDanWeiName }}</a-select-option
+                  >
                 </a-select>
               </a-form-item>
             </a-col>
@@ -54,10 +52,7 @@
           <a-row :gutter="24">
             <a-col :xl="6" :lg="8" :md="10" :sm="24">
               <a-form-item label="起止日期">
-                <a-range-picker
-                  :trigger-change="true"
-                  v-decorator="['rangeDate', validatorRules.rangeDate]"
-                />
+                <a-range-picker :trigger-change="true" v-decorator="['rangeDate', validatorRules.rangeDate]" />
               </a-form-item>
             </a-col>
             <a-col :xl="6" :lg="7" :md="8" :sm="24">
@@ -66,7 +61,7 @@
               </a-form-item>
             </a-col>
             <a-col :xl="6" :lg="7" :md="8" :sm="24">
-              <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+              <span style="float: left; overflow: hidden" class="table-page-search-submitButtons">
                 <a-button type="primary" @click="searchList" icon="search">质检数据</a-button>
               </span>
             </a-col>
@@ -79,11 +74,11 @@
       </div>
       <!-- table区域-begin -->
       <div>
-        <div class="ant-alert ant-alert-info" style="margin-bottom: 16px;">
-          <i class="anticon anticon-info-circle ant-alert-icon"></i>质检数据列表&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;已选择
-          <a
-            style="font-weight: 600"
-          >{{ selectedRowKeys.length }}</a>项
+        <div class="ant-alert ant-alert-info" style="margin-bottom: 16px">
+          <i class="anticon anticon-info-circle ant-alert-icon"></i
+          >质检数据列表&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;已选择
+          <a style="font-weight: 600">{{ selectedRowKeys.length }}</a
+          >项
           <a style="margin-left: 24px" @click="onClearSelected">清空</a>
         </div>
         <a-table
@@ -95,7 +90,7 @@
           :dataSource="dataSource"
           :pagination="ipagination"
           :loading="loading"
-          :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
+          :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
           class="j-table-force-nowrap"
           @change="handleTableChange"
         ></a-table>
@@ -239,7 +234,7 @@ export default {
           dataIndex: '派工单号',
         },
       ],
-   
+
       validatorRules: {
         contractNo: { rules: [{ required: true, message: '请选择合同号!' }] },
         receivingUnit: { rules: [{ required: true, message: '请选择收货单位!' }] },
@@ -248,7 +243,7 @@ export default {
           initialValue: [moment(this.date), moment(this.date)],
         },
       },
-  
+
       url: {
         list: '/zhijianxingxi/zhijianxingxi/listzjxx',
         findpzh: '/contract/contractInformation/findpzh',
@@ -257,7 +252,7 @@ export default {
         findOne: '/hetong/hetong/findOne',
         htadd: '/shengtie/shengtie/htadd',
       },
-      
+
       dictOptions: {},
     }
   },
@@ -273,8 +268,8 @@ export default {
   },
   methods: {
     initDictConfig() {},
-  
-  //获取凭证号
+
+    //获取凭证号
     findpzh() {
       getAction(this.url.findpzh).then((res) => {
         if (res.success) {
@@ -288,7 +283,7 @@ export default {
         this.loading = false
       })
     },
-    
+
     //获取合同号
     findHt(hth) {
       getAction(this.url.findHt, { hth: hth }).then((res) => {
@@ -301,12 +296,12 @@ export default {
         this.loading = false
       })
     },
-    
+
     //获取合同号
     htSearch(value) {
       this.findHt(value)
     },
-    
+
     //获取收货单位
     findshdw(hth) {
       getAction(this.url.findshdw).then((res) => {
@@ -319,8 +314,8 @@ export default {
         this.loading = false
       })
     },
-  
-  //获取供货单位、物资名称
+
+    //获取供货单位、物资名称
     findOne(hth) {
       getAction(this.url.findOne, { hth: hth }).then((res) => {
         if (res.success) {
@@ -337,22 +332,22 @@ export default {
       this.finlist(hth)
       this.$emit('gethtbh', hth)
     },
-   
-   //合同信息
+
+    //合同信息
     finlist(hth) {
       this.$refs.ContractList.htlist(hth)
     },
-  
-  //导入质检数据
+
+    //导入质检数据
     htAdd() {
       let htxx = JSON.stringify(this.selectionRows)
       //凭证号
       let pzh = this.voucherNo
       let length = this.selectedRowKeys.length
       if (length === 0) {
-         this.$message.warning('请选择数据。')
-         return 
-      } 
+        this.$message.warning('请选择数据。')
+        return
+      }
       this.form.validateFields((err, values) => {
         if (!err) {
           let shdw = values.receivingUnit
@@ -361,6 +356,14 @@ export default {
             if (res.success) {
               this.$message.success(res.message)
               this.$refs.ContractList.htlist(htbhs)
+              this.selectedRowKeys = []
+              this.selectionRows = []
+              let datas = {
+                startTime: this.startTime,
+                endTime: this.endTime,
+                supplier: this.supplier,
+              }
+              this.loadData(this.arg, datas)
             }
             if (res.code === 510) {
               this.$message.warning(res.message)
@@ -370,7 +373,7 @@ export default {
         }
       })
     },
-    
+
     //查询质检数据
     searchList() {
       this.form.validateFields((err, values) => {
@@ -411,8 +414,8 @@ export default {
         this.loading = false
       })
     },
-   
-   //获取选中行数据
+
+    //获取选中行数据
     onSelectChange(selectedRowKeys, selectionRows) {
       this.selectedRowKeys = selectedRowKeys
       this.selectionRows = selectionRows

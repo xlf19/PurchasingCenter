@@ -7,44 +7,21 @@
           <a-col :xl="6" :lg="7" :md="8" :sm="24">
             <!-- 第一个输入框 -->
             <a-form-item label="合同编号">
-              <a-select
-                show-search
-                :value="contractNo"
-                placeholder="亲输入合同编号"
-                style="width: 200px"
-                :default-active-first-option="false"
-                :show-arrow="false"
-                :filter-option="false"
-                :not-found-content="null"
-                @search="handleSearch"
-                @change="handleChange"
-              >
-                <a-select-option
-                  v-for="(item,index) in contract"
-                  :key="index"
-                >{{ item.contract_no }}</a-select-option>
+              <a-select v-model="contractNo" show-search allowClear @search="handleSearch" @change="handleChange">
+                <a-select-option v-for="(item, index) in contracts" :value="item.contract_no" :key="index">{{
+                  item.contract_no
+                }}</a-select-option>
               </a-select>
             </a-form-item>
           </a-col>
           <!-- 第二个输入框 -->
           <a-col :xl="6" :lg="7" :md="8" :sm="24">
             <a-form-item label="凭证号">
-              <a-select
-                show-search
-                :value="voucherNo"
-                placeholder="亲输入合同编号"
-                style="width: 200px"
-                :default-active-first-option="false"
-                :show-arrow="false"
-                :filter-option="false"
-                :not-found-content="null"
-                @change="voucherNoChange"
-              >
+              <a-select v-model="voucherNo" allowClear placeholder="请选择凭证号">
                 <!-- 会将下拉框中的key中所对应的值给上面的:value中多对应的值 -->
-                <a-select-option
-                  v-for="(item,index) in voucherNos"
-                  :key="index"
-                >{{ item.voucher_no }}</a-select-option>
+                <a-select-option v-for="(item, index) in voucherNos" :value="item.voucher_no" :key="index">{{
+                  item.voucher_no
+                }}</a-select-option>
               </a-select>
             </a-form-item>
           </a-col>
@@ -52,12 +29,9 @@
           <a-col :md="8" :sm="24">
             <span>
               <a-button type="primary" @click="searchList" setTimeout="200" icon="search">查询</a-button>
-              <a-button
-                type="primary"
-                @click="accountSettle"
-                icon="account-book"
-                style="margin-left: 8px"
-              >结算</a-button>
+              <a-button type="primary" @click="accountSettle" icon="account-book" style="margin-left: 8px"
+                >结算</a-button
+              >
             </span>
           </a-col>
         </a-row>
@@ -67,11 +41,11 @@
     <div>
       <a-table
         ref="table"
-        :scroll="{x:true}"
+        :scroll="{ x: true }"
         size="middle"
         rowKey="id"
         :pagination="ipagination"
-        :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
+        :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
         :columns="columns"
         :dataSource="dataValue"
         :loading="loading"
@@ -80,15 +54,15 @@
         class="j-table-force-nowrap"
         @change="handleTableChange"
       >
-        <div slot="expandedRowRender" slot-scope="record" style="margin: 0">
+        <div slot="expandedRowRender" style="margin: 0">
           <a-row :gutter="24" :style="{ marginBottom: '240px' }">
             <a-descriptions title="生铁合同元素数据" :column="8">
-              <detail-list-item v-for="(item,index) in element" :key="index" :term="item.element">
+              <detail-list-item v-for="(item, index) in element" :key="index" :term="item.element">
                 <ul>
-                  <li>元素数据:{{item.element}}</li>
-                  <li>{{item.elelmentDate}}</li>
+                  <li>元素数据:{{ item.element }}</li>
+                  <li>{{ item.elelmentDate }}</li>
                   <li>扣除结果</li>
-                  <li>{{item.deductionResult}}</li>
+                  <li>{{ item.deductionResult }}</li>
                 </ul>
               </detail-list-item>
             </a-descriptions>
@@ -105,8 +79,7 @@ import { deleteAction, getAction, postAction } from '@/api/manage'
 import { mixinDevice } from '@/utils/mixin'
 import DetailList from '@/components/tools/DetailList'
 import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-import { filterObj } from '@/utils/util'
-
+import { validateDuplicateValue, randomUUID, handleStatus, filterObj } from '@/utils/util'
 const DetailListItem = DetailList.Item
 
 export default {
@@ -116,15 +89,27 @@ export default {
     DetailList,
     DetailListItem,
   },
-
+  props: {
+    contrac: {
+      type: String,
+    },
+    contracttype: {
+      type: String,
+    },
+  },
+  watch: {
+    contrac(newVal, oldVal) {
+      this.contractNo = newVal
+    },
+  },
   data() {
     return {
       visible: false,
       message: '',
       voucherNo: '', //凭证编号列表的索引值
-      contractNo: '', //合同编号列表的索引值
+      contractNo: this.contrac, //合同编号列表的索引值
       voucherNos: [], //接收凭证编号模糊查询的列表
-      contract: [], //接收合同编号模糊查询的列表
+      contracts: [], //接收合同编号模糊查询的列表
       dataValue: [], //填充查询到的数据
       element: [], //获取元素表的数据
       selectedRowKeys: [], //获取选中的ID
@@ -280,25 +265,14 @@ export default {
       dictOptions: {},
     }
   },
-  watch: {
-    // contract(newVal,oldVal){
-    //      console.log(newVal)
-    //      console.log("--------------------------------")
-    //      console.log(oldVal)
-    // },
-    // voucherNos(newVal,oldVal){
-    //      console.log(newVal)
-    //      console.log("--------------------------------")
-    //      console.log(oldVal)
-    // }
+
+  created() {
+    this.handleSearch('')
   },
-  created() {},
-  computed: {
-    importExcelUrl: function () {
-      return `${window._CONFIG['domianURL']}/${this.url.importExcelUrl}`
-    },
-  },
+  computed: {},
   methods: {
+    initDictConfig() {},
+
     //合同结算
     accountSettle() {
       let id = this.selectedRowKeys
@@ -347,28 +321,25 @@ export default {
       this.selectionRows = selectionRows
     },
 
-    //重置输入框
-    searchReset() {},
-
     //根据合同编号和凭证号查询数据列表
     searchList() {
-      let vno = this.voucherNos[this.voucherNo].voucher_no
-      let cno = this.contract[this.contractNo].contract_no
+      let vno = this.voucherNo
+      let cno = this.contractNo
       let datas = {
-        vno: this.voucherNos[this.voucherNo].voucher_no,
-        cno: this.contract[this.contractNo].contract_no,
+        vno: vno,
+        cno: cno,
       }
-      console.log(datas)
       this.loadData(this.arg, datas)
     },
 
     //合同查询的自动补全功能
     handleSearch(contractNo) {
       console.log(contractNo + '-------------------------')
-      postAction(this.url.findContractNo, { contractNo: contractNo }).then((res) => {
+      let contracttype = this.contracttype
+      postAction(this.url.findContractNo, { contractNo: contractNo, contracttype: contracttype }).then((res) => {
         if (res.success) {
           if (res.result != null) {
-            this.contract = res.result
+            this.contracts = res.result
           }
           if (res.code === 510) {
             this.$message.warning(res.message)
@@ -376,15 +347,11 @@ export default {
         }
       })
     },
+
     //自动补全的填充
     handleChange(contractNo) {
-      console.log('我是handleChange')
-      console.log(contractNo)
-      console.log(this.contract[contractNo].contract_no)
-      let cno = this.contract[contractNo].contract_no
-      console.log(cno)
       this.contractNo = contractNo
-      postAction(this.url.findVoucherNo, { contractNo1: cno }).then((res) => {
+      postAction(this.url.findVoucherNo, { contractNo1: contractNo }).then((res) => {
         if (res.success) {
           if (res.result != null) {
             this.voucherNos = res.result
@@ -395,13 +362,6 @@ export default {
         }
       })
     },
-    //填充凭证号
-    voucherNoChange(voucherNo) {
-      // console.log("我是voucherNoChange");
-      this.voucherNo = voucherNo
-    },
-
-    initDictConfig() {},
 
     //抽离出一个数据列表加载方法
     loadData(arg, datas) {
@@ -428,6 +388,7 @@ export default {
         this.loading = false
       })
     },
+
     //分页、排序、筛选
     handleTableChange(pagination, filters, sorter) {
       //分页、排序、筛选变化时触发
@@ -440,6 +401,7 @@ export default {
 
       this.searchList()
     },
+
     //删除
     handleDelete(id) {
       deleteAction(this.url.delete, { id: id }).then((res) => {
