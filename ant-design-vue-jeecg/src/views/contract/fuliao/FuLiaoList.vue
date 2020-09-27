@@ -28,9 +28,10 @@
                   <a-select-option
                     placeholder="请选择合同号"
                     :value="item.HeTongBianHao"
-                    v-for="(item,index) in contractNos"
+                    v-for="(item, index) in contractNos"
                     :key="index"
-                  >{{item.HeTongBianHao}}</a-select-option>
+                    >{{ item.HeTongBianHao }}</a-select-option
+                  >
                 </a-select>
               </a-form-item>
             </a-col>
@@ -41,17 +42,14 @@
             </a-col>
             <a-col :xl="6" :lg="7" :md="8" :sm="24">
               <a-form-item label="收货单位">
-                <a-select
-                  show-search
-                  allowClear
-                  v-decorator="['receivingUnit', validatorRules.receivingUnit]"
-                >
+                <a-select show-search allowClear v-decorator="['receivingUnit', validatorRules.receivingUnit]">
                   <a-select-option
                     placeholder="请选择收货单位"
                     :value="item.ShouHuoDanWeiName"
-                    v-for="(item,index) in receivingUnits"
+                    v-for="(item, index) in receivingUnits"
                     :key="index"
-                  >{{item.ShouHuoDanWeiName}}</a-select-option>
+                    >{{ item.ShouHuoDanWeiName }}</a-select-option
+                  >
                 </a-select>
               </a-form-item>
             </a-col>
@@ -64,10 +62,7 @@
             </a-col>
             <a-col :xl="6" :lg="8" :md="10" :sm="24">
               <a-form-item label="起止日期">
-                <a-range-picker
-                  :trigger-change="true"
-                  v-decorator="['rangeDate', validatorRules.rangeDate]"
-                />
+                <a-range-picker :trigger-change="true" v-decorator="['rangeDate', validatorRules.rangeDate]" />
               </a-form-item>
             </a-col>
             <a-col :xl="6" :lg="7" :md="8" :sm="24">
@@ -76,7 +71,7 @@
               </a-form-item>
             </a-col>
             <a-col :xl="6" :lg="7" :md="8" :sm="24">
-              <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+              <span style="float: left; overflow: hidden" class="table-page-search-submitButtons">
                 <a-button type="primary" @click="searchList" icon="search">查询质检数据</a-button>
               </span>
             </a-col>
@@ -89,11 +84,11 @@
       </div>
       <!-- table区域-begin -->
       <div>
-        <div class="ant-alert ant-alert-info" style="margin-bottom: 16px;">
-          <i class="anticon anticon-info-circle ant-alert-icon"></i>质检数据列表&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;已选择
-          <a
-            style="font-weight: 600"
-          >{{ selectedRowKeys.length }}</a>项
+        <div class="ant-alert ant-alert-info" style="margin-bottom: 16px">
+          <i class="anticon anticon-info-circle ant-alert-icon"></i
+          >质检数据列表&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;已选择
+          <a style="font-weight: 600">{{ selectedRowKeys.length }}</a
+          >项
           <a style="margin-left: 24px" @click="onClearSelected">清空</a>
         </div>
         <a-table
@@ -105,7 +100,7 @@
           :dataSource="dataSource"
           :pagination="ipagination"
           :loading="loading"
-          :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
+          :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
           class="j-table-force-nowrap"
           @change="handleTableChange"
         ></a-table>
@@ -443,6 +438,15 @@ export default {
               if (res.success) {
                 this.$message.success(res.message)
                 this.$refs.ContractList.htlist(htbhs)
+                this.selectedRowKeys = []
+                this.selectionRows = []
+                let datas = {
+                  startTime: this.startTime,
+                  endTime: this.endTime,
+                  supplier: this.supplier,
+                  materialName: this.materialName,
+                }
+                this.loadData(this.arg, datas)
               }
               if (res.code === 510) {
                 this.$message.warning(res.message)

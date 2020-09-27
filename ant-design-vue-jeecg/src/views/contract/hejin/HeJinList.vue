@@ -27,9 +27,10 @@
                   <a-select-option
                     placeholder="请选择合同号"
                     :value="item.HeTongBianHao"
-                    v-for="(item,index) in contractNos"
+                    v-for="(item, index) in contractNos"
                     :key="index"
-                  >{{item.HeTongBianHao}}</a-select-option>
+                    >{{ item.HeTongBianHao }}</a-select-option
+                  >
                 </a-select>
               </a-form-item>
             </a-col>
@@ -47,43 +48,35 @@
           <a-row :gutter="24">
             <a-col :xl="6" :lg="8" :md="8" :sm="24">
               <a-form-item label="物资名称">
-                <a-select
-                  v-decorator="['materialName', validatorRules.materialName]"
-                  @change="finwzcode"
-                >
+                <a-select v-decorator="['materialName', validatorRules.materialName]" @change="finwzcode">
                   <a-select-option
                     placeholder="请选择物资名称"
                     :value="item.WZName"
-                    v-for="(item,index) in materialNamelist"
+                    v-for="(item, index) in materialNamelist"
                     :key="index"
-                  >{{item.WZName}}</a-select-option>
+                    >{{ item.WZName }}</a-select-option
+                  >
                 </a-select>
               </a-form-item>
             </a-col>
 
             <a-col :xl="6" :lg="8" :md="8" :sm="24">
               <a-form-item label="收货单位">
-                <a-select
-                  show-search
-                  allowClear
-                  v-decorator="['receivingUnit', validatorRules.receivingUnit]"
-                >
+                <a-select show-search allowClear v-decorator="['receivingUnit', validatorRules.receivingUnit]">
                   <a-select-option
                     placeholder="请选择收货单位"
                     :value="item.ShouHuoDanWeiName"
-                    v-for="(item,index) in receivingUnits"
+                    v-for="(item, index) in receivingUnits"
                     :key="index"
-                  >{{item.ShouHuoDanWeiName}}</a-select-option>
+                    >{{ item.ShouHuoDanWeiName }}</a-select-option
+                  >
                 </a-select>
               </a-form-item>
             </a-col>
 
             <a-col :xl="6" :lg="8" :md="10" :sm="24">
               <a-form-item label="起止日期">
-                <a-range-picker
-                  :trigger-change="true"
-                  v-decorator="['rangeDate', validatorRules.rangeDate]"
-                />
+                <a-range-picker :trigger-change="true" v-decorator="['rangeDate', validatorRules.rangeDate]" />
               </a-form-item>
             </a-col>
             <a-col :xl="6" :lg="8" :md="8" :sm="24">
@@ -100,27 +93,23 @@
             <a-col :xl="6" :lg="8" :md="8" :sm="24">
               <a-form-item label="筛上">
                 <a-select v-model="wzshang" @focus="checkshang">
-                  <a-select-option
-                    :value="item.name"
-                    v-for="(item,index) in wzshanglist"
-                    :key="index"
-                  >{{item.name}}</a-select-option>
+                  <a-select-option :value="item.name" v-for="(item, index) in wzshanglist" :key="index">{{
+                    item.name
+                  }}</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
             <a-col :xl="6" :lg="8" :md="8" :sm="24">
               <a-form-item label="筛下">
                 <a-select v-model="wzxia" @focus="checkxia">
-                  <a-select-option
-                    :value="item.name"
-                    v-for="(item,index) in wzxialist"
-                    :key="index"
-                  >{{item.name}}</a-select-option>
+                  <a-select-option :value="item.name" v-for="(item, index) in wzxialist" :key="index">{{
+                    item.name
+                  }}</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
             <a-col :xl="6" :lg="8" :md="8" :sm="24">
-              <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+              <span style="float: left; overflow: hidden" class="table-page-search-submitButtons">
                 <a-button type="primary" @click="searchList" icon="search">查询质检数据</a-button>
               </span>
             </a-col>
@@ -133,11 +122,11 @@
       </div>
       <!-- table区域-begin -->
       <div>
-        <div class="ant-alert ant-alert-info" style="margin-bottom: 16px;">
-          <i class="anticon anticon-info-circle ant-alert-icon"></i>质检数据列表&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;已选择
-          <a
-            style="font-weight: 600"
-          >{{ selectedRowKeys.length }}</a>项
+        <div class="ant-alert ant-alert-info" style="margin-bottom: 16px">
+          <i class="anticon anticon-info-circle ant-alert-icon"></i
+          >质检数据列表&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;已选择
+          <a style="font-weight: 600">{{ selectedRowKeys.length }}</a
+          >项
           <a style="margin-left: 24px" @click="onClearSelected">清空</a>
         </div>
         <a-table
@@ -149,7 +138,7 @@
           :dataSource="dataSource"
           :pagination="ipagination"
           :loading="loading"
-          :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
+          :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
           class="j-table-force-nowrap"
           @change="handleTableChange"
         ></a-table>
@@ -586,6 +575,7 @@ export default {
         return
       }
     },
+
     //筛上
     checkxia() {
       let type = this.wztype
@@ -594,6 +584,7 @@ export default {
         return
       }
     },
+
     //获取凭证号
     findpzh() {
       getAction(this.url.findpzh).then((res) => {
@@ -728,6 +719,8 @@ export default {
 
     //物资大类
     finwztype(wztype) {
+      this.wzshang = ''
+      this.wzxia = ''
       if (wztype === '合金') {
         this.columns = this.columnsone
         this.wzshanglist = this.wzshanglisthj
@@ -775,6 +768,9 @@ export default {
             if (res.success) {
               this.$message.success(res.message)
               this.$refs.ContractList.htlist(htbhs)
+              this.selectedRowKeys = []
+              this.selectionRows = []
+              this.searchList()
             }
             if (res.code === 510) {
               this.$message.warning(res.message)

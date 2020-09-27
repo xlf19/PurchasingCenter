@@ -7,10 +7,7 @@
           <a-row :gutter="24">
             <a-col :xl="6" :lg="8" :md="10" :sm="24">
               <a-form-item label="起止日期">
-                <a-range-picker
-                  :trigger-change="true"
-                  v-decorator="['rangeDate', validatorRules.rangeDate]"
-                />
+                <a-range-picker :trigger-change="true" v-decorator="['rangeDate', validatorRules.rangeDate]" />
               </a-form-item>
             </a-col>
             <a-col :xl="5" :lg="7" :md="8" :sm="24">
@@ -19,7 +16,7 @@
               </a-form-item>
             </a-col>
             <a-col :xl="4" :lg="7" :md="8" :sm="24">
-              <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+              <span style="float: left; overflow: hidden" class="table-page-search-submitButtons">
                 <a-button type="primary" @click="searchList()" icon="search">查询质检数据</a-button>
               </span>
             </a-col>
@@ -32,7 +29,7 @@
               </a-form-item>
             </a-col>
             <a-col :xl="4" :lg="7" :md="8" :sm="24">
-              <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+              <span style="float: left; overflow: hidden" class="table-page-search-submitButtons">
                 <a-button type="primary" @click="addjflist()" icon="search">加权平均</a-button>
               </span>
             </a-col>
@@ -41,11 +38,11 @@
       </div>
       <!-- table区域-begin -->
       <div>
-        <div class="ant-alert ant-alert-info" style="margin-bottom: 16px;">
-          <i class="anticon anticon-info-circle ant-alert-icon"></i>质检数据列表&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;已选择
-          <a
-            style="font-weight: 600"
-          >{{ selectedRowKeys.length }}</a>项
+        <div class="ant-alert ant-alert-info" style="margin-bottom: 16px">
+          <i class="anticon anticon-info-circle ant-alert-icon"></i
+          >质检数据列表&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;已选择
+          <a style="font-weight: 600">{{ selectedRowKeys.length }}</a
+          >项
           <a style="margin-left: 24px" @click="onClearSelected">清空</a>
         </div>
         <a-table
@@ -57,7 +54,7 @@
           :dataSource="dataSource"
           :pagination="ipagination"
           :loading="loading"
-          :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
+          :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
           class="j-table-force-nowrap"
           @change="handleTableChange"
         ></a-table>
@@ -145,148 +142,6 @@ export default {
         {
           title: '供货单位',
           align: 'center',
-          dataIndex: 'supplier',
-        },
-        {
-          title: '收货单位',
-          align: 'center',
-          dataIndex: 'receivingunit',
-        },
-        {
-          title: '物资名称',
-          align: 'center',
-          dataIndex: 'material_name',
-        },
-        {
-          title: '取样日期',
-          align: 'center',
-          dataIndex: 'riqi',
-          customRender: function (text) {
-            return !text ? '' : text.length > 10 ? text.substr(0, 10) : text
-          },
-        },
-        {
-          title: '派工单号',
-          align: 'center',
-          dataIndex: '派工单号',
-        },
-        {
-          title: '检验量',
-          align: 'center',
-          dataIndex: 'weighing',
-        },
-
-        {
-          title: 'S',
-          align: 'center',
-          dataIndex: 'ss',
-        },
-        {
-          title: 'P',
-          align: 'center',
-          dataIndex: 'pp',
-        },
-        {
-          title: 'FEO',
-          align: 'center',
-          dataIndex: 'feo',
-        },
-        {
-          title: 'H2O',
-          align: 'center',
-          dataIndex: 'h2o',
-        },
-        {
-          title: 'Al2O3',
-          align: 'center',
-          dataIndex: 'al2o3',
-        },
-        {
-          title: 'MnO',
-          align: 'center',
-          dataIndex: 'mno',
-        },
-        {
-          title: 'TiO2',
-          align: 'center',
-          dataIndex: 'tio2',
-        },
-        {
-          title: 'Cr',
-          align: 'center',
-          dataIndex: 'cr',
-        },
-        {
-          title: 'Cu',
-          align: 'center',
-          dataIndex: 'cu',
-        },
-        {
-          title: 'TFE',
-          align: 'center',
-          dataIndex: 'tfe',
-        },
-        {
-          title: 'MGO',
-          align: 'center',
-          dataIndex: 'mgo',
-        },
-        {
-          title: 'Pb',
-          align: 'center',
-          dataIndex: 'pb',
-        },
-        {
-          title: '[As]',
-          align: 'center',
-          dataIndex: 'as1',
-        },
-        {
-          title: 'CaO',
-          align: 'center',
-          dataIndex: 'cao',
-        },
-        {
-          title: 'K2O',
-          align: 'center',
-          dataIndex: 'k2o',
-        },
-        {
-          title: 'SiO2',
-          align: 'center',
-          dataIndex: 'sio2',
-        },
-        {
-          title: 'Zn',
-          align: 'center',
-          dataIndex: 'zn',
-        },
-        {
-          title: '抗压',
-          align: 'center',
-          dataIndex: 'compressive',
-        },
-        {
-          title: '[粒度<5mm]',
-          align: 'center',
-          dataIndex: 'granularity',
-        },
-      ],
-
-      columns: [
-        {
-          title: '序号',
-          dataIndex: '',
-          key: 'rowIndex',
-          width: 60,
-          align: 'center',
-          customRender: function (t, r, index) {
-            return parseInt(index) + 1
-          },
-        },
-        {
-          title: '供货单位',
-          align: 'center',
           dataIndex: '供货单位',
         },
         {
@@ -300,14 +155,9 @@ export default {
           dataIndex: '名称',
         },
         {
-          title: '检验量',
-          align: 'center',
-          dataIndex: '检验量',
-        },
-        {
           title: '取样日期',
           align: 'center',
-          dataIndex: '取样日期',
+          dataIndex: '取样日期时间',
           customRender: function (text) {
             return !text ? '' : text.length > 10 ? text.substr(0, 10) : text
           },
@@ -317,6 +167,12 @@ export default {
           align: 'center',
           dataIndex: '派工单号',
         },
+        {
+          title: '检验量',
+          align: 'center',
+          dataIndex: '检验量',
+        },
+
         {
           title: 'S',
           align: 'center',
@@ -330,7 +186,7 @@ export default {
         {
           title: 'FEO',
           align: 'center',
-          dataIndex: 'FEO',
+          dataIndex: 'FeO',
         },
         {
           title: 'H2O',
@@ -365,12 +221,12 @@ export default {
         {
           title: 'TFE',
           align: 'center',
-          dataIndex: 'TFE',
+          dataIndex: 'TFe',
         },
         {
           title: 'MGO',
           align: 'center',
-          dataIndex: 'MGO',
+          dataIndex: 'MgO',
         },
         {
           title: 'Pb',
@@ -410,7 +266,148 @@ export default {
         {
           title: '[粒度<5mm]',
           align: 'center',
-          dataIndex: '[粒度<5mm]',
+          dataIndex: 'ld',
+        },
+      ],
+
+      columns: [
+        {
+          title: '序号',
+          dataIndex: '',
+          key: 'rowIndex',
+          width: 60,
+          align: 'center',
+          customRender: function (t, r, index) {
+            return parseInt(index) + 1
+          },
+        },
+        {
+          title: '供货单位',
+          align: 'center',
+          dataIndex: '供货单位',
+        },
+        {
+          title: '收货单位',
+          align: 'center',
+          dataIndex: '使用单位',
+        },
+        {
+          title: '物资名称',
+          align: 'center',
+          dataIndex: '名称',
+        },
+        {
+          title: '检验量',
+          align: 'center',
+          dataIndex: '检验量',
+        },
+        {
+          title: '取样日期',
+          align: 'center',
+          dataIndex: '取样日期时间',
+          customRender: function (text) {
+            return !text ? '' : text.length > 10 ? text.substr(0, 10) : text
+          },
+        },
+        {
+          title: '派工单号',
+          align: 'center',
+          dataIndex: '派工单号',
+        },
+        {
+          title: 'S',
+          align: 'center',
+          dataIndex: 'S',
+        },
+        {
+          title: 'P',
+          align: 'center',
+          dataIndex: 'P',
+        },
+        {
+          title: 'FEO',
+          align: 'center',
+          dataIndex: 'FeO',
+        },
+        {
+          title: 'H2O',
+          align: 'center',
+          dataIndex: 'H2O',
+        },
+        {
+          title: 'Al2O3',
+          align: 'center',
+          dataIndex: 'Al2O3',
+        },
+        {
+          title: 'MnO',
+          align: 'center',
+          dataIndex: 'MnO',
+        },
+        {
+          title: 'TiO2',
+          align: 'center',
+          dataIndex: 'TiO2',
+        },
+        {
+          title: 'Cr',
+          align: 'center',
+          dataIndex: 'Cr',
+        },
+        {
+          title: 'Cu',
+          align: 'center',
+          dataIndex: 'Cu',
+        },
+        {
+          title: 'TFE',
+          align: 'center',
+          dataIndex: 'TFe',
+        },
+        {
+          title: 'MGO',
+          align: 'center',
+          dataIndex: 'MgO',
+        },
+        {
+          title: 'Pb',
+          align: 'center',
+          dataIndex: 'Pb',
+        },
+        {
+          title: '[As]',
+          align: 'center',
+          dataIndex: '[As]',
+        },
+        {
+          title: 'CaO',
+          align: 'center',
+          dataIndex: 'CaO',
+        },
+        {
+          title: 'K2O',
+          align: 'center',
+          dataIndex: 'K2O',
+        },
+        {
+          title: 'SiO2',
+          align: 'center',
+          dataIndex: 'SiO2',
+        },
+        {
+          title: 'Zn',
+          align: 'center',
+          dataIndex: 'Zn',
+        },
+        {
+          title: '抗压',
+          align: 'center',
+          dataIndex: '抗压',
+        },
+        {
+          title: '[粒度<5mm]',
+          align: 'center',
+          dataIndex: 'ld',
         },
       ],
 
@@ -428,22 +425,27 @@ export default {
         {
           title: '供货单位',
           align: 'center',
-          dataIndex: 'supplier',
+          dataIndex: '供货单位',
         },
         {
           title: '收货单位',
           align: 'center',
-          dataIndex: 'receivingunit',
+          dataIndex: '使用单位',
         },
         {
           title: '物资名称',
           align: 'center',
-          dataIndex: 'material_name',
+          dataIndex: '名称',
+        },
+        {
+          title: '检验量',
+          align: 'center',
+          dataIndex: '检验量',
         },
         {
           title: '取样日期',
           align: 'center',
-          dataIndex: 'riqi',
+          dataIndex: '取样日期时间',
           customRender: function (text) {
             return !text ? '' : text.length > 10 ? text.substr(0, 10) : text
           },
@@ -454,95 +456,89 @@ export default {
           dataIndex: '派工单号',
         },
         {
-          title: '检验量',
-          align: 'center',
-          dataIndex: 'weighing',
-        },
-
-        {
           title: 'S',
           align: 'center',
-          dataIndex: 'ss',
+          dataIndex: 'S',
         },
         {
           title: 'P',
           align: 'center',
-          dataIndex: 'pp',
+          dataIndex: 'P',
         },
         {
           title: 'FEO',
           align: 'center',
-          dataIndex: 'feo',
+          dataIndex: 'FeO',
         },
         {
           title: 'H2O',
           align: 'center',
-          dataIndex: 'h2o',
+          dataIndex: 'H2O',
         },
         {
           title: 'Al2O3',
           align: 'center',
-          dataIndex: 'al2o3',
+          dataIndex: 'Al2O3',
         },
         {
           title: 'MnO',
           align: 'center',
-          dataIndex: 'mno',
+          dataIndex: 'MnO',
         },
         {
           title: 'TiO2',
           align: 'center',
-          dataIndex: 'tio2',
+          dataIndex: 'TiO2',
         },
         {
           title: 'Cr',
           align: 'center',
-          dataIndex: 'cr',
+          dataIndex: 'Cr',
         },
         {
           title: 'Cu',
           align: 'center',
-          dataIndex: 'cu',
+          dataIndex: 'Cu',
         },
         {
           title: 'TFE',
           align: 'center',
-          dataIndex: 'tfe',
+          dataIndex: 'TFe',
         },
         {
           title: 'MGO',
           align: 'center',
-          dataIndex: 'mgo',
+          dataIndex: 'MgO',
         },
         {
           title: 'Pb',
           align: 'center',
-          dataIndex: 'pb',
+          dataIndex: 'Pb',
         },
         {
           title: '[As]',
           align: 'center',
-          dataIndex: 'as1',
+          dataIndex: '[As]',
         },
         {
           title: 'CaO',
           align: 'center',
-          dataIndex: 'cao',
+          dataIndex: 'CaO',
         },
         {
           title: 'K2O',
           align: 'center',
-          dataIndex: 'k2o',
+          dataIndex: 'K2O',
         },
         {
           title: 'SiO2',
           align: 'center',
-          dataIndex: 'sio2',
+          dataIndex: 'SiO2',
         },
         {
           title: 'Zn',
           align: 'center',
-          dataIndex: 'zn',
+          dataIndex: 'Zn',
         },
       ],
 
@@ -571,6 +567,7 @@ export default {
         this.columns = this.columnstwo
       }
     },
+
     //查询质检数据
     searchList() {
       this.form.validateFields((err, values) => {
@@ -587,6 +584,7 @@ export default {
         }
       })
     },
+
     loadData(arg, datas) {
       if (!this.url.listModel) {
         this.$message.error('请设置url.list属性!')
@@ -610,6 +608,7 @@ export default {
         this.loading = false
       })
     },
+
     //分页、排序、筛选
     handleTableChange(pagination, filters, sorter) {
       this.form.validateFields((err, values) => {
@@ -633,11 +632,13 @@ export default {
         }
       })
     },
+
     //获取选中行数据
     onSelectChange(selectedRowKeys, selectionRows) {
       this.selectedRowKeys = selectedRowKeys
       this.selectionRows = selectionRows
     },
+
     //添加质检数据
     addjflist() {
       if ((this.fangshi = '可选')) {

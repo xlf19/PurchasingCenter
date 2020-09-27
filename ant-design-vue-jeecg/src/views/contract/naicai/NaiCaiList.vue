@@ -376,7 +376,8 @@ export default {
         return
       }
     },
-    //获取凭证号
+  
+  //获取凭证号
     findpzh() {
       getAction(this.url.findpzh).then((res) => {
         if (res.success) {

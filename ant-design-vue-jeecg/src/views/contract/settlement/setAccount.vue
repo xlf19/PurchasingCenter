@@ -294,7 +294,8 @@ export default {
         })
       }
     },
-    //展开行事件
+   
+   //展开行事件
     handleExpand(expanded, record) {
       console.log('我选中的是' + record.id)
       this.expandedRowKeys = []
@@ -312,7 +313,8 @@ export default {
         })
       }
     },
-    //选中行事件
+   
+   //选中行事件
     onSelectChange(selectedRowKeys, selectionRows) {
       // console.log("我是selectedRowKeys"+selectedRowKeys)
       console.log('我是selectionRows' + selectionRows)

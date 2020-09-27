@@ -1,7 +1,7 @@
 <!--
  * @descript: 
  * @Date: 2020-08-28 14:27:18
- * @LastEditTime: 2020-09-27 12:53:56
+ * @LastEditTime: 2020-09-27 15:44:02
  * @version: 0.0.1
 -->
 <template>
@@ -16,12 +16,16 @@
               style="width: 160px"
               
               :dictOptions="dictOptions"
-              
               @change="searchChange($event)"
             ></j-search-select-tag-sec> -->
-            <a-select style="width: 160px" :defaultValue="hetongId1" @change="searchChange">
-              <a-select-option v-for="item in dictOptions" :key="item.value">
-                {{ item.title }}
+            <a-select
+              style="width: 160px"
+              ref="changeSelect"
+              :value="hetongId1"
+              @change="searchChange"
+            >
+              <a-select-option v-for="item in dictOptions" :key='item.value'>
+                {{item.title}}
               </a-select-option>
             </a-select>
           </a-form-item>
@@ -121,9 +125,9 @@ export default {
       // required: true,
       // default: 'WX20200900031',
     },
-    contractType: {
-      type: String,
-    },
+    contracttype: {
+      type: String
+    }
   },
   watch: {
     contrac(newVal, oldVal) {
@@ -342,7 +346,7 @@ export default {
         hetongId: this.contrac,
       },
       templatename: '',
-      dictOptions: [
+      dictOptions:[
         // {
         //   text:"选项一",
         //   value:"1"
@@ -355,7 +359,7 @@ export default {
         //   text:"选项三",
         //   value:"3"
         // }
-      ],
+      ]
     }
   },
   created() {
@@ -366,21 +370,24 @@ export default {
   },
   methods: {
     //查询合同编号
-    queryContractType() {
+    queryContractType(){
       let params = {
-        contractType:this.contractType,
+        contractType: this.contracttype
       }
-      getAction(this.url.queryContractType, params).then((res) => {
+      getAction(this.url.queryContractType,params).then(res => {
         // console.log(res.result)
         let hetongIdArr = []
-        res.result.records.forEach((item) => {
+        res.result.records.forEach(item => {
           hetongIdArr.push(item.contractNo)
         })
         let arr = [...new Set(hetongIdArr)]
         let dictItem = []
-        arr.forEach((item) => {
+        arr.forEach(item => {
           let itx = {}
-          ;(itx.text = item), (itx.value = item), (itx.title = item), dictItem.push(itx)
+          itx.text = item,
+          itx.value = item,
+          itx.title = item,
+          dictItem.push(itx)
         })
         // debugger;
         this.dictOptions = dictItem
@@ -466,6 +473,8 @@ export default {
     searchChange(values) {
       // console.log(values+'---------')
       this.params.hetongId = values
+      // this.$refs.changeSelect.value = values
+      this.hetongId1 = values
       this.loadData(1)
       this.setSyselements(values)
     },
