@@ -63,7 +63,8 @@
 
     <select id="listzjfg" resultType="map" statementType="CALLABLE">
         {call dbo.ht_zhijianxinxi_feigang(
-	    #{htbh,jdbcType=VARCHAR,mode=IN}
+	    #{htbh,jdbcType=VARCHAR,mode=IN},
+	    #{shdw,jdbcType=VARCHAR,mode=IN}
 	    )}
     </select>
 

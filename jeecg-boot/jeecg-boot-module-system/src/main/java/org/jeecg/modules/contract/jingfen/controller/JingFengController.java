@@ -127,7 +127,7 @@ public class JingFengController extends JeecgController<T, IJingFengService> {
             if(htone.containsKey("compressive")){
                 compressive = htone.getBigDecimal("compressive");
             }
-            BigDecimal jyl = htone.getBigDecimal("检验量");
+            BigDecimal jyl = htone.getBigDecimal("weighing");//检验量
             String data = htone.getString("riqi");
             String dwname = htone.getString("supplier");//供货单位
             String wzname = htone.getString("material_name");//物资名称
@@ -287,7 +287,7 @@ public class JingFengController extends JeecgController<T, IJingFengService> {
         //添加合同元素表
         //S
         if(jsd.containsKey("ss")){
-            if(jsd.containsValue("ss")){
+            if(oConvertUtils.isNotEmpty(jsd.get("ss").toString())){
                 BigDecimal S = new BigDecimal(jsd.get("ss").toString());
                 saveelement(uuid, htbh, pzh, "S", S);
             }

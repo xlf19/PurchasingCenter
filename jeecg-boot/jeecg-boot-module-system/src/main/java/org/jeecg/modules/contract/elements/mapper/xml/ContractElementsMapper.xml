@@ -5,6 +5,7 @@
     <select id="findList" resultType="org.jeecg.modules.contract.elements.entity.ContractElements">
         SELECT * FROM contract_elements
         where ci_id=#{cid} and is_delete =0
+        order by element desc
     </select>
 
     <select id="updateElelist" resultType="java.lang.String">

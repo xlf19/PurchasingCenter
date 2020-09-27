@@ -173,7 +173,7 @@ public class RanLiaoController extends JeecgController<T, IRanLiaoService> {
         //添加合同元素表
         //Ad
         if(jsd.containsKey("Ad")){
-            if(jsd.containsValue("Ad")){
+            if(oConvertUtils.isNotEmpty(jsd.get("Ad").toString())){
                 BigDecimal Ad = new BigDecimal(jsd.get("Ad").toString());
                 saveelement(uuid, htbh, pzh, "Ad", Ad);
             }
