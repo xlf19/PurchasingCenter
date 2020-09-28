@@ -14,6 +14,9 @@ import org.jeecg.modules.contract.zhijianxinxi.service.IZhiJianXinXiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.util.List;
@@ -140,6 +143,13 @@ public class ZhiJianXinXiController extends JeecgController<T, IZhiJianXinXiServ
             @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
             @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
             HttpServletRequest req) {
+        ScriptEngine js = new ScriptEngineManager().getEngineByName("JavaScript");
+        try {
+            System.out.println("3<4为："+js.eval("3<4"));
+            System.out.println("6<4为："+js.eval("6<4"));
+        } catch (ScriptException e) {
+            e.printStackTrace();
+        }
         Page<Map<Object, String>> page = new Page<Map<Object, String>>(pageNo, pageSize);
         IPage<Map<Object, String>> pageList = zjxxservice.listzjfg(page,htbh,shdw);
         return Result.ok(pageList);
@@ -160,6 +170,8 @@ public class ZhiJianXinXiController extends JeecgController<T, IZhiJianXinXiServ
             @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
             HttpServletRequest req) {
         Page<Map<Object, String>> page = new Page<Map<Object, String>>(pageNo, pageSize);
+        materialName="钝化镁粒";
+        supplier="新兴河北冶金资源有限公司";
         IPage<Map<Object, String>> pageList = zjxxservice.listzjhjhj(page, startTime, endTime, supplier,materialName,wzshang,wzxia);
         return Result.ok(pageList);
     }

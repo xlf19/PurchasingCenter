@@ -158,10 +158,13 @@ public class FeiGangController extends JeecgController<T, IFeiGangService> {
         BigDecimal sj=je.multiply(sl).divide(cs);//结算税金
         BigDecimal sll=cs1.add(sl.divide(cs));//税率1
         if(contractInformation.getTaxIncluded()){
+            BigDecimal jssj=sj.divide(sll,4, BigDecimal.ROUND_HALF_UP);
+            System.out.println(jssj);
             contractInformation.setSettlementResults(je);
-            contractInformation.setSettlementTaxes(sj.multiply(sll));
+            contractInformation.setSettlementTaxes(jssj);
         }else{
-            contractInformation.setSettlementResults(je.multiply(sll));
+            BigDecimal jssjs=je.divide(sll,4, BigDecimal.ROUND_HALF_UP);
+            contractInformation.setSettlementResults(jssjs);
             contractInformation.setSettlementTaxes(sj);
         }
         contractInformation.setSettlementIdentification(1);
