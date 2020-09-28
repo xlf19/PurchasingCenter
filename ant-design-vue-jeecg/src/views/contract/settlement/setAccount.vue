@@ -100,6 +100,8 @@ export default {
   watch: {
     contrac(newVal, oldVal) {
       this.contractNo = newVal
+      this.handleSearch(newVal)
+      this.handleChange(newVal)
     },
   },
   data() {
@@ -268,6 +270,10 @@ export default {
 
   created() {
     this.handleSearch('')
+    let hth = this.contractNo
+    if (hth != '' && hth != null) {
+      this.handleChange(hth)
+    }
   },
   computed: {},
   methods: {
@@ -294,8 +300,8 @@ export default {
         })
       }
     },
-   
-   //展开行事件
+
+    //展开行事件
     handleExpand(expanded, record) {
       console.log('我选中的是' + record.id)
       this.expandedRowKeys = []
@@ -313,12 +319,16 @@ export default {
         })
       }
     },
-   
-   //选中行事件
-    onSelectChange(selectedRowKeys, selectionRows) {
-      // console.log("我是selectedRowKeys"+selectedRowKeys)
-      console.log('我是selectionRows' + selectionRows)
 
+    // onSelectlist(record) {
+    //   if (record.settlementIdentification === 0) {
+    //     console.log('不能选择')
+    //     return
+    //   }
+    // },
+
+    //选中行事件
+    onSelectChange(selectedRowKeys, selectionRows) {
       this.selectedRowKeys = selectedRowKeys
       this.selectionRows = selectionRows
     },

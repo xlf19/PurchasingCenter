@@ -194,7 +194,7 @@ export default {
           dataIndex: 'taxRate',
         },
         {
-          title: '税金',
+          title: '结算税金',
           align: 'center',
           dataIndex: 'settlementTaxes',
         },

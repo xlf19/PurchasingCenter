@@ -124,6 +124,11 @@ export default {
           align: 'center',
           dataIndex: 'taxes',
         },
+         {
+          title: '结算税金',
+          align: 'center',
+          dataIndex: 'settlementTaxes',
+        },
         {
           title: '点收',
           align: 'center',
@@ -137,14 +142,14 @@ export default {
             return !text ? '' : text.length > 10 ? text.substr(0, 10) : text
           },
         },
-        {
-          title: '过磅日期',
-          align: 'center',
-          dataIndex: 'weighTime',
-          customRender: function (text) {
-            return !text ? '' : text.length > 10 ? text.substr(0, 10) : text
-          },
-        },
+        // {
+        //   title: '过磅日期',
+        //   align: 'center',
+        //   dataIndex: 'weighTime',
+        //   customRender: function (text) {
+        //     return !text ? '' : text.length > 10 ? text.substr(0, 10) : text
+        //   },
+        // },
         {
           title: '备注',
           align: 'center',

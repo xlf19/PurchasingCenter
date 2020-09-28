@@ -59,7 +59,7 @@
           <a-row :gutter="24">
             <a-col :xl="6" :lg="7" :md="8" :sm="24">
               <a-form-item label="物资名称">
-                <a-select  v-decorator="['materialName', validatorRules.materialName]"  @change="finwzcode">
+                <a-select  v-model="materialName"  @change="finwzcode">
                   <a-select-option
                     placeholder="请选择物资名称"
                     :value="item.WZName"
@@ -79,7 +79,7 @@
             </a-col>
             <a-col :xl="6" :lg="7" :md="8" :sm="24">
               <a-form-item label="供货单位">
-                <a-input placeholder="请输入供货单位" v-model="supplier" disabled></a-input>
+                <a-input placeholder="请输入供货单位" v-model="supplier" ></a-input>
               </a-form-item>
             </a-col>
             <a-col :xl="6" :lg="7" :md="8" :sm="24">
@@ -107,7 +107,7 @@
           ref="table"
           size="middle"
           bordered
-          rowKey="id"
+          rowKey="派工单号"
           :columns="columns"
           :dataSource="dataSource"
           :pagination="ipagination"
@@ -333,7 +333,7 @@ export default {
       validatorRules: {
         contractNo: { rules: [{ required: true, message: '请选择合同号!' }] },
         receivingUnit: { rules: [{ required: true, message: '请选择收货单位!' }] },
-        materialName:{ rules: [{ required: true, message: '请选择物资名称!' }] },
+
         rangeDate: {
           rules: [{ required: true, message: '请输入取样日期!' }],
           initialValue: [moment(this.date), moment(this.date)],
@@ -443,6 +443,7 @@ export default {
 
     //获取供货单位、物资名称
     findOne(hth) {
+      this.materialName=''
       let httpye = this.hetongly
       this.htbh = hth
       let urlhtdw = ''
@@ -464,7 +465,6 @@ export default {
     getghdw(hth, urldw) {
       getAction(urldw, { hth: hth }).then((res) => {
         if (res.success) {
-          debugger
           if (res.result != null && res.result != '') {
             this.supplier = res.result.DanWeiName
           }

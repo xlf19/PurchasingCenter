@@ -86,7 +86,7 @@
           ref="table"
           size="middle"
           bordered
-          rowKey="id"
+          rowKey="派工单号"
           :columns="columns"
           :dataSource="dataSource"
           :pagination="ipagination"

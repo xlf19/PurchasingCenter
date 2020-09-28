@@ -1,7 +1,7 @@
 <!--
  * @descript: 
  * @Date: 2020-08-28 14:27:18
- * @LastEditTime: 2020-09-27 15:44:02
+ * @LastEditTime: 2020-09-28 09:26:16
  * @version: 0.0.1
 -->
 <template>
@@ -18,14 +18,9 @@
               :dictOptions="dictOptions"
               @change="searchChange($event)"
             ></j-search-select-tag-sec> -->
-            <a-select
-              style="width: 160px"
-              ref="changeSelect"
-              :value="hetongId1"
-              @change="searchChange"
-            >
-              <a-select-option v-for="item in dictOptions" :key='item.value'>
-                {{item.title}}
+            <a-select style="width: 160px" ref="changeSelect" :value="hetongId1" @change="searchChange">
+              <a-select-option v-for="item in dictOptions" :key="item.value">
+                {{ item.title }}
               </a-select-option>
             </a-select>
           </a-form-item>
@@ -126,8 +121,8 @@ export default {
       // default: 'WX20200900031',
     },
     contracttype: {
-      type: String
-    }
+      type: String,
+    },
   },
   watch: {
     contrac(newVal, oldVal) {
@@ -346,7 +341,7 @@ export default {
         hetongId: this.contrac,
       },
       templatename: '',
-      dictOptions:[
+      dictOptions: [
         // {
         //   text:"选项一",
         //   value:"1"
@@ -359,7 +354,7 @@ export default {
         //   text:"选项三",
         //   value:"3"
         // }
-      ]
+      ],
     }
   },
   created() {
@@ -370,24 +365,21 @@ export default {
   },
   methods: {
     //查询合同编号
-    queryContractType(){
+    queryContractType() {
       let params = {
-        contractType: this.contracttype
+        contractType: this.contracttype,
       }
-      getAction(this.url.queryContractType,params).then(res => {
+      getAction(this.url.queryContractType, params).then((res) => {
         // console.log(res.result)
         let hetongIdArr = []
-        res.result.records.forEach(item => {
+        res.result.records.forEach((item) => {
           hetongIdArr.push(item.contractNo)
         })
         let arr = [...new Set(hetongIdArr)]
         let dictItem = []
-        arr.forEach(item => {
+        arr.forEach((item) => {
           let itx = {}
-          itx.text = item,
-          itx.value = item,
-          itx.title = item,
-          dictItem.push(itx)
+          ;(itx.text = item), (itx.value = item), (itx.title = item), dictItem.push(itx)
         })
         // debugger;
         this.dictOptions = dictItem
@@ -540,7 +532,7 @@ export default {
                 if (itxItem.elements == element) {
                   //第一种情况左值不为空，右值为空,左符号值为<
                   if (left != '' && right == '' && leftFuHao == '0') {
-                    if (itxItem.leftnum >= left || itxItem.rightnum > left) {
+                    if (parseFloat(itxItem.leftnum) >= parseFloat(left) || parseFloat(itxItem.rightnum) > parseFloat(left)) {
                       // console.log("公式有错误")
                       this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复')
                       submitMark = 0
@@ -548,23 +540,25 @@ export default {
                   }
                   //第二种情况左值不为空，右值为空，左符号值为≤
                   if (left != '' && right == '' && leftFuHao == '1') {
-                    if (itxItem.leftnum >= left || itxItem.rightnum > left) {
+                    if (parseFloat(itxItem.leftnum) >= parseFloat(left) || parseFloat(itxItem.rightnum) > parseFloat(left)) {
                       // console.log("公式有错误")
-                      this.$message.error(element + '元素公式区间有重复')
+                      this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复')
+                      // this.$message.error(element + '元素公式区间有重复')
                       submitMark = 0
                     }
                   }
                   //第三种情况左值为空，右值不为空，右符号为<
                   if (left == '' && right != '' && rightFuHao == '0') {
-                    if (itxItem.leftnum < right) {
+                    if (parseFloat(itxItem.leftnum) < parseFloat(right)) {
                       // console.log("公式有错误")
-                      this.$message.error(element + '元素公式区间有重复')
+                      this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复')
+                      // this.$message.error(element + '元素公式区间有重复')
                       submitMark = 0
                     }
                   }
                   //第四种情况左值为空，右值不为空，右符号为≤
                   if (left == '' && right != '' && rightFuHao == '1') {
-                    if (itxItem.leftnum < right) {
+                    if (parseFloat(itxItem.leftnum) < parseFloat(right)) {
                       // console.log("公式有错误")
                       this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复')
                       submitMark = 0
@@ -574,45 +568,56 @@ export default {
                   if (left != '' && right != '' && leftFuHao == '0' && rightFuHao == '0') {
                     // console.log('left:',left)
                     // console.log('right:',right)
-                    // console.log('leftnum:',itxItem.leftnum)
-                    // console.log('rightnum:',itxItem.rightnum)
-                    // if((left >itxItem.leftnum && left < itxItem.rightnum)){
+                    // console.log('leftnum:',parseFloat(itxItem.leftnum))
+                    // console.log('rightnum:',parseFloat(itxItem.rightnum))
+                    // if((left >parseFloat(itxItem.leftnum) && left < parseFloat(itxItem.rightnum))){
                     //   this.$message.error('第'+(index+1)+'行'+element+'元素公式区间有重复')
                     //   submitMark = 0
                     // }
+                    // debugger;
                     if (itxItem.leftsysbol == '0') {
-                      if (itxItem.leftnum > left && itxItem.leftnum < right) {
+                      if (parseFloat(itxItem.leftnum) > parseFloat(left) && parseFloat(itxItem.leftnum) < parseFloat(right)) {
                         this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复')
                         submitMark = 0
                       }
                     } else if (itxItem.leftsysbol == '1') {
-                      if (itxItem.leftnum > left && itxItem.leftnum < right) {
+                      if (parseFloat(itxItem.leftnum) > parseFloat(left) && parseFloat(itxItem.leftnum) < parseFloat(right)) {
                         this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复')
                         submitMark = 0
                       }
                     }
                   }
+                  
                   //第六种情况左符号为≤，右符号为<，左右值都不为空
                   if (left != '' && right != '' && leftFuHao == '1' && rightFuHao == '0') {
-                    if (left >= itxItem.leftnum && left < itxItem.rightnum) {
-                      this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复')
-                      submitMark = 0
+                    // debugger;
+                    if (itxItem.leftsysbol == '0') {
+                      if (parseFloat(itxItem.leftnum) > parseFloat(left) && parseFloat(itxItem.leftnum) < parseFloat(right)) {
+                        this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复')
+                        submitMark = 0
+                      }
+                    } else if (itxItem.leftsysbol == '1') {
+                      if (parseFloat(itxItem.leftnum) > parseFloat(left) && parseFloat(itxItem.leftnum) < parseFloat(right)) {
+                        this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复')
+                        submitMark = 0
+                      }
                     }
                   }
                   //第七种情况左符号为<，右符号为≤，左右值都不为空
                   if (left != '' && right != '' && leftFuHao == '0' && rightFuHao == '1') {
                     // console.log('left:',left)
                     // console.log('right:',right)
-                    // console.log('leftnum:',itxItem.leftnum)
+                    // console.log('leftnum:',parseFloat(itxItem.leftnum))
                     // console.log('leftsysbol:',itxItem.leftsysbol)
-                    // console.log('rightnum:',itxItem.rightnum)
+                    // console.log('rightnum:',parseFloat(itxItem.rightnum))
+                    debugger;
                     if (itxItem.leftsysbol == '0') {
-                      if (itxItem.leftnum > left && itxItem.leftnum < right) {
+                      if (parseFloat(itxItem.leftnum) > parseFloat(left) && parseFloat(itxItem.leftnum) < parseFloat(right)) {
                         this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复')
                         submitMark = 0
                       }
                     } else if (itxItem.leftsysbol == '1') {
-                      if (itxItem.leftnum > left && itxItem.leftnum <= right) {
+                      if (parseFloat(itxItem.leftnum) > parseFloat(left) && parseFloat(itxItem.leftnum) <= parseFloat(right)) {
                         this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复')
                         submitMark = 0
                       }
@@ -621,24 +626,24 @@ export default {
                   //第八种情况左符号为≤，右符号为≤，左右值都不为空
                   if (left != '' && right != '' && leftFuHao == '1' && rightFuHao == '1') {
                     if (itxItem.leftsysbol == '0') {
-                      if (itxItem.leftnum > left && itxItem.leftnum < right) {
+                      if (parseFloat(itxItem.leftnum) > parseFloat(left) && parseFloat(itxItem.leftnum) < parseFloat(right)) {
                         this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复')
                         submitMark = 0
                       }
                     } else if (itxItem.leftsysbol == '1') {
-                      if (itxItem.leftnum > left && itxItem.leftnum <= right) {
+                      if (parseFloat(itxItem.leftnum) > parseFloat(left) && parseFloat(itxItem.leftnum) <= parseFloat(right)) {
                         this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复')
                         submitMark = 0
                       }
                     }
                   }
                   //第九种
-                  if (left == itxItem.leftnum && right == itxItem.rightnum) {
+                  if (parseFloat(left) == parseFloat(itxItem.leftnum) && parseFloat(right) == parseFloat(itxItem.rightnum)) {
                     this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复')
                     submitMark = 0
                   }
                   //第十种
-                  if (left == itxItem.leftnum && itxItem.rightnum > left) {
+                  if (parseFloat(left) == parseFloat(itxItem.leftnum) && parseFloat(itxItem.rightnum) > left) {
                     this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复')
                     submitMark = 0
                   }
@@ -652,19 +657,20 @@ export default {
             })
           })
           //数组去重
+          let notHasGs
           let arr = [...new Set(elementsMarkArr)]
           if (values.length != 0) {
             if (arr.length != this.elementsOptions.length) {
               this.$message.error('还有' + (this.elementsOptions.length - arr.length) + '个元素公式未录入')
-              submitMark = 0
+              notHasGs = 0
             } else {
-              submitMark = 1
+              notHasGs = 1
             }
           }
           // console.log(arr)
           console.log('提交标志', submitMark)
           // console.log('2222', values)
-          if (submitMark == 1 && values.length != 0) {
+          if (submitMark == 1 && values.length != 0 && notHasGs == 1) {
             httpAction(this.url.savaHtGongShi, values, 'post').then((res) => {
               this.$message.success(res.message)
             })
