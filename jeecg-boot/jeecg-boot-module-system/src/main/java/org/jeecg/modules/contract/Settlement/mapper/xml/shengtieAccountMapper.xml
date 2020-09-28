@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.jeecg.modules.contract.Settlement.mapper.shengtieAccountMapper">
     <select id="findHthList" resultType="map">
-        SELECT distinct contract_no FROM contract_information
+        SELECT distinct top(30) contract_no FROM contract_information
         where 1=1
         <if test="hth !=null and  hth !='' ">
             and contract_no like  '%' +#{hth}+'%'
