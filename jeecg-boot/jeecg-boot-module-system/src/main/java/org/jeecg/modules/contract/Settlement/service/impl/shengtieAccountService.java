@@ -1138,6 +1138,11 @@ public class shengtieAccountService extends ServiceImpl<shengtieAccountMapper, T
   }
 
 
+  //结算
+  public String jiesuan(String[] ci_id){
+
+    return  "";
+  }
 
 
 }

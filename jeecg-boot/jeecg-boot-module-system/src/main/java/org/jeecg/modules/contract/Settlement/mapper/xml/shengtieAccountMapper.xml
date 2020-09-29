@@ -104,5 +104,11 @@
         select * from contract_information
         where id = #{id}
     </select>
+
+    <!--结算-->
+    <select id="jiesuan" resultType="map">
+        select * from contract_information
+        where id = #{id}
+    </select>
     
 </mapper>
