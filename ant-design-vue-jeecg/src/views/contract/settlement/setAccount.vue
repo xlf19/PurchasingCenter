@@ -32,6 +32,9 @@
               <a-button type="primary" @click="accountSettle" icon="account-book" style="margin-left: 8px"
                 >结算</a-button
               >
+              <a-button type="primary" v-has="types" @click="againAccountSettle" icon="plus" style="margin-left: 8px"
+                >再次结算</a-button
+              >
             </span>
           </a-col>
         </a-row>
@@ -97,15 +100,17 @@ export default {
       type: String,
     },
   },
+
   watch: {
     contrac(newVal, oldVal) {
       this.contractNo = newVal
-      this.handleSearch(newVal)
       this.handleChange(newVal)
     },
   },
+
   data() {
     return {
+      types: '',
       visible: false,
       message: '',
       voucherNo: '', //凭证编号列表的索引值
@@ -117,6 +122,7 @@ export default {
       selectedRowKeys: [], //获取选中的ID
       description: '合同信息表管理页面',
       disableMixinCreated: true,
+      selectionRows: [],
       form: {},
       arg: 0,
       /* 分页参数 */
@@ -230,7 +236,6 @@ export default {
           align: 'center',
           dataIndex: 'settlementResults',
         },
-
         {
           title: '结算人',
           align: 'center',
@@ -248,10 +253,10 @@ export default {
           customRender: function (t, r, index) {
             if (t === 1) {
               return '结算成功'
-            } else if (t === 2) {
-              return '结算失败'
-            } else {
+            } else if (t === 0) {
               return '未结算'
+            } else {
+              return '结算失败'
             }
           },
         },
@@ -269,24 +274,84 @@ export default {
   },
 
   created() {
+    //console.log(this.contracttype)
+    this.againAccount()
     this.handleSearch('')
-    let hth = this.contractNo
-    if (hth != '' && hth != null) {
-      this.handleChange(hth)
+    let contractNo = this.contractNo
+    if (contractNo != null && contractNo != '') {
+      this.handleChange(contractNo)
     }
+    
   },
   computed: {},
   methods: {
     initDictConfig() {},
-
-    //合同结算
-    accountSettle() {
+    //再一次结算
+    againAccountSettle() {
       let id = this.selectedRowKeys
       if (id == '' || id == undefined || id == null) {
+        this.$message.warning("请选择要结算的合同结算！")
+      } else {
+        postAction(this.url.accountSettlement, { id: id }).then((res) => {
+          console.log(res.result)
+          if (res.success) {
+            this.dataValue = res.result
+            res.result.forEach(element => {
+               if(element.settlementIdentification === 501){
+                 this.$message.error("结算的订单中有条数据结算失败请根据返回的结算状况检查相应的合同公式的填写是否正确")
+               }else if(element.settlementIdentification === 502) {
+                 this.$message.error("结算过程中发生了一些系统性错误，亲联系程序班")
+               }
+            }); 
+            
+          }
+          if (res.code === 500) {
+            this.$message.error(res.message)
+          }
+          this.loading = false
+        })
+      }
+    },
+    //按钮权限
+    againAccount() {
+      if (this.contracttype === '生铁') {
+        this.types = 'user:iron'
+        console.log(this.types)
+      } else if (this.contracttype === '合金') {
+        this.types = 'user:alloy'
+        console.log(this.types)
+      } else if (this.contracttype === '辅料') {
+        this.types = 'user:subsidiary'
+        console.log(this.types)
+      } else if (this.contracttype === '耐材') {
+        this.types = 'user:refractory'
+        console.log(this.types)
+      } else if (this.contracttype === '燃料') {
+        this.types = 'user:fuel'
+        console.log(this.types)
+      } else if (this.contracttype === '精粉富粉球团') {
+        this.types = 'user:jinfen'
+        console.log(this.types)
+      }
+    },
+    //合同结算
+    accountSettle() {
+      let id = []
+      if (this.selectedRowKeys == '' || this.selectedRowKeys == undefined || this.selectedRowKeys == null) {
         this.visible = true
         this.message = '请在选择合同后在结算'
         this.$message.warning('请在选择合同后在结算')
       } else {
+        this.selectionRows.forEach((item) => {
+          console.log('item.id' + item.id)
+          if (item.settlementIdentification > 0) {
+            this.$message.warning('这批订单已经结算过，请不要重复结算！')
+          } else {
+            id.push(item.id)
+          }
+        })
+      }
+      if (id != null && id != '') {
         postAction(this.url.accountSettlement, { id: id }).then((res) => {
           console.log(res.result)
           if (res.success) {
@@ -300,7 +365,6 @@ export default {
         })
       }
     },
-
     //展开行事件
     handleExpand(expanded, record) {
       console.log('我选中的是' + record.id)
@@ -319,29 +383,35 @@ export default {
         })
       }
     },
-
-    // onSelectlist(record) {
-    //   if (record.settlementIdentification === 0) {
-    //     console.log('不能选择')
-    //     return
-    //   }
-    // },
-
     //选中行事件
     onSelectChange(selectedRowKeys, selectionRows) {
+      console.log('我是selectedRowKeys' + selectedRowKeys)
+
       this.selectedRowKeys = selectedRowKeys
       this.selectionRows = selectionRows
+
+      // let id = this.selectionRows.filter((item,i) =>{
+      //    console.log("循环==i==",i);
+      //    console.log(item.settlementIdentification)
+      //    return item.settlementIdentification > 1
+      // })
+      // console.log('我是selectionRows' + this.selectionRows)
+      // console.log("id=",id)
     },
 
     //根据合同编号和凭证号查询数据列表
     searchList() {
       let vno = this.voucherNo
       let cno = this.contractNo
-      let datas = {
-        vno: vno,
-        cno: cno,
+      if (vno === '' || vno === null || cno === '' || cno === null) {
+        this.$message.warning('请输入合同编号和凭证号后在查询')
+      } else {
+        let datas = {
+          vno: vno,
+          cno: cno,
+        }
+        this.loadData(this.arg, datas)
       }
-      this.loadData(this.arg, datas)
     },
 
     //合同查询的自动补全功能
@@ -360,7 +430,7 @@ export default {
       })
     },
 
-    //自动补全的填充
+    //自动补全的填充凭证号
     handleChange(contractNo) {
       this.contractNo = contractNo
       postAction(this.url.findVoucherNo, { contractNo1: contractNo }).then((res) => {
@@ -412,17 +482,6 @@ export default {
       this.ipagination = pagination
 
       this.searchList()
-    },
-
-    //删除
-    handleDelete(id) {
-      deleteAction(this.url.delete, { id: id }).then((res) => {
-        if (res.success) {
-          this.loadData()
-        } else {
-          that.$message.warning(res.message)
-        }
-      })
     },
   },
 }
