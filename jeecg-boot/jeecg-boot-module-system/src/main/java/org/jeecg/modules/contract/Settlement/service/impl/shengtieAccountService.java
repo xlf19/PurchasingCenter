@@ -132,582 +132,634 @@ public class shengtieAccountService extends ServiceImpl<shengtieAccountMapper, T
     List<SysNumgongshi> heTongNumber = shengtieHth.selectNumgongshi(contractElements.get(0).getContractNo());
     //合同单价
     BigDecimal contractPrice = null;
+
+    //标识错误的原因便于向用户展示
+    int heTongGongShiflag = 0;
+    int numflag = 0;
+
     //匹配相应元素和对应的公式
     for (int i = 0; i<contractElements.size(); i++){
 
-           ciId = contractElements.get(i).getCiId();
-           elementdata = contractElements.get(i).getElelmentDate();
-           element = contractElements.get(i).getElement();
-
-
-       for (int j= 0; j<heTongGongShi.size(); j++){
-
-         if(contractElements.get(i).getElement().equals(heTongGongShi.get(j).getElements())){
-
-           //进行异常处理如果有些数据为空的时候
-           if (heTongGongShi.get(j).getLeftnum() != null) {
-             leftdata = heTongGongShi.get(j).getLeftnum();
-           }else {
-             leftdata = new BigDecimal("-100");
-             System.out.println("laftdata:"+leftdata);
-           }
-
-           if (heTongGongShi.get(j).getRightnum() != null) {
-             rightdata = heTongGongShi.get(j).getRightnum();
-           }else {
-             rightdata = new BigDecimal("-100");
-             System.out.println("rightdata:"+rightdata);
-           }
-
-           if ( heTongGongShi.get(j).getLeftsysbol() != null) {
-             leftsysbol = heTongGongShi.get(j).getLeftsysbol();
-           }else {
-             leftsysbol = "-100";
-             System.out.println("leftsysbol:"+leftsysbol);
-           }
-
-           if (heTongGongShi .get(j).getRightsysbol() != null) {
-             rightsysbol = heTongGongShi .get(j).getRightsysbol();
-           }else {
-             rightsysbol = "-100";
-             System.out.println("rightsysbol:"+rightsysbol);
-           }
-
-           deductions = heTongGongShi.get(j).getDeductions();
-           basedatas = heTongGongShi.get(j).getBasedata();
-           IsReduce = heTongGongShi.get(j).getIsreduce();
-
-           //从公式表集合中取出相应的数据进行匹配
-           if (1 == Integer.parseInt(leftsysbol)){
-
-             if (1 == Integer.parseInt(rightsysbol)){
-
-               if ((leftdata.compareTo(elementdata) <= 0) && (elementdata.compareTo(rightdata) <= 0)){
-
-                 if (basedatas.compareTo(new BigDecimal("0")) ==0){
-                    //直接在单价上扣除或者加上该元素所对应的价格
-                   if (IsReduce.equals("1")){
-
-                     resultData = deductions;
-                     List li = new ArrayList<>();
-                     Map<String,List> map = new HashMap<>();
-                     li.add(element);
-                     li.add(resultData);
-                     map.put(ciId, li);
-                     elementResultData.add(map);
-
-                     System.out.println("<= <= <= <= <= <=:"+resultData);
-
-                   }else if (IsReduce.equals("0")) {
-                     //数据取反
-                     resultData = deductions.negate();
-                     List li = new ArrayList<>();
-                     Map<String,List> map = new HashMap<>();
-                     li.add(element);
-                     li.add(resultData);
-                     map.put(ciId, li);
-                     elementResultData.add(map);
-
-                     System.out.println("<= <= <= <= <= <=:"+resultData);
-                   }else {
-                     System.out.println("出现系统错误IsReduce");
-
-                   }
-
-                 }else {
-
-                   if (IsReduce.equals("1")){
-
-                     differenceValue = elementdata.subtract(leftdata);
-                     resultData = (differenceValue.divide(basedatas,10,BigDecimal.ROUND_HALF_UP)).multiply(deductions);
-                     List li = new ArrayList<>();
-                     Map<String,List> map = new HashMap<>();
-                     li.add(element);
-                     li.add(resultData);
-                     map.put(ciId, li);
-                     elementResultData.add(map);
-
-                     System.out.println("<= <= <= <= <= <=:"+resultData);
-
-                   }else if (IsReduce.equals("0")) {
-
-                     differenceValue = elementdata.subtract(leftdata);
-                     resultData = ((differenceValue.divide(basedatas,10,BigDecimal.ROUND_HALF_UP)).multiply(deductions)).negate();
-                     List li = new ArrayList<>();
-                     Map<String,List> map = new HashMap<>();
-                     li.add(element);
-                     li.add(resultData);
-                     map.put(ciId, li);
-                     elementResultData.add(map);
-
-                     System.out.println("<= <= <= <= <= <=:"+resultData);
-
-                   }else {
-                     System.out.println("出现系统错误IsReduce");
-                   }
-
-                 }
-
-               }else {
-                  System.out.println("元素数据所对应的值不在此区间中出错");
-               }
-
-             }else if (0 == Integer.parseInt(rightsysbol)){
-                //a<= b <c
-               if ((leftdata.compareTo(elementdata) <= 0) && (elementdata.compareTo(rightdata) < 0)){
-
-                 if (basedatas.compareTo(new BigDecimal("0")) ==0){
-                   //直接在单价上扣除或者加上该元素所对应的价格
-                   if (IsReduce.equals("1")){
-
-                     resultData = deductions;
-                     List li = new ArrayList<>();
-                     Map<String,List> map = new HashMap<>();
-                     li.add(element);
-                     li.add(resultData);
-                     map.put(ciId, li);
-                     elementResultData.add(map);
-
-                     System.out.println("<= <= <= < < <:"+resultData);
-
-                   }else if (IsReduce.equals("0")) {
-                     //数据取反
-                     resultData = deductions.negate();
-                     List li = new ArrayList<>();
-                     Map<String,List> map = new HashMap<>();
-                     li.add(element);
-                     li.add(resultData);
-                     map.put(ciId, li);
-                     elementResultData.add(map);
-
-                     System.out.println("<= <= <= <  <  <:"+resultData);
-                   }else {
-                     System.out.println("出现系统错误IsReduce");
-                   }
-
-                 }else {
-
-                   if (IsReduce.equals("1")){
-
-                     differenceValue = elementdata.subtract(leftdata);
-                     resultData = (differenceValue.divide(basedatas,10,BigDecimal.ROUND_HALF_UP)).multiply(deductions);
-                     List li = new ArrayList<>();
-                     Map<String,List> map = new HashMap<>();
-                     li.add(element);
-                     li.add(resultData);
-                     map.put(ciId, li);
-                     elementResultData.add(map);
-
-                     System.out.println("<= <= <= <  <  < :"+resultData);
-
-                   }else if (IsReduce.equals("0")) {
-
-                     differenceValue = elementdata.subtract(leftdata);
-                     resultData = ((differenceValue.divide(basedatas,10,BigDecimal.ROUND_HALF_UP)).multiply(deductions)).negate();
-                     List li = new ArrayList<>();
-                     Map<String,List> map = new HashMap<>();
-                     li.add(element);
-                     li.add(resultData);
-                     map.put(ciId, li);
-                     elementResultData.add(map);
-
-                     System.out.println("<= <= <= <  <  < :"+resultData);
-
-                   }else {
-                     System.out.println("出现系统错误IsReduce");
-                   }
-
-                 }
-
-               }else {
-                 System.out.println("元素数据所对应的值不在此区间中出错");
-               }
-
-
-             }else if (rightsysbol.equals("-100")){
-               //说明公式没有右区间
-               if ((leftdata.compareTo(elementdata) <= 0)) {
-
-                 if (basedatas.compareTo(new BigDecimal("0")) ==0) {
-                   //没有基数值说明就要直接扣除
-                   if (IsReduce.equals("1")){
-
-                     resultData = deductions;
-                     List li = new ArrayList<>();
-                     Map<String,List> map = new HashMap<>();
-                     li.add(element);
-                     li.add(resultData);
-                     map.put(ciId, li);
-                     elementResultData.add(map);
-
-                     System.out.println("<= <= <= :"+resultData);
-
-                   }else if (IsReduce.equals("0")) {
-                     //数据取反
-                     resultData = deductions.negate();
-                     List li = new ArrayList<>();
-                     Map<String,List> map = new HashMap<>();
-                     li.add(element);
-                     li.add(resultData);
-                     map.put(ciId, li);
-                     elementResultData.add(map);
-
-                     System.out.println("<= <= <= :"+resultData);
-                   }else {
-                     System.out.println("<= <= <=出现系统错误IsReduce");
-                   }
-
-                 }else {
-                   //有基数值
-                   if (IsReduce.equals("1")){
-
-                     differenceValue = elementdata.subtract(leftdata);
-                     resultData = (differenceValue.divide(basedatas,10,BigDecimal.ROUND_HALF_UP)).multiply(deductions);
-                     List li = new ArrayList<>();
-                     Map<String,List> map = new HashMap<>();
-                     li.add(element);
-                     li.add(resultData);
-                     map.put(ciId, li);
-                     elementResultData.add(map);
-
-                     System.out.println("<= <= <=  :"+resultData);
-
-                   }else if (IsReduce.equals("0")) {
-
-                     differenceValue = elementdata.subtract(leftdata);
-                     resultData = ((differenceValue.divide(basedatas,10,BigDecimal.ROUND_HALF_UP)).multiply(deductions)).negate();
-                     List li = new ArrayList<>();
-                     Map<String,List> map = new HashMap<>();
-                     li.add(element);
-                     li.add(resultData);
-                     map.put(ciId, li);
-                     elementResultData.add(map);
-
-                     System.out.println("<= <= <= :"+resultData);
-
-                   }else {
-                     System.out.println("<= <= <=出现系统错误IsReduce");
-                   }
-
-                 }
-
-               }else {
-                 System.out.println("<= <= <=元素数据所对应的值不在此区间中出错");
-               }
-             }
-
-
-           }else if (0 == Integer.parseInt(leftsysbol)){
-
-             if (1 == Integer.parseInt(rightsysbol)){
-
-               if ((leftdata.compareTo(elementdata) == -1) && ((elementdata.compareTo(rightdata) <= 0))) {
-
-                 if (basedatas.compareTo(new BigDecimal("0")) ==0) {
-                   //没有基数值说明就要直接扣除
-                   if (IsReduce.equals("1")){
-
-                     resultData = deductions;
-                     List li = new ArrayList<>();
-                     Map<String,List> map = new HashMap<>();
-                     li.add(element);
-                     li.add(resultData);
-                     map.put(ciId, li);
-                     elementResultData.add(map);
-
-                     System.out.println("<  <  <  <= <= <= :"+resultData);
-
-                   }else if (IsReduce.equals("0")) {
-                     //数据取反
-                     resultData = deductions.negate();
-                     List li = new ArrayList<>();
-                     Map<String,List> map = new HashMap<>();
-                     li.add(element);
-                     li.add(resultData);
-                     map.put(ciId, li);
-                     elementResultData.add(map);
-
-                     System.out.println("<  <  <  <= <= <= :"+resultData);
-                   }else {
-                     System.out.println("<  <  <  <= <= <=出现系统错误IsReduce");
-                   }
-
-                 }else {
-                   //有基数值
-                   if (IsReduce.equals("1")){
-
-                     differenceValue = elementdata.subtract(leftdata);
-                     resultData = (differenceValue.divide(basedatas,10,BigDecimal.ROUND_HALF_UP)).multiply(deductions);
-                     List li = new ArrayList<>();
-                     Map<String,List> map = new HashMap<>();
-                     li.add(element);
-                     li.add(resultData);
-                     map.put(ciId, li);
-                     elementResultData.add(map);
-
-                     System.out.println("<  <  <  <= <= <= :"+resultData);
-
-                   }else if (IsReduce.equals("0")) {
-
-                     differenceValue = elementdata.subtract(leftdata);
-                     resultData = ((differenceValue.divide(basedatas,10,BigDecimal.ROUND_HALF_UP)).multiply(deductions)).negate();
-                     List li = new ArrayList<>();
-                     Map<String,List> map = new HashMap<>();
-                     li.add(element);
-                     li.add(resultData);
-                     map.put(ciId, li);
-                     elementResultData.add(map);
-
-                     System.out.println("<  <  <  <= <= <= :"+resultData);
-
-                   }else {
-                     System.out.println("<  <  <  <= <= <=出现系统错误IsReduce");
-                   }
-
-                 }
-
-               }else {
-                 System.out.println("<  <  <  <=  <=  <=元素数据所对应的值不在此区间中出错");
-               }
-
-
-             }else if (0 == Integer.parseInt(rightsysbol)){
-
-               if ((leftdata.compareTo(elementdata) == -1) && ((elementdata.compareTo(rightdata) == -1))) {
-
-                 if (basedatas.compareTo(new BigDecimal("0")) ==0) {
-                   //没有基数值说明就要直接扣除
-                   if (IsReduce.equals("1")){
-
-                     resultData = deductions;
-                     List li = new ArrayList<>();
-                     Map<String,List> map = new HashMap<>();
-                     li.add(element);
-                     li.add(resultData);
-                     map.put(ciId, li);
-                     elementResultData.add(map);
-
-                     System.out.println("<  <  <  <  <  < :"+resultData);
-
-                   }else if (IsReduce.equals("0")) {
-                     //数据取反
-                     resultData = deductions.negate();
-                     List li = new ArrayList<>();
-                     Map<String,List> map = new HashMap<>();
-                     li.add(element);
-                     li.add(resultData);
-                     map.put(ciId, li);
-                     elementResultData.add(map);
-
-                     System.out.println("<  <  <  <  <  < :"+resultData);
-                   }else {
-                     System.out.println("<  <  <  <= <= <=出现系统错误IsReduce");
-                   }
-
-                 }else {
-                   //有基数值
-                   if (IsReduce.equals("1")){
-
-                     differenceValue = elementdata.subtract(leftdata);
-                     resultData = (differenceValue.divide(basedatas,10,BigDecimal.ROUND_HALF_UP)).multiply(deductions);
-                     List li = new ArrayList<>();
-                     Map<String,List> map = new HashMap<>();
-                     li.add(element);
-                     li.add(resultData);
-                     map.put(ciId, li);
-                     elementResultData.add(map);
-
-                     System.out.println("<  <  <  <  <  < :"+resultData);
-
-                   }else if (IsReduce.equals("0")) {
-
-                     differenceValue = elementdata.subtract(leftdata);
-                     resultData = ((differenceValue.divide(basedatas,10,BigDecimal.ROUND_HALF_UP)).multiply(deductions)).negate();
-                     List li = new ArrayList<>();
-                     Map<String,List> map = new HashMap<>();
-                     li.add(element);
-                     li.add(resultData);
-                     map.put(ciId, li);
-                     elementResultData.add(map);
-
-                     System.out.println("<  <  <  <  <  < :"+resultData);
-
-                   }else {
-                     System.out.println("<  <  <  <  <  < 出现系统错误IsReduce");
-                   }
-
-                 }
-
-               }else {
-                 System.out.println("<  <  <  <  <  <元素数据所对应的值不在此区间中出错");
-               }
-
-             }else if (rightsysbol.equals("-100")){
-               //说明公式没有右区间
-               if ((leftdata.compareTo(elementdata) == -1)) {
-
-                 if (basedatas.compareTo(new BigDecimal("0")) ==0) {
-                   //没有基数值说明就要直接扣除
-                   if (IsReduce.equals("1")){
-
-                     resultData = deductions;
-                     List li = new ArrayList<>();
-                     Map<String,List> map = new HashMap<>();
-                     li.add(element);
-                     li.add(resultData);
-                     map.put(ciId, li);
-                     elementResultData.add(map);
-
-                     System.out.println("< < < :"+resultData);
-
-                   }else if (IsReduce.equals("0")) {
-                     //数据取反
-                     resultData = deductions.negate();
-                     List li = new ArrayList<>();
-                     Map<String,List> map = new HashMap<>();
-                     li.add(element);
-                     li.add(resultData);
-                     map.put(ciId, li);
-                     elementResultData.add(map);
-
-                     System.out.println("< < < :"+resultData);
-                   }else {
-                     System.out.println("< < <出现系统错误IsReduce");
-                   }
-
-                 }else {
-                   //有基数值
-                   if (IsReduce.equals("1")){
-
-                     differenceValue = elementdata.subtract(leftdata);
-                     resultData = (differenceValue.divide(basedatas,10,BigDecimal.ROUND_HALF_UP)).multiply(deductions);
-                     List li = new ArrayList<>();
-                     Map<String,List> map = new HashMap<>();
-                     li.add(element);
-                     li.add(resultData);
-                     map.put(ciId, li);
-                     elementResultData.add(map);
-
-                     System.out.println("< < <  :"+resultData);
-
-                   }else if (IsReduce.equals("0")) {
-
-                     differenceValue = elementdata.subtract(leftdata);
-                     resultData = ((differenceValue.divide(basedatas,10,BigDecimal.ROUND_HALF_UP)).multiply(deductions)).negate();
-                     List li = new ArrayList<>();
-                     Map<String,List> map = new HashMap<>();
-                     li.add(element);
-                     li.add(resultData);
-                     map.put(ciId, li);
-                     elementResultData.add(map);
-
-                     System.out.println("< < < :"+resultData);
-
-                   }else {
-                     System.out.println("< < <出现系统错误IsReduce");
-                   }
-
-                 }
-
-               }else {
-                 System.out.println("<  <  < 元素数据所对应的值不在此区间中出错");
-               }
-             }
-
-           }else if (leftsysbol.equals("-100")){
-             //此处说明公式中左区间没有值
-             if (1 == Integer.parseInt(rightsysbol)){
-               if ((elementdata.compareTo(rightdata) <= 0)) {
-                 if (basedatas.compareTo(new BigDecimal("0")) ==0) {
-                   //没有基数值说明就要直接扣除
-                   if (IsReduce.equals("1")){
-
-                     resultData = deductions;
-                     List li = new ArrayList<>();
-                     Map<String,List> map = new HashMap<>();
-                     li.add(element);
-                     li.add(resultData);
-                     map.put(ciId, li);
-                     elementResultData.add(map);
-
-                     System.out.println("<=  <= <= :"+resultData);
-
-                   }else if (IsReduce.equals("0")) {
-                     //数据取反
-                     resultData = deductions.negate();
-                     List li = new ArrayList<>();
-                     Map<String,List> map = new HashMap<>();
-                     li.add(element);
-                     li.add(resultData);
-                     map.put(ciId, li);
-                     elementResultData.add(map);
-
-                     System.out.println("<=  <= <= :"+resultData);
-                   }else {
-                     System.out.println("<=  <= <=出现系统错误IsReduce");
-                   }
-
-                 }else {
-                   //有基数值
-                   System.out.println("<= <= <=此处进入左区间没有值右区间有值");
-
-                 }
-               }else {
-                 System.out.println("<=  <=  <= 元素数据大于右边区间值出错");
-               }
-
-             }else if (0 == Integer.parseInt(rightsysbol)){
-               if ((elementdata.compareTo(rightdata) == -1)) {
-                 if (basedatas.compareTo(new BigDecimal("0")) ==0) {
-                   //没有基数值说明就要直接扣除
-                   if (IsReduce.equals("1")){
-
-                     resultData = deductions;
-                     List li = new ArrayList<>();
-                     Map<String,List> map = new HashMap<>();
-                     li.add(element);
-                     li.add(resultData);
-                     map.put(ciId, li);
-                     elementResultData.add(map);
-
-                     System.out.println("< < <  :"+resultData);
-
-                   }else if (IsReduce.equals("0")) {
-                     //数据取反
-                     resultData = deductions.negate();
-                     List li = new ArrayList<>();
-                     Map<String,List> map = new HashMap<>();
-                     li.add(element);
-                     li.add(resultData);
-                     map.put(ciId, li);
-                     elementResultData.add(map);
-
-                     System.out.println("< <  < :"+resultData);
-                   }else {
-                     System.out.println("<  <  < 出现系统错误IsReduce");
-                   }
-
-                 }else {
-                   //有基数值
-                   System.out.println("<  <  < 此处进入左区间没有值右区间有值");
-
-                 }
-               }else {
-                 System.out.println("<  <  < 元素数据大于右边区间值出错");
-               }
-
-             }else {
-               System.out.println("公式出现错误");
-             }
-           }
-
-         }
-
-       }
+      ciId = contractElements.get(i).getCiId();
+      elementdata = contractElements.get(i).getElelmentDate();
+      element = contractElements.get(i).getElement();
+
+
+      for (int j= 0; j<heTongGongShi.size(); j++){
+
+        if(contractElements.get(i).getElement().equals(heTongGongShi.get(j).getElements())){
+
+          //进行异常处理如果有些数据为空的时候
+          leftdata = heTongGongShi.get(j).getLeftnum();
+
+          rightdata = heTongGongShi.get(j).getRightnum();
+
+
+          if ( heTongGongShi.get(j).getLeftsysbol() == null|| heTongGongShi.get(j).getLeftsysbol().equals("")) {
+            leftsysbol = "-100";
+            System.out.println("leftsysbol:"+leftsysbol);
+          }else {
+            leftsysbol = heTongGongShi.get(j).getLeftsysbol();
+          }
+
+          if (heTongGongShi .get(j).getRightsysbol() == null|| heTongGongShi.get(j).getRightsysbol().equals("")) {
+            rightsysbol = "-100";
+            System.out.println("rightsysbol:"+rightsysbol);
+          }else {
+            rightsysbol = heTongGongShi .get(j).getRightsysbol();
+
+          }
+
+          deductions = heTongGongShi.get(j).getDeductions();
+          if (heTongGongShi.get(j).getBasedata() == null){
+            basedatas = new BigDecimal("0");
+          }else {
+            basedatas = heTongGongShi.get(j).getBasedata();
+          }
+
+          IsReduce = heTongGongShi.get(j).getIsreduce();
+
+          //从公式表集合中取出相应的数据进行匹配
+          if (1 == Integer.parseInt(leftsysbol)){
+
+            if (1 == Integer.parseInt(rightsysbol)){
+
+              if ((leftdata.compareTo(elementdata) <= 0) && (elementdata.compareTo(rightdata) <= 0)){
+
+                if (basedatas.compareTo(new BigDecimal("0")) ==0){
+                  //直接在单价上扣除或者加上该元素所对应的价格
+                  if (IsReduce.equals("1")){
+
+                    resultData = deductions;
+                    List li = new ArrayList<>();
+                    Map<String,List> map = new HashMap<>();
+                    li.add(element);
+                    li.add(resultData);
+                    map.put(ciId, li);
+                    elementResultData.add(map);
+
+                    System.out.println("<= <= <= <= <= <=:"+resultData);
+                    break;
+
+                  }else if (IsReduce.equals("0")) {
+                    //数据取反
+                    resultData = deductions.negate();
+                    List li = new ArrayList<>();
+                    Map<String,List> map = new HashMap<>();
+                    li.add(element);
+                    li.add(resultData);
+                    map.put(ciId, li);
+                    elementResultData.add(map);
+
+                    System.out.println("<= <= <= <= <= <=:"+resultData);
+                    break;
+                  }else {
+                    System.out.println("出现系统错误IsReduce");
+                    heTongGongShiflag = 1;
+                  }
+
+                }else {
+
+                  if (IsReduce.equals("1")){
+
+                    differenceValue = elementdata.subtract(leftdata);
+                    resultData = (differenceValue.divide(basedatas,10,BigDecimal.ROUND_HALF_UP)).multiply(deductions);
+                    List li = new ArrayList<>();
+                    Map<String,List> map = new HashMap<>();
+                    li.add(element);
+                    li.add(resultData);
+                    map.put(ciId, li);
+                    elementResultData.add(map);
+
+                    System.out.println("<= <= <= <= <= <=:"+resultData);
+                    break;
+
+                  }else if (IsReduce.equals("0")) {
+
+                    differenceValue = elementdata.subtract(leftdata);
+                    resultData = ((differenceValue.divide(basedatas,10,BigDecimal.ROUND_HALF_UP)).multiply(deductions)).negate();
+                    List li = new ArrayList<>();
+                    Map<String,List> map = new HashMap<>();
+                    li.add(element);
+                    li.add(resultData);
+                    map.put(ciId, li);
+                    elementResultData.add(map);
+
+                    System.out.println("<= <= <= <= <= <=:"+resultData);
+                    break;
+
+                  }else {
+                    System.out.println("出现系统错误IsReduce");
+                    heTongGongShiflag = 1;
+                  }
+
+                }
+
+              }else {
+                System.out.println("元素数据所对应的值不在此区间中出错");
+                heTongGongShiflag = 2;
+              }
+
+            }else if (0 == Integer.parseInt(rightsysbol)){
+              //a<= b <c
+              if ((leftdata.compareTo(elementdata) <= 0) && (elementdata.compareTo(rightdata) < 0)){
+
+                if (basedatas.compareTo(new BigDecimal("0")) ==0){
+                  //直接在单价上扣除或者加上该元素所对应的价格
+                  if (IsReduce.equals("1")){
+
+                    resultData = deductions;
+                    List li = new ArrayList<>();
+                    Map<String,List> map = new HashMap<>();
+                    li.add(element);
+                    li.add(resultData);
+                    map.put(ciId, li);
+                    elementResultData.add(map);
+
+                    System.out.println("<= <= <= < < <:"+resultData);
+                    break;
+
+                  }else if (IsReduce.equals("0")) {
+                    //数据取反
+                    resultData = deductions.negate();
+                    List li = new ArrayList<>();
+                    Map<String,List> map = new HashMap<>();
+                    li.add(element);
+                    li.add(resultData);
+                    map.put(ciId, li);
+                    elementResultData.add(map);
+
+                    System.out.println("<= <= <= <  <  <:"+resultData);
+                    break;
+                  }else {
+                    System.out.println("出现系统错误IsReduce");
+                    heTongGongShiflag = 1;
+                  }
+
+                }else {
+
+                  if (IsReduce.equals("1")){
+
+                    differenceValue = elementdata.subtract(leftdata);
+                    resultData = (differenceValue.divide(basedatas,10,BigDecimal.ROUND_HALF_UP)).multiply(deductions);
+                    List li = new ArrayList<>();
+                    Map<String,List> map = new HashMap<>();
+                    li.add(element);
+                    li.add(resultData);
+                    map.put(ciId, li);
+                    elementResultData.add(map);
+
+                    System.out.println("<= <= <= <  <  < :"+resultData);
+                    break;
+
+                  }else if (IsReduce.equals("0")) {
+
+                    differenceValue = elementdata.subtract(leftdata);
+                    resultData = ((differenceValue.divide(basedatas,10,BigDecimal.ROUND_HALF_UP)).multiply(deductions)).negate();
+                    List li = new ArrayList<>();
+                    Map<String,List> map = new HashMap<>();
+                    li.add(element);
+                    li.add(resultData);
+                    map.put(ciId, li);
+                    elementResultData.add(map);
+
+                    System.out.println("<= <= <= <  <  < :"+resultData);
+                    break;
+
+                  }else {
+                    System.out.println("出现系统错误IsReduce");
+                    heTongGongShiflag = 1;
+                  }
+
+                }
+
+              }else {
+                System.out.println("元素数据所对应的值不在此区间中出错");
+                heTongGongShiflag = 2;
+              }
+
+
+            }else if (rightsysbol.equals("-100")){
+              //说明公式没有右区间
+              if ((leftdata.compareTo(elementdata) <= 0)) {
+
+                if (basedatas.compareTo(new BigDecimal("0")) ==0) {
+                  //没有基数值说明就要直接扣除
+                  if (IsReduce.equals("1")){
+
+                    resultData = deductions;
+                    List li = new ArrayList<>();
+                    Map<String,List> map = new HashMap<>();
+                    li.add(element);
+                    li.add(resultData);
+                    map.put(ciId, li);
+                    elementResultData.add(map);
+
+                    System.out.println("<= <= <= :"+resultData);
+                    break;
+
+                  }else if (IsReduce.equals("0")) {
+                    //数据取反
+                    resultData = deductions.negate();
+                    List li = new ArrayList<>();
+                    Map<String,List> map = new HashMap<>();
+                    li.add(element);
+                    li.add(resultData);
+                    map.put(ciId, li);
+                    elementResultData.add(map);
+
+                    System.out.println("<= <= <= :"+resultData);
+                    break;
+
+                  }else {
+                    System.out.println("<= <= <=出现系统错误IsReduce");
+                    heTongGongShiflag = 1;
+                  }
+
+                }else {
+                  //有基数值
+                  if (IsReduce.equals("1")){
+
+                    differenceValue = elementdata.subtract(leftdata);
+                    resultData = (differenceValue.divide(basedatas,10,BigDecimal.ROUND_HALF_UP)).multiply(deductions);
+                    List li = new ArrayList<>();
+                    Map<String,List> map = new HashMap<>();
+                    li.add(element);
+                    li.add(resultData);
+                    map.put(ciId, li);
+                    elementResultData.add(map);
+
+                    System.out.println("<= <= <=  :"+resultData);
+                    break;
+
+                  }else if (IsReduce.equals("0")) {
+
+                    differenceValue = elementdata.subtract(leftdata);
+                    resultData = ((differenceValue.divide(basedatas,10,BigDecimal.ROUND_HALF_UP)).multiply(deductions)).negate();
+                    List li = new ArrayList<>();
+                    Map<String,List> map = new HashMap<>();
+                    li.add(element);
+                    li.add(resultData);
+                    map.put(ciId, li);
+                    elementResultData.add(map);
+
+                    System.out.println("<= <= <= :"+resultData);
+                    break;
+
+                  }else {
+                    System.out.println("<= <= <=出现系统错误IsReduce");
+                    heTongGongShiflag = 1;
+                  }
+
+                }
+
+              }else {
+                System.out.println("<= <= <=元素数据所对应的值不在此区间中出错");
+                heTongGongShiflag = 2;
+              }
+            }
+
+
+          }else if (0 == Integer.parseInt(leftsysbol)){
+
+            if (1 == Integer.parseInt(rightsysbol)){
+
+              if ((leftdata.compareTo(elementdata) == -1) && ((elementdata.compareTo(rightdata) <= 0))) {
+
+                if (basedatas.compareTo(new BigDecimal("0")) ==0) {
+                  //没有基数值说明就要直接扣除
+                  if (IsReduce.equals("1")){
+
+                    resultData = deductions;
+                    List li = new ArrayList<>();
+                    Map<String,List> map = new HashMap<>();
+                    li.add(element);
+                    li.add(resultData);
+                    map.put(ciId, li);
+                    elementResultData.add(map);
+
+                    System.out.println("<  <  <  <= <= <= :"+resultData);
+                    break;
+
+                  }else if (IsReduce.equals("0")) {
+                    //数据取反
+                    resultData = deductions.negate();
+                    List li = new ArrayList<>();
+                    Map<String,List> map = new HashMap<>();
+                    li.add(element);
+                    li.add(resultData);
+                    map.put(ciId, li);
+                    elementResultData.add(map);
+
+                    System.out.println("<  <  <  <= <= <= :"+resultData);
+                    break;
+                  }else {
+                    System.out.println("<  <  <  <= <= <=出现系统错误IsReduce");
+                  }
+
+                }else {
+                  //有基数值
+                  if (IsReduce.equals("1")){
+
+                    differenceValue = elementdata.subtract(leftdata);
+                    resultData = (differenceValue.divide(basedatas,10,BigDecimal.ROUND_HALF_UP)).multiply(deductions);
+                    List li = new ArrayList<>();
+                    Map<String,List> map = new HashMap<>();
+                    li.add(element);
+                    li.add(resultData);
+                    map.put(ciId, li);
+                    elementResultData.add(map);
+
+                    System.out.println("<  <  <  <= <= <= :"+resultData);
+                    break;
+
+                  }else if (IsReduce.equals("0")) {
+
+                    differenceValue = elementdata.subtract(leftdata);
+                    resultData = ((differenceValue.divide(basedatas,10,BigDecimal.ROUND_HALF_UP)).multiply(deductions)).negate();
+                    List li = new ArrayList<>();
+                    Map<String,List> map = new HashMap<>();
+                    li.add(element);
+                    li.add(resultData);
+                    map.put(ciId, li);
+                    elementResultData.add(map);
+
+                    System.out.println("<  <  <  <= <= <= :"+resultData);
+                    break;
+
+                  }else {
+                    System.out.println("<  <  <  <= <= <=出现系统错误IsReduce");
+                    heTongGongShiflag = 1;
+                  }
+
+                }
+
+              }else {
+                System.out.println("<  <  <  <=  <=  <=元素数据所对应的值不在此区间中出错");
+                heTongGongShiflag = 2;
+              }
+
+
+            }else if (0 == Integer.parseInt(rightsysbol)){
+
+              if ((leftdata.compareTo(elementdata) == -1) && ((elementdata.compareTo(rightdata) == -1))) {
+
+                if (basedatas.compareTo(new BigDecimal("0")) ==0) {
+                  //没有基数值说明就要直接扣除
+                  if (IsReduce.equals("1")){
+
+                    resultData = deductions;
+                    List li = new ArrayList<>();
+                    Map<String,List> map = new HashMap<>();
+                    li.add(element);
+                    li.add(resultData);
+                    map.put(ciId, li);
+                    elementResultData.add(map);
+
+                    System.out.println("<  <  <  <  <  < :"+resultData);
+                    break;
+
+                  }else if (IsReduce.equals("0")) {
+                    //数据取反
+                    resultData = deductions.negate();
+                    List li = new ArrayList<>();
+                    Map<String,List> map = new HashMap<>();
+                    li.add(element);
+                    li.add(resultData);
+                    map.put(ciId, li);
+                    elementResultData.add(map);
+
+                    System.out.println("<  <  <  <  <  < :"+resultData);
+                    break;
+
+                  }else {
+                    System.out.println("<  <  <  <= <= <=出现系统错误IsReduce");
+                    heTongGongShiflag = 1;
+                  }
+
+                }else {
+                  //有基数值
+                  if (IsReduce.equals("1")){
+
+                    differenceValue = elementdata.subtract(leftdata);
+                    resultData = (differenceValue.divide(basedatas,10,BigDecimal.ROUND_HALF_UP)).multiply(deductions);
+                    List li = new ArrayList<>();
+                    Map<String,List> map = new HashMap<>();
+                    li.add(element);
+                    li.add(resultData);
+                    map.put(ciId, li);
+                    elementResultData.add(map);
+
+                    System.out.println("<  <  <  <  <  < :"+resultData);
+                    break;
+
+                  }else if (IsReduce.equals("0")) {
+
+                    differenceValue = elementdata.subtract(leftdata);
+                    resultData = ((differenceValue.divide(basedatas,10,BigDecimal.ROUND_HALF_UP)).multiply(deductions)).negate();
+                    List li = new ArrayList<>();
+                    Map<String,List> map = new HashMap<>();
+                    li.add(element);
+                    li.add(resultData);
+                    map.put(ciId, li);
+                    elementResultData.add(map);
+
+                    System.out.println("<  <  <  <  <  < :"+resultData);
+                    break;
+
+                  }else {
+                    System.out.println("<  <  <  <  <  < 出现系统错误IsReduce");
+                    heTongGongShiflag = 1;
+                  }
+
+                }
+
+              }else {
+                System.out.println("<  <  <  <  <  <元素数据所对应的值不在此区间中出错");
+                heTongGongShiflag = 2;
+              }
+
+            }else if (rightsysbol.equals("-100")){
+              //说明公式没有右区间
+              if ((leftdata.compareTo(elementdata) == -1)) {
+
+                if (basedatas.compareTo(new BigDecimal("0")) ==0) {
+                  //没有基数值说明就要直接扣除
+                  if (IsReduce.equals("1")){
+
+                    resultData = deductions;
+                    List li = new ArrayList<>();
+                    Map<String,List> map = new HashMap<>();
+                    li.add(element);
+                    li.add(resultData);
+                    map.put(ciId, li);
+                    elementResultData.add(map);
+
+                    System.out.println("< < < :"+resultData);
+                    break;
+
+                  }else if (IsReduce.equals("0")) {
+                    //数据取反
+                    resultData = deductions.negate();
+                    List li = new ArrayList<>();
+                    Map<String,List> map = new HashMap<>();
+                    li.add(element);
+                    li.add(resultData);
+                    map.put(ciId, li);
+                    elementResultData.add(map);
+
+                    System.out.println("< < < :"+resultData);
+                    break;
+                  }else {
+                    heTongGongShiflag = 2;
+                    System.out.println("< < <出现系统错误IsReduce");
+                  }
+
+                }else {
+                  //有基数值
+                  if (IsReduce.equals("1")){
+
+                    differenceValue = elementdata.subtract(leftdata);
+                    resultData = (differenceValue.divide(basedatas,10,BigDecimal.ROUND_HALF_UP)).multiply(deductions);
+                    List li = new ArrayList<>();
+                    Map<String,List> map = new HashMap<>();
+                    li.add(element);
+                    li.add(resultData);
+                    map.put(ciId, li);
+                    elementResultData.add(map);
+
+                    System.out.println("< < <  :"+resultData);
+                    break;
+
+                  }else if (IsReduce.equals("0")) {
+
+                    differenceValue = elementdata.subtract(leftdata);
+                    resultData = ((differenceValue.divide(basedatas,10,BigDecimal.ROUND_HALF_UP)).multiply(deductions)).negate();
+                    List li = new ArrayList<>();
+                    Map<String,List> map = new HashMap<>();
+                    li.add(element);
+                    li.add(resultData);
+                    map.put(ciId, li);
+                    elementResultData.add(map);
+
+                    System.out.println("< < < :"+resultData);
+                    break;
+
+                  }else {
+                    System.out.println("< < <出现系统错误IsReduce");
+                    heTongGongShiflag = 1;
+                  }
+
+                }
+
+              }else {
+                System.out.println("<  <  < 元素数据所对应的值不在此区间中出错");
+                heTongGongShiflag = 2;
+              }
+            }
+
+          }else if (leftsysbol.equals("-100")){
+            //此处说明公式中左区间没有值
+            if (1 == Integer.parseInt(rightsysbol)){
+              if ((elementdata.compareTo(rightdata) <= 0)) {
+                if (basedatas.compareTo(new BigDecimal("0")) ==0) {
+                  //没有基数值说明就要直接扣除
+                  if (IsReduce.equals("1")){
+
+                    resultData = deductions;
+                    List li = new ArrayList<>();
+                    Map<String,List> map = new HashMap<>();
+                    li.add(element);
+                    li.add(resultData);
+                    map.put(ciId, li);
+                    elementResultData.add(map);
+
+                    System.out.println("<=  <= <= :"+resultData);
+                    break;
+
+                  }else if (IsReduce.equals("0")) {
+                    //数据取反
+                    resultData = deductions.negate();
+                    List li = new ArrayList<>();
+                    Map<String,List> map = new HashMap<>();
+                    li.add(element);
+                    li.add(resultData);
+                    map.put(ciId, li);
+                    elementResultData.add(map);
+
+                    System.out.println("<=  <= <= :"+resultData);
+                    break;
+                  }else {
+                    System.out.println("<=  <= <=出现系统错误IsReduce");
+                  }
+
+                }else {
+                  //有基数值
+                  System.out.println("<= <= <=此处进入左区间没有值右区间有值");
+
+                }
+              }else {
+                System.out.println("<=  <=  <= 元素数据大于右边区间值出错");
+              }
+
+            }else if (0 == Integer.parseInt(rightsysbol)){
+              if ((elementdata.compareTo(rightdata) == -1)) {
+                if (basedatas.compareTo(new BigDecimal("0")) ==0) {
+                  //没有基数值说明就要直接扣除
+                  if (IsReduce.equals("1")){
+
+                    resultData = deductions;
+                    List li = new ArrayList<>();
+                    Map<String,List> map = new HashMap<>();
+                    li.add(element);
+                    li.add(resultData);
+                    map.put(ciId, li);
+                    elementResultData.add(map);
+
+                    System.out.println("< < <  :"+resultData);
+                    break;
+
+                  }else if (IsReduce.equals("0")) {
+                    //数据取反
+                    resultData = deductions.negate();
+                    List li = new ArrayList<>();
+                    Map<String,List> map = new HashMap<>();
+                    li.add(element);
+                    li.add(resultData);
+                    map.put(ciId, li);
+                    elementResultData.add(map);
+
+                    System.out.println("< <  < :"+resultData);
+                    break;
+
+                  }else {
+                    System.out.println("<  <  < 出现系统错误IsReduce");
+                    heTongGongShiflag = 1;
+                  }
+
+                }else {
+                  //有基数值
+                  System.out.println("<  <  < 此处进入左区间没有值右区间有值");
+
+                }
+              }else {
+                System.out.println("<  <  < 元素数据大于右边区间值出错");
+                heTongGongShiflag = 2;
+              }
+
+            }else {
+              System.out.println("公式出现错误");
+              heTongGongShiflag = 2;
+            }
+          }
+
+        }
+
+      }
 
     }
 
-    //计算每个ID出现的次数后面判断是否将合同中对应所有元素都加入其中
+    //计算每个ID出现的次数后面判断是否将合同中对应所有元素都成功结算
     Map<String,Integer> map = new HashMap();
     for (int i=0;i<contractElements.size();i++) {
       Integer count = map.get(contractElements.get(i).getCiId());
@@ -726,7 +778,10 @@ public class shengtieAccountService extends ServiceImpl<shengtieAccountMapper, T
 
     for( Map.Entry<String,Integer> vo : map.entrySet()){
       String key = vo.getKey();
-      if (vo.getValue().intValue() == map2.get(key)) {
+      Integer a = vo.getValue();
+      Integer b = map2.get(key);
+       // System.out.println("a："+a+"b"+b);
+      if ( a == b) {
         map3.put(key, true);
       }else {
         map3.put(key, false);
@@ -741,43 +796,14 @@ public class shengtieAccountService extends ServiceImpl<shengtieAccountMapper, T
     String leftsysbolNum = null;
     String rightsysbolNum = null;
     BigDecimal rightnum = null;
-    BigDecimal basedata = new BigDecimal(heTongNumber.get(0).getBasedata());
+    BigDecimal basedata = null;
     //计算的最终扣值
     BigDecimal weighingData = null;
     // String isReduce = heTongNumber.get(0).getIsreduce();
     //合同中的斤检数量
     BigDecimal weighing = null;
-    //扣数值
-    BigDecimal weigningDeduction = new BigDecimal(heTongNumber.get(0).getDeductions());
-
-    //进行异常处理如果有些数据为空的时候
-    if (heTongNumber.get(0).getLeftnum() != null) {
-      leftnum = new BigDecimal(heTongNumber.get(0).getLeftnum().toString());
-    }else {
-      leftnum = new BigDecimal("-100");
-      System.out.println("leftnum:"+leftnum);
-    }
-
-    if (heTongNumber.get(0).getRightnum() != null) {
-      rightnum = new BigDecimal(heTongNumber.get(0).getRightnum().toString());
-    }else {
-      rightnum = new BigDecimal("-100");
-      System.out.println("rightnum:"+rightdata);
-    }
-
-    if ( heTongNumber.get(0).getLeftsysbol() != null) {
-      leftsysbolNum = heTongNumber.get(0).getLeftsysbol();
-    }else {
-      leftsysbolNum = "-100";
-      System.out.println("leftsysbolNum:"+leftsysbolNum);
-    }
-
-    if (heTongNumber.get(0).getRightsysbol() != null) {
-      rightsysbolNum = heTongNumber.get(0).getRightsysbol();
-    }else {
-      rightsysbolNum = "-100";
-      System.out.println("rightsysbolNum:"+rightsysbolNum);
-    }
+    //公式中的扣数值
+    BigDecimal weigningDeduction = null;
 
     Map<String,BigDecimal> weighingMap = new HashMap<>();
 
@@ -797,147 +823,197 @@ public class shengtieAccountService extends ServiceImpl<shengtieAccountMapper, T
     Map<String,BigDecimal> map4 = new HashMap();
 
     for (int i=0;i<contractInformations.size() ;i++) {
-       weighing = weighingMap.get(contractInformations.get(i).getId());
 
-       if(weighing != null){
-         if (leftsysbolNum.equals("1")){
+      for(int j=0;j<heTongNumber.size();j++){
+        weighing = weighingMap.get(contractInformations.get(i).getId());
 
-           if (rightsysbolNum.equals("1")){
-
-             if ((leftnum.compareTo(weighing) <= 0) && (weighing.compareTo(rightnum) <= 0)){
-
-               if (basedata.compareTo(new BigDecimal("0")) ==0){
-                 //直接在单价上扣除或者加上该元素所对应的价格
-                 weighingData = weighing.subtract(weigningDeduction);
-                 map4.put(contractInformations.get(i).getId(),weighingData);
-                 System.out.println("<= <= <= <= <= <=:"+weighingData);
-               }else {
-                 weighingData = (((weighing.subtract(leftnum)).divide(basedata,10,BigDecimal.ROUND_HALF_UP)).multiply(weigningDeduction)).negate().add(weighing);
-                 map4.put(contractInformations.get(i).getId(),weighingData);
-                 System.out.println("<= <= <= <= <= <=:"+weighingData);
-               }
-
-             } else {
-               System.out.println("数量所对应的值不在此区间中出错");
-               map4.put(contractInformations.get(i).getId(), null);
-             }
-
-           }else if (rightsysbolNum.equals("0")){
-             //a<= b <c
-             if ((leftnum.compareTo(weighing) <= 0) && (weighing.compareTo(rightnum) < 0)){
-
-               if (basedatas.compareTo(new BigDecimal("0")) ==0){
-
-                 //直接在单价上扣除或者加上该元素所对应的价格
-                 weighingData = weighing.subtract(weigningDeduction);
-                 map4.put(contractInformations.get(i).getId(),weighingData);
-                 System.out.println("<= <= <= <  <  < :"+weighingData);
-
-               }else {
-                 weighingData = (((weighing.subtract(leftnum)).divide(basedata,10,BigDecimal.ROUND_HALF_UP)).multiply(weigningDeduction)).negate().add(weighing);
-                 map4.put(contractInformations.get(i).getId(),weighingData);
-                 System.out.println("<= <= <= <= <= <=:"+weighingData);
-               }
-
-             }else {
-               map4.put(contractInformations.get(i).getId(), null);
-               System.out.println("数量所对应的值不在此区间中出错");
-             }
-
-           }else if (rightsysbol.equals("-100")){
-             //说明公式没有右区间
-             if ((leftnum.compareTo(weighing) <= 0)) {
-
-               if (basedata.compareTo(new BigDecimal("0")) ==0) {
-                 //没有基数值说明就要直接扣除
-
-                 weighingData = weighing.subtract(weigningDeduction);
-                 map4.put(contractInformations.get(i).getId(),weighingData);
-                 System.out.println("<=  <=  <= :"+weighingData);
-
-               }else {
-                 //有基数值
-                 weighingData = (((weighing.subtract(leftnum)).divide(basedata,10,BigDecimal.ROUND_HALF_UP)).multiply(weigningDeduction)).negate().add(weighing);
-                 map4.put(contractInformations.get(i).getId(),weighingData);
-                 System.out.println("<= <= <=  :"+weighingData);
-               }
-
-             } else {
-               map4.put(contractInformations.get(i).getId(), null);
-               System.out.println("<= <= <=数量所对应的值不在此区间中出错");
-             }
-           }
-
-         }else if(leftsysbolNum.equals("0")){
-
-           if (rightsysbolNum.equals("1")){
-
-             if ((leftnum.compareTo(weighing) < 0) && (weighing.compareTo(rightnum) <= 0)){
-
-               if (basedata.compareTo(new BigDecimal("0")) ==0){
-                 //直接在单价上扣除或者加上该元素所对应的价格
-                 weighingData = weighing.subtract(weigningDeduction);
-                 map4.put(contractInformations.get(i).getId(),weighingData);
-                 System.out.println("< < < <= <= <=:"+weighingData);
-               }else {
-                 weighingData = (((weighing.subtract(leftnum)).divide(basedata,10,BigDecimal.ROUND_HALF_UP)).multiply(weigningDeduction)).negate().add(weighing);
-                 map4.put(contractInformations.get(i).getId(),weighingData);
-                 System.out.println("<  < <  <= <= <=:"+weighingData);
-               }
-
-             } else {
-               map4.put(contractInformations.get(i).getId(), null);
-               System.out.println("数量所对应的值不在此区间中出错");
-             }
-
-           }else if (rightsysbolNum.equals("0")){
-             //a<= b <c
-             if ((leftnum.compareTo(weighing) < 0) && (weighing.compareTo(rightnum) < 0)){
-
-               if (basedata.compareTo(new BigDecimal("0")) ==0){
-
-                 //直接在单价上扣除或者加上该元素所对应的数量
-                 weighingData = weighing.subtract(weigningDeduction);
-                 map4.put(contractInformations.get(i).getId(),weighingData);
-                 System.out.println("< < < <  <  < :"+weighingData);
-
-               }else {
-                 weighingData = (((weighing.subtract(leftnum)).divide(basedata,10,BigDecimal.ROUND_HALF_UP)).multiply(weigningDeduction)).negate().add(weighing);
-                 map4.put(contractInformations.get(i).getId(),weighingData);
-                 System.out.println("< < < < < <:"+weighingData);
-               }
-
-             }else {
-               map4.put(contractInformations.get(i).getId(), null);
-               System.out.println("数量所对应的值不在此区间中出错");
-             }
-
-           }else if (rightsysbol.equals("-100")){
-             //说明公式没有右区间
-             if ((leftnum.compareTo(weighing) <= 0)) {
-
-               if (basedata.compareTo(new BigDecimal("0")) ==0) {
-                 //没有基数值说明就要直接扣除
-
-                 weighingData = weighing.subtract(weigningDeduction);
-                 map4.put(contractInformations.get(i).getId(),weighingData);
-                 System.out.println("<=  <=  <= :"+weighingData);
-
-               }else {
-                 //有基数值
-                 weighingData = (((weighing.subtract(leftnum)).divide(basedata,10,BigDecimal.ROUND_HALF_UP)).multiply(weigningDeduction)).negate().add(weighing);
-                 map4.put(contractInformations.get(i).getId(),weighingData);
-                 System.out.println("<= <= <= :"+weighingData);
-               }
-
-             } else {
-               map4.put(contractInformations.get(i).getId(), null);
-               System.out.println("<= <= <=数量所对应的值不在此区间中出错");
-             }
-           }
+        if(weighing != null){
 
 
-         }else if(leftsysbolNum.equals("-100")){
+
+          weigningDeduction = new BigDecimal(heTongNumber.get(j).getDeductions());
+
+          //进行异常处理如果有些数据为空的时候
+          if (heTongNumber.get(0).getBasedata() == null) {
+            basedata = new BigDecimal("0");
+          } else {
+            basedata = new BigDecimal(heTongNumber.get(j).getBasedata());
+          }
+
+
+          leftnum = new BigDecimal(heTongNumber.get(j).getLeftnum().toString());
+
+          rightnum = new BigDecimal(heTongNumber.get(j).getRightnum().toString());
+
+          if ( heTongNumber.get(j).getLeftsysbol() == null || heTongNumber.get(j).getLeftsysbol().equals("")) {
+            leftsysbolNum = "-100";
+            System.out.println("leftsysbolNum:"+leftsysbolNum);
+          }else {
+            leftsysbolNum = heTongNumber.get(j).getLeftsysbol();
+          }
+
+          if (heTongNumber.get(j).getRightsysbol() == null || heTongNumber.get(j).getRightsysbol().equals("")) {
+            rightsysbolNum = "-100";
+            System.out.println("rightsysbolNum:"+rightsysbolNum);
+          }else {
+            rightsysbolNum = heTongNumber.get(j).getRightsysbol();
+          }
+
+          if (leftsysbolNum.equals("1")){
+
+            if (rightsysbolNum.equals("1")){
+
+              if ((leftnum.compareTo(weighing) <= 0) && (weighing.compareTo(rightnum) <= 0)){
+
+                if (basedata.compareTo(new BigDecimal("0")) ==0){
+                  //直接在单价上扣除或者加上该元素所对应的价格
+                  weighingData = weighing.subtract(weigningDeduction);
+                  map4.put(contractInformations.get(i).getId(),weighingData);
+                  System.out.println("<= <= <= <= <= <=:"+weighingData);
+                  break;
+                }else {
+                  weighingData = (((weighing.subtract(leftnum)).divide(basedata,10,BigDecimal.ROUND_HALF_UP)).multiply(weigningDeduction)).negate().add(weighing);
+                  map4.put(contractInformations.get(i).getId(),weighingData);
+                  System.out.println("<= <= <= <= <= <=:"+weighingData);
+                  break;
+                }
+
+              } else {
+                System.out.println("数量所对应的值不在此区间中出错");
+                map4.put(contractInformations.get(i).getId(), null);
+                numflag = 2;
+              }
+
+            }else if (rightsysbolNum.equals("0")){
+              //a<= b <c
+              if ((leftnum.compareTo(weighing) <= 0) && (weighing.compareTo(rightnum) < 0)){
+
+                if (basedatas.compareTo(new BigDecimal("0")) ==0){
+
+                  //直接在单价上扣除或者加上该元素所对应的价格
+                  weighingData = weighing.subtract(weigningDeduction);
+                  map4.put(contractInformations.get(i).getId(),weighingData);
+                  System.out.println("<= <= <= <  <  < :"+weighingData);
+                  break;
+
+                }else {
+                  weighingData = (((weighing.subtract(leftnum)).divide(basedata,10,BigDecimal.ROUND_HALF_UP)).multiply(weigningDeduction)).negate().add(weighing);
+                  map4.put(contractInformations.get(i).getId(),weighingData);
+                  System.out.println("<= <= <= <= <= <=:"+weighingData);
+                  break;
+                }
+
+              }else {
+                map4.put(contractInformations.get(i).getId(), null);
+                System.out.println("数量所对应的值不在此区间中出错");
+              }
+
+            }else if (rightsysbol.equals("-100")){
+              //说明公式没有右区间
+              if ((leftnum.compareTo(weighing) <= 0)) {
+
+                if (basedata.compareTo(new BigDecimal("0")) ==0) {
+                  //没有基数值说明就要直接扣除
+
+                  weighingData = weighing.subtract(weigningDeduction);
+                  map4.put(contractInformations.get(i).getId(),weighingData);
+                  System.out.println("<=  <=  <= :"+weighingData);
+                  break;
+
+                }else {
+                  //有基数值
+                  weighingData = (((weighing.subtract(leftnum)).divide(basedata,10,BigDecimal.ROUND_HALF_UP)).multiply(weigningDeduction)).negate().add(weighing);
+                  map4.put(contractInformations.get(i).getId(),weighingData);
+                  System.out.println("<= <= <=  :"+weighingData);
+                  break;
+                }
+
+              } else {
+                map4.put(contractInformations.get(i).getId(), null);
+                System.out.println("<= <= <=数量所对应的值不在此区间中出错");
+                numflag = 2;
+              }
+            }
+
+          }else if(leftsysbolNum.equals("0")){
+
+            if (rightsysbolNum.equals("1")){
+
+              if ((leftnum.compareTo(weighing) < 0) && (weighing.compareTo(rightnum) <= 0)){
+
+                if (basedata.compareTo(new BigDecimal("0")) ==0){
+                  //直接在单价上扣除或者加上该元素所对应的价格
+                  weighingData = weighing.subtract(weigningDeduction);
+                  map4.put(contractInformations.get(i).getId(),weighingData);
+                  System.out.println("< < < <= <= <=:"+weighingData);
+                  break;
+                }else {
+                  weighingData = (((weighing.subtract(leftnum)).divide(basedata,10,BigDecimal.ROUND_HALF_UP)).multiply(weigningDeduction)).negate().add(weighing);
+                  map4.put(contractInformations.get(i).getId(),weighingData);
+                  System.out.println("<  < <  <= <= <=:"+weighingData);
+                  break;
+                }
+
+              } else {
+                map4.put(contractInformations.get(i).getId(), null);
+                System.out.println("数量所对应的值不在此区间中出错");
+                numflag = 2;
+              }
+
+            }else if (rightsysbolNum.equals("0")){
+              //a<= b <c
+              if ((leftnum.compareTo(weighing) < 0) && (weighing.compareTo(rightnum) < 0)){
+
+                if (basedata.compareTo(new BigDecimal("0")) ==0){
+
+                  //直接在单价上扣除或者加上该元素所对应的数量
+                  weighingData = weighing.subtract(weigningDeduction);
+                  map4.put(contractInformations.get(i).getId(),weighingData);
+                  System.out.println("< < < <  <  < :"+weighingData);
+                  break;
+
+                }else {
+                  weighingData = (((weighing.subtract(leftnum)).divide(basedata,10,BigDecimal.ROUND_HALF_UP)).multiply(weigningDeduction)).negate().add(weighing);
+                  map4.put(contractInformations.get(i).getId(),weighingData);
+                  System.out.println("< < < < < <:"+weighingData);
+                  break;
+                }
+
+              }else {
+                map4.put(contractInformations.get(i).getId(), null);
+                System.out.println("数量所对应的值不在此区间中出错");
+                numflag = 2;
+              }
+
+            }else if (rightsysbol.equals("-100")){
+              //说明公式没有右区间
+              if ((leftnum.compareTo(weighing) <= 0)) {
+
+                if (basedata.compareTo(new BigDecimal("0")) ==0) {
+                  //没有基数值说明就要直接扣除
+
+                  weighingData = weighing.subtract(weigningDeduction);
+                  map4.put(contractInformations.get(i).getId(),weighingData);
+                  System.out.println("<=  <=  <= :"+weighingData);
+                  break;
+
+                }else {
+                  //有基数值
+                  weighingData = (((weighing.subtract(leftnum)).divide(basedata,10,BigDecimal.ROUND_HALF_UP)).multiply(weigningDeduction)).negate().add(weighing);
+                  map4.put(contractInformations.get(i).getId(),weighingData);
+                  System.out.println("<= <= <= :"+weighingData);
+                  break;
+                }
+
+              } else {
+                map4.put(contractInformations.get(i).getId(), null);
+                System.out.println("<= <= <=数量所对应的值不在此区间中出错");
+                numflag = 2;
+              }
+            }
+
+
+          }else if(leftsysbolNum.equals("-100")){
             if (rightsysbolNum.equals("1")) {
               if ((weighing.compareTo(rightnum) <= 0)){
                 if (basedata.compareTo(new BigDecimal("0")) ==0) {
@@ -945,6 +1021,7 @@ public class shengtieAccountService extends ServiceImpl<shengtieAccountMapper, T
                   weighingData = weighing.subtract(weigningDeduction);
                   map4.put(contractInformations.get(i).getId(),weighingData);
                   System.out.println("<=  <=   <= :"+weighingData);
+                  break;
 
                 }else {
                   //有基数值
@@ -963,6 +1040,7 @@ public class shengtieAccountService extends ServiceImpl<shengtieAccountMapper, T
                   weighingData = weighing.subtract(weigningDeduction);
                   map4.put(contractInformations.get(i).getId(),weighingData);
                   System.out.println("<  <   < :"+weighingData);
+                  break;
 
                 }else {
                   //有基数值
@@ -977,14 +1055,16 @@ public class shengtieAccountService extends ServiceImpl<shengtieAccountMapper, T
               System.out.println("公式出现错误");
             }
 
-         }else {
-           map4.put(contractInformations.get(i).getId(), null);
-           System.out.println("公式出现错误");
-         }
-       }else {
-         System.out.print("结算失败！");
-         map4.put(contractInformations.get(i).getId(), null);
-       }
+          }else {
+            map4.put(contractInformations.get(i).getId(), null);
+            System.out.println("公式出现错误");
+          }
+        }else {
+          System.out.print("结算失败！");
+          map4.put(contractInformations.get(i).getId(), null);
+        }
+      }
+
     }
 
     System.out.println("map4:"+map4);
@@ -1026,7 +1106,6 @@ public class shengtieAccountService extends ServiceImpl<shengtieAccountMapper, T
         List<ContractInformation> li = shengtieHth.selectContractInformation(key);
 
         for (int i = 0; i < elementResultData.size(); i++) {
-
 
           if (elementResultData.get(i).get(key) != null) {
             //System.out.println(elementResultData.get(i).toString());

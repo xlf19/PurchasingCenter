@@ -101,11 +101,22 @@ public class shengtieAccountController {
     String[] ci_id = new String[conid.size()];
     for (int j=0; j<conid.size(); j++) {
       System.out.println(conid.get(j));
-      ci_id[j] = (String)conid.get(j);
+      ci_id[j] = (String) conid.get(j);
     }
-
     List<ContractInformation> contractInformations = shengtie.contractAccount(ci_id);
-    if(contractInformations ==null){
+    if (contractInformations != null) {
+      for (ContractInformation c : contractInformations) {
+        if (c.getSettlementIdentification() == 2) {
+          //Result.error(501,"结算的订单中有条数据结算失败请根据返回的结算状况检查相应的合同公式的填写是否正确！");
+          c.setSettlementIdentification(501);
+          System.out.println("结算的订单中有条数据结算失败请根据返回的结算状况检查相应的合同公式的填写是否正确！");
+        } else if (c.getSettlementIdentification() == 0) {
+          //Result.error(502,"结算过程中发生了一些系统性错误，亲联系程序班");
+          c.setSettlementIdentification(502);
+          System.out.println("结算过程中发生了一些系统性错误，亲联系程序班");
+        }
+      }
+    }else {
       return Result.error("结算失败！");
     }
     return Result.ok(contractInformations);
