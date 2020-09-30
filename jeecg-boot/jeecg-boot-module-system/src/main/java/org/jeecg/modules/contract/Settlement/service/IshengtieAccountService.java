@@ -23,7 +23,8 @@ public interface IshengtieAccountService extends IService<T> {
   List<Map<Object,String>> findVoucherNo(String contractNo);
 
   //通过合同编号，以及凭证号查找所有信息
-  IPage<List<ContractInformation>> findContractList(IPage<Map<Object, String>> page, String contractNo, String voucherNo);
+  IPage<List<ContractInformation>> findContractList(IPage<Map<Object, String>> page, String contractNo,
+                                                    String voucherNo,int settlementIdentification);
 
   //通过合同信息表中的ID找元素表中对应的元素1对多
   List<ContractElements> findContractElement(String id);

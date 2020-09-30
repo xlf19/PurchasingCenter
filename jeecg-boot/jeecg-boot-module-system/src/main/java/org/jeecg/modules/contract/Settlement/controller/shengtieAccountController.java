@@ -70,11 +70,12 @@ public class shengtieAccountController {
       @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
       @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
       @RequestParam(name = "cno", defaultValue = "") String cno,
-      @RequestParam(name = "vno", defaultValue = "") String vno
+      @RequestParam(name = "vno", defaultValue = "") String vno,
+      @RequestParam(name = "settlementIdentification")int settlementIdentification
   ) {
 
     Page<Map<Object, String>> page = new Page<Map<Object, String>>(pageNo, pageSize);
-    IPage<List<ContractInformation>> pageList = shengtie.findContractList(page,cno, vno);
+    IPage<List<ContractInformation>> pageList = shengtie.findContractList(page,cno, vno,settlementIdentification);
     return Result.ok(pageList);
   }
 
@@ -121,8 +122,6 @@ public class shengtieAccountController {
     }
     return Result.ok(contractInformations);
   }
-
-
 
 
 }

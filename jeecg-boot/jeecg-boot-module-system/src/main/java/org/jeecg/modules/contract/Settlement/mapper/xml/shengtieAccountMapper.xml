@@ -29,6 +29,11 @@
         <if test="voucherNo !=null and  voucherNo !='' ">
             and voucher_no = #{voucherNo}
         </if>
+
+        <if test="identification !=null ">
+            and settlement_identification =#{identification}
+        </if>
+
     </select>
 
     <select id="findContractElement" resultType="org.jeecg.modules.contract.elements.entity.ContractElements">
@@ -101,12 +106,6 @@
 
     <!--查询合同信息表所有信息-->
     <select id="selectContractInformation" resultType="org.jeecg.modules.contract.contract.entity.ContractInformation">
-        select * from contract_information
-        where id = #{id}
-    </select>
-
-    <!--结算-->
-    <select id="jiesuan" resultType="map">
         select * from contract_information
         where id = #{id}
     </select>

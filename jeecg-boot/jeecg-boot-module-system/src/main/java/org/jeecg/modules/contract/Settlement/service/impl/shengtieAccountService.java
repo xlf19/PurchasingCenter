@@ -52,8 +52,9 @@ public class shengtieAccountService extends ServiceImpl<shengtieAccountMapper, T
   }
 
   @Override
-  public IPage<List<ContractInformation>> findContractList(IPage<Map<Object, String>> page , String contractNo, String voucherNo) {
-    return shengtieHth.findContractList(page,contractNo,voucherNo);
+  public IPage<List<ContractInformation>> findContractList(IPage<Map<Object, String>> page , String contractNo,
+                                                           String voucherNo,int settlementIdentification) {
+    return shengtieHth.findContractList(page,contractNo,voucherNo,settlementIdentification);
   }
 
   @Override
@@ -171,7 +172,7 @@ public class shengtieAccountService extends ServiceImpl<shengtieAccountMapper, T
           }
 
           deductions = heTongGongShi.get(j).getDeductions();
-          if (heTongGongShi.get(j).getBasedata() == null){
+          if (heTongGongShi.get(j).getBasedata() == null || heTongGongShi.get(j).getBasedata().equals("")){
             basedatas = new BigDecimal("0");
           }else {
             basedatas = heTongGongShi.get(j).getBasedata();
@@ -829,12 +830,10 @@ public class shengtieAccountService extends ServiceImpl<shengtieAccountMapper, T
 
         if(weighing != null){
 
-
-
           weigningDeduction = new BigDecimal(heTongNumber.get(j).getDeductions());
 
           //进行异常处理如果有些数据为空的时候
-          if (heTongNumber.get(0).getBasedata() == null) {
+          if (heTongNumber.get(0).getBasedata() == null || heTongNumber.get(0).getBasedata().equals("")) {
             basedata = new BigDecimal("0");
           } else {
             basedata = new BigDecimal(heTongNumber.get(j).getBasedata());
@@ -1138,11 +1137,6 @@ public class shengtieAccountService extends ServiceImpl<shengtieAccountMapper, T
   }
 
 
-  //结算
-  public String jiesuan(String[] ci_id){
-
-    return  "";
-  }
 
 
 }

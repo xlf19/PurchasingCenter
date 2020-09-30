@@ -29,7 +29,8 @@ public interface shengtieAccountMapper extends BaseMapper<T> {
   //通过合同信息表中的ID找
 
   //通过合同编号，以及凭证号查找所有信息
-  IPage<List<ContractInformation>> findContractList(IPage<Map<Object, String>> page, @Param("contractNo")String contractNo, @Param("voucherNo")String voucherNo);
+  IPage<List<ContractInformation>> findContractList(IPage<Map<Object, String>> page, @Param("contractNo")String contractNo,
+                                                    @Param("voucherNo")String voucherNo,@Param("identification") int identification);
 
   //通过合同信息表中的ID找元素表中对应的元素1对多
   List<ContractElements> findContractElement(@Param("id") String id);
