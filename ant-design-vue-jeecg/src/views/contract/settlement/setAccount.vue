@@ -7,7 +7,11 @@
           <a-col :xl="6" :lg="7" :md="8" :sm="24">
             <!-- 第一个输入框 -->
             <a-form-item label="合同编号">
-              <a-select v-model="contractNo" show-search allowClear @search="handleSearch" @change="handleChange">
+              <a-select v-model="contractNo" show-search allowClear
+              @search="handleSearch"
+              @change="handleChange"
+              style="width: 200px;"
+              >
                 <a-select-option v-for="(item, index) in contracts" :value="item.contract_no" :key="index">{{
                   item.contract_no
                 }}</a-select-option>
@@ -17,7 +21,7 @@
           <!-- 第二个输入框 -->
           <a-col :xl="6" :lg="7" :md="8" :sm="24">
             <a-form-item label="凭证号">
-              <a-select v-model="voucherNo" allowClear placeholder="请选择凭证号">
+              <a-select v-model="voucherNo" allowClear style="width: 200px;">
                 <!-- 会将下拉框中的key中所对应的值给上面的:value中多对应的值 -->
                 <a-select-option v-for="(item, index) in voucherNos" :value="item.voucher_no" :key="index">{{
                   item.voucher_no
@@ -25,19 +29,29 @@
               </a-select>
             </a-form-item>
           </a-col>
-
-          <a-col :md="8" :sm="24">
-            <span>
-              <a-button type="primary" @click="searchList" setTimeout="200" icon="search">查询</a-button>
-              <a-button type="primary" @click="accountSettle" icon="account-book" style="margin-left: 8px"
-                >结算</a-button
+          <!-- 第三个结算类型 选择框-->
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <a-form-item label="结算状况">
+              <a-select v-model="settlementIdentification"
+              style="width: 200px;"
               >
-              <a-button type="primary" v-has="types" @click="againAccountSettle" icon="plus" style="margin-left: 8px"
-                >再次结算</a-button
-              >
-            </span>
+                <a-select-option value = 0>未结算</a-select-option>
+                <a-select-option value = 1>结算成功</a-select-option>
+                <a-select-option value = 2>结算失败</a-select-option>
+              </a-select>
+            </a-form-item>
           </a-col>
+
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+             <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+                <a-button type="primary" @click="searchList" setTimeout="200" icon="search">查询</a-button>
+                <a-button type="primary" @click="accountSettle" icon="account-book" style="margin-left: 8px">结算</a-button>
+                <a-button type="primary" v-has="types" @click="againAccountSettle" icon="plus" style="margin-left: 8px">再次结算</a-button>
+             </span>
+          </a-col>
+
         </a-row>
+
       </a-form>
     </div>
     <!-- table区域-begin rowSelection选中事件设置 -->
@@ -105,13 +119,14 @@ export default {
     contrac(newVal, oldVal) {
       this.contractNo = newVal
       this.handleChange(newVal)
-    },
+    }
   },
 
   data() {
     return {
-      types: '',
-      visible: false,
+
+     types: '',//再次结算按钮的授权标识
+      settlementIdentification:'',//合同订单结算状况标识
       message: '',
       voucherNo: '', //凭证编号列表的索引值
       contractNo: this.contrac, //合同编号列表的索引值
@@ -281,7 +296,7 @@ export default {
     if (contractNo != null && contractNo != '') {
       this.handleChange(contractNo)
     }
-    
+
   },
   computed: {},
   methods: {
@@ -298,12 +313,14 @@ export default {
             this.dataValue = res.result
             res.result.forEach(element => {
                if(element.settlementIdentification === 501){
-                 this.$message.error("结算的订单中有条数据结算失败请根据返回的结算状况检查相应的合同公式的填写是否正确")
+                 this.$message.error("结算的订单中有条数据结算失败请根据返回的结算状况检查相应的合同公式的填写是否正确！")
                }else if(element.settlementIdentification === 502) {
-                 this.$message.error("结算过程中发生了一些系统性错误，亲联系程序班")
+                 this.$message.error("结算过程中发生了一些系统性错误，亲联系程序班！")
+               }else if(element.settlementIdentification === 1) {
+                this.$message.success("结算成功！")
                }
-            }); 
-            
+            });
+
           }
           if (res.code === 500) {
             this.$message.error(res.message)
@@ -338,7 +355,6 @@ export default {
     accountSettle() {
       let id = []
       if (this.selectedRowKeys == '' || this.selectedRowKeys == undefined || this.selectedRowKeys == null) {
-        this.visible = true
         this.message = '请在选择合同后在结算'
         this.$message.warning('请在选择合同后在结算')
       } else {
@@ -356,7 +372,15 @@ export default {
           console.log(res.result)
           if (res.success) {
             this.dataValue = res.result //  this.ipagination.total = res.result.total
-            this.$message.success('结算成功')
+            res.result.forEach(element => {
+               if(element.settlementIdentification === 501){
+                 this.$message.error("结算的订单中有条数据结算失败请根据返回的结算状况检查相应的合同公式的填写是否正确！")
+               }else if(element.settlementIdentification === 502) {
+                 this.$message.error("结算过程中发生了一些系统性错误，亲联系程序班！")
+               }else if(element.settlementIdentification === 1) {
+                this.$message.success("结算成功！")
+               }
+            });
           }
           if (res.code === 500) {
             this.$message.warning(res.message)
@@ -390,25 +414,21 @@ export default {
       this.selectedRowKeys = selectedRowKeys
       this.selectionRows = selectionRows
 
-      // let id = this.selectionRows.filter((item,i) =>{
-      //    console.log("循环==i==",i);
-      //    console.log(item.settlementIdentification)
-      //    return item.settlementIdentification > 1
-      // })
-      // console.log('我是selectionRows' + this.selectionRows)
-      // console.log("id=",id)
     },
 
     //根据合同编号和凭证号查询数据列表
     searchList() {
       let vno = this.voucherNo
       let cno = this.contractNo
-      if (vno === '' || vno === null || cno === '' || cno === null) {
-        this.$message.warning('请输入合同编号和凭证号后在查询')
+      let sno = this.settlementIdentification
+      // alert(sno.constructor)
+      if (vno === "" || vno === null || vno === undefined || cno === "" || cno === null || cno === undefined||sno === "" || sno === null || sno === undefined) {
+        this.$message.warning('请输入合同编号,凭证号以及结算状况后再查询！')
       } else {
         let datas = {
           vno: vno,
           cno: cno,
+          settlementIdentification : sno
         }
         this.loadData(this.arg, datas)
       }
