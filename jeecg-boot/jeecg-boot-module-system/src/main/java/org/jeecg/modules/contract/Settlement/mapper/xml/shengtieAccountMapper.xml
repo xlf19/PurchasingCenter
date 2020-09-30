@@ -109,5 +109,11 @@
         select * from contract_information
         where id = #{id}
     </select>
-    
+
+    <!--查询结算信息-->
+    <select id="hejiesuan" resultType="map" statementType="CALLABLE">
+        {call dbo.ht_jiesuan(
+	    #{id,jdbcType=VARCHAR,mode=IN}
+	    )}
+    </select>
 </mapper>

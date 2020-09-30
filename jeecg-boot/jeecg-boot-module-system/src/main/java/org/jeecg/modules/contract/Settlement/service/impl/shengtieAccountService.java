@@ -1136,7 +1136,10 @@ public class shengtieAccountService extends ServiceImpl<shengtieAccountMapper, T
     return resultInformation;
   }
 
-
+  @Override
+  public List<Map<Object, String>> hejiesuan(String id) {
+    return shengtieHth.hejiesuan(id);
+  }
 
 
 }

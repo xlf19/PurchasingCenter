@@ -59,4 +59,8 @@ public interface shengtieAccountMapper extends BaseMapper<T> {
   //查询合同信息表所有信息
   List<ContractInformation> selectContractInformation(@Param("id")String id);
 
+
+  //查询结算信息
+  List<Map<Object,String>> hejiesuan(@Param("id")String id);
+
 }

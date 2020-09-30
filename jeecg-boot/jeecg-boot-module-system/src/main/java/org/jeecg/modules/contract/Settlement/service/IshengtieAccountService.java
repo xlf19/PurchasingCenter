@@ -39,5 +39,9 @@ public interface IshengtieAccountService extends IService<T> {
   List<ContractInformation> contractAccount(String[] ci_id);
 
 
+  //查询结算信息
+  List<Map<Object,String>> hejiesuan(String id);
+
+
 
 }
