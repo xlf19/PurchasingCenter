@@ -409,7 +409,9 @@ export default {
         this.loading = false
       })
       this.$emit('gethtbh', hth)
-      this.finlist(hth)
+      if (hth != null && hth != '' && hth != undefined) {
+        this.finlist(hth)
+      }
     },
 
     //合同信息

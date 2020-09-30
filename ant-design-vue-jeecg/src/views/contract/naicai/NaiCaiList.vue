@@ -28,9 +28,10 @@
                   <a-select-option
                     placeholder="请选择合同号"
                     :value="item.HeTongBianHao"
-                    v-for="(item,index) in contractNos"
+                    v-for="(item, index) in contractNos"
                     :key="index"
-                  >{{item.HeTongBianHao}}</a-select-option>
+                    >{{ item.HeTongBianHao }}</a-select-option
+                  >
                 </a-select>
               </a-form-item>
             </a-col>
@@ -41,17 +42,14 @@
             </a-col>
             <a-col :xl="6" :lg="7" :md="8" :sm="24">
               <a-form-item label="收货单位">
-                <a-select
-                  show-search
-                  allowClear
-                  v-decorator="['receivingUnit', validatorRules.receivingUnit]"
-                >
+                <a-select show-search allowClear v-decorator="['receivingUnit', validatorRules.receivingUnit]">
                   <a-select-option
                     placeholder="请选择收货单位"
                     :value="item.ShouHuoDanWeiName"
-                    v-for="(item,index) in receivingUnits"
+                    v-for="(item, index) in receivingUnits"
                     :key="index"
-                  >{{item.ShouHuoDanWeiName}}</a-select-option>
+                    >{{ item.ShouHuoDanWeiName }}</a-select-option
+                  >
                 </a-select>
               </a-form-item>
             </a-col>
@@ -59,31 +57,29 @@
           <a-row :gutter="24">
             <a-col :xl="6" :lg="7" :md="8" :sm="24">
               <a-form-item label="物资名称">
-                <a-select  v-model="materialName"  @change="finwzcode">
+                <a-select v-model="materialName" @change="finwzcode">
                   <a-select-option
                     placeholder="请选择物资名称"
                     :value="item.WZName"
-                    v-for="(item,index) in materialNamelist"
+                    v-for="(item, index) in materialNamelist"
                     :key="index"
-                  >{{item.WZName}}</a-select-option>
+                    >{{ item.WZName }}</a-select-option
+                  >
                 </a-select>
               </a-form-item>
             </a-col>
             <a-col :xl="6" :lg="8" :md="10" :sm="24">
               <a-form-item label="起止日期">
-                <a-range-picker
-                  :trigger-change="true"
-                  v-decorator="['rangeDate', validatorRules.rangeDate]"
-                />
+                <a-range-picker :trigger-change="true" v-decorator="['rangeDate', validatorRules.rangeDate]" />
               </a-form-item>
             </a-col>
             <a-col :xl="6" :lg="7" :md="8" :sm="24">
               <a-form-item label="供货单位">
-                <a-input placeholder="请输入供货单位" v-model="supplier" ></a-input>
+                <a-input placeholder="请输入供货单位" v-model="supplier"></a-input>
               </a-form-item>
             </a-col>
             <a-col :xl="6" :lg="7" :md="8" :sm="24">
-              <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+              <span style="float: left; overflow: hidden" class="table-page-search-submitButtons">
                 <a-button type="primary" @click="searchList" icon="search">查询质检数据</a-button>
               </span>
             </a-col>
@@ -96,11 +92,11 @@
       </div>
       <!-- table区域-begin -->
       <div>
-        <div class="ant-alert ant-alert-info" style="margin-bottom: 16px;">
-          <i class="anticon anticon-info-circle ant-alert-icon"></i>质检数据列表&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;已选择
-          <a
-            style="font-weight: 600"
-          >{{ selectedRowKeys.length }}</a>项
+        <div class="ant-alert ant-alert-info" style="margin-bottom: 16px">
+          <i class="anticon anticon-info-circle ant-alert-icon"></i
+          >质检数据列表&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;已选择
+          <a style="font-weight: 600">{{ selectedRowKeys.length }}</a
+          >项
           <a style="margin-left: 24px" @click="onClearSelected">清空</a>
         </div>
         <a-table
@@ -112,7 +108,7 @@
           :dataSource="dataSource"
           :pagination="ipagination"
           :loading="loading"
-          :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
+          :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
           class="j-table-force-nowrap"
           @change="handleTableChange"
         ></a-table>
@@ -376,8 +372,8 @@ export default {
         return
       }
     },
-  
-  //获取凭证号
+
+    //获取凭证号
     findpzh() {
       getAction(this.url.findpzh).then((res) => {
         if (res.success) {
@@ -443,7 +439,7 @@ export default {
 
     //获取供货单位、物资名称
     findOne(hth) {
-      this.materialName=''
+      this.materialName = ''
       let httpye = this.hetongly
       this.htbh = hth
       let urlhtdw = ''
@@ -458,7 +454,9 @@ export default {
       this.getghdw(hth, urlhtdw)
       this.getwzmc(hth, urlhtmc)
       this.$emit('gethtbh', hth)
-      this.finlist(hth)
+      if (hth != null && hth != '' && hth != undefined) {
+        this.finlist(hth)
+      }
     },
 
     //供货单位
@@ -495,7 +493,7 @@ export default {
     finwzcode(wzname) {
       let hth = this.htbh
       let httpye = this.hetongly
-      this.materialName=wzname
+      this.materialName = wzname
       getAction(this.url.finwzname, { hth: hth, wzname: wzname, httpye: httpye }).then((res) => {
         if (res.success) {
           if (res.result != '' && res.result != null) {

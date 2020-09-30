@@ -665,7 +665,9 @@ export default {
       this.getghdw(hth, urlhtdw)
       this.getwzmc(hth, urlhtmc)
       this.$emit('gethtbh', hth)
-      this.finlist(hth)
+      if (hth != null && hth != '' && hth != undefined) {
+        this.finlist(hth)
+      }
     },
 
     //供货单位

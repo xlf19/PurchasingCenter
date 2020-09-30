@@ -542,7 +542,9 @@ export default {
     //合同编号改变发生
     findOne(hth) {
       this.finghuandwzmc(hth)
-      this.finlist(hth)
+      if (hth != null && hth != '' && hth != undefined) {
+        this.finlist(hth)
+      }
       this.htbhs = hth
       let datas = {
         htbh: hth,

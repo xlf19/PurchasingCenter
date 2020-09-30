@@ -328,8 +328,10 @@ export default {
           this.$message.warning(res.message)
         }
         this.loading = false
-      })
-      this.finlist(hth)
+      })    
+      if (hth != null && hth != '' && hth != undefined) {
+        this.finlist(hth)
+      }
       this.$emit('gethtbh', hth)
     },
 

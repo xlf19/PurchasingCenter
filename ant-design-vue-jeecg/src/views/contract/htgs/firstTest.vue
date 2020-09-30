@@ -610,7 +610,7 @@ export default {
                     // console.log('leftnum:',parseFloat(itxItem.leftnum))
                     // console.log('leftsysbol:',itxItem.leftsysbol)
                     // console.log('rightnum:',parseFloat(itxItem.rightnum))
-                    debugger;
+                    //debugger;
                     if (itxItem.leftsysbol == '0') {
                       if (parseFloat(itxItem.leftnum) > parseFloat(left) && parseFloat(itxItem.leftnum) < parseFloat(right)) {
                         this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复')
