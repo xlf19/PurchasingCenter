@@ -29,4 +29,9 @@ public class JingFengServiceImpl extends ServiceImpl<JingFengMapper, T> implemen
         return  jf.selectjfdy(page,htbh,pzh);
     }
 
+
+    public Map<Object, Object> updatejsd(String id) {
+        return jf.updatejsd(id);
+    }
+
 }

@@ -187,4 +187,18 @@ public class ContractInformation implements Serializable {
     private java.lang.String jqId;
 
 
+    /**
+     * 结算备注
+     */
+    @Excel(name = "结算备注", width = 15)
+    @ApiModelProperty(value = "结算备注")
+    private java.lang.String settlementNotes;
+    /**
+     * 手动添加
+     */
+    @Excel(name = "手动添加", width = 15)
+    @ApiModelProperty(value = "手动添加")
+    private java.lang.Integer manual;
+
+
 }

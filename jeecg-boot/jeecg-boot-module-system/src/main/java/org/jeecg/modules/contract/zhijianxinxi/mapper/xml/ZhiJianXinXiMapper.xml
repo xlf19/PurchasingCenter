@@ -20,7 +20,8 @@
 	</select>
 
     <select id="listzjjfxx" resultType="map">
-         select  HeTongBianHao,ShuiLv, WZDanJia, HanShuiBiaoJi, WZName, WZCode,DanWeiName,#{voucherno} as voucherno,#{receiving} as receiving
+         select  HeTongBianHao,ShuiLv, WZDanJia, HanShuiBiaoJi, WZName, WZCode,DanWeiName,#{voucherno} as voucherno,#{receiving} as receiving,
+         '1' as id
          from V_合同物资单价供需方
          where HeTongBianHao = #{htbh}
     </select>

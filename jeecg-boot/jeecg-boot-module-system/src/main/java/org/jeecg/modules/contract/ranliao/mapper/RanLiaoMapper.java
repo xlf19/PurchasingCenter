@@ -11,4 +11,8 @@ public interface RanLiaoMapper extends BaseMapper<T> {
 
     //燃料打印查询
     IPage<Map<Object, String>> selectrldy(IPage<Map<Object, String>> page, @Param("htbh") String htbh, @Param("pzh") Integer pzh);
+
+
+    //燃料编辑结算单
+    Map<Object,Object> updatejsd(@Param("id") String id);
 }

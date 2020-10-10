@@ -143,13 +143,6 @@ public class ZhiJianXinXiController extends JeecgController<T, IZhiJianXinXiServ
             @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
             @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
             HttpServletRequest req) {
-//        ScriptEngine js = new ScriptEngineManager().getEngineByName("JavaScript");
-//        try {
-//            System.out.println("3<4为："+js.eval("3<4"));
-//            System.out.println("6<4为："+js.eval("6<4"));
-//        } catch (ScriptException e) {
-//            e.printStackTrace();
-//        }
         Page<Map<Object, String>> page = new Page<Map<Object, String>>(pageNo, pageSize);
         IPage<Map<Object, String>> pageList = zjxxservice.listzjfg(page,htbh,shdw);
         return Result.ok(pageList);

@@ -20,4 +20,9 @@ public class RanLiaoServiceImpl extends ServiceImpl<RanLiaoMapper, T> implements
     public IPage<Map<Object, String>> selectrldy(IPage<Map<Object, String>> page, String htbh, Integer pzh) {
         return rl.selectrldy(page,htbh,pzh);
     }
+
+    @Override
+    public Map<Object, Object> updatejsd(String id) {
+        return rl.updatejsd(id);
+    }
 }

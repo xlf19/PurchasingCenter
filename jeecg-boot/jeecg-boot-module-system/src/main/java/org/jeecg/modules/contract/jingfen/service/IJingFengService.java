@@ -23,4 +23,7 @@ public interface IJingFengService extends IService<T> {
 
     //精粉打印查询
     IPage<Map<Object, String>> selectjfdy(IPage<Map<Object, String>> page,  String htbh, Integer pzh);
+
+    //精粉编辑结算单
+    Map<Object,Object> updatejsd(String id);
 }

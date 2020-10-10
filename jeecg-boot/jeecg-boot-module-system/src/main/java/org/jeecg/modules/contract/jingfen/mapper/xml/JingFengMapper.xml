@@ -32,4 +32,17 @@
 	    #{pzh,jdbcType=INTEGER,mode=IN}
 	    )}
     </select>
+	<select id="selectjfdy" resultType="map" statementType="CALLABLE">
+        {call dbo.ht_jingfen_dayin(
+	    #{htbh,jdbcType=VARCHAR,mode=IN},
+	    #{pzh,jdbcType=INTEGER,mode=IN}
+	    )}
+    </select>
+
+	<select id="updatejsd" resultType="map" statementType="CALLABLE">
+        {call dbo.ht_jingfen_jsdupdate(
+	    #{id,jdbcType=VARCHAR,mode=IN}
+	    )}
+    </select>
+
 </mapper>

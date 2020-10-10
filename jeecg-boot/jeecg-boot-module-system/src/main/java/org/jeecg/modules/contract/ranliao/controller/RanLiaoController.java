@@ -3,6 +3,7 @@ package org.jeecg.modules.contract.ranliao.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
@@ -65,20 +66,31 @@ public class RanLiaoController extends JeecgController<T, IRanLiaoService> {
         return Result.ok(pageList);
     }
     /**
-     * 精粉手动添加结算单弹框
+     * 燃料手动添加结算单弹框
      *
      * @return
      */
-    @AutoLog(value = "精粉手动添加结算单弹框")
-    @ApiOperation(value = "精粉手动添加结算单弹框", notes = "精粉手动添加结算单弹框")
+    @AutoLog(value = "燃料手动添加结算单弹框")
+    @ApiOperation(value = "燃料手动添加结算单弹框", notes = "燃料手动添加结算单弹框")
     @GetMapping(value = "/listzjjfxx")
     public Result<?> listzjjfxx(@RequestParam(name = "htbh", defaultValue = "") String htbh,
                                 @RequestParam(name = "voucherno", defaultValue = "") String voucherno,
                                 @RequestParam(name = "receiving", defaultValue = "") String receiving) {
         Map<Object, Object> list = zjxxservice.listzjjfxx(htbh, voucherno, receiving);
-        return Result.ok(list);
+        if(list==null){
+            return Result.ok("数据为空");
+        }else{
+            return Result.ok(list);
+        }
     }
 
+    @AutoLog(value = "编辑燃料手动结算单")
+    @ApiOperation(value = "编辑燃料手动结算单", notes = "编辑燃料手动结算单")
+    @GetMapping(value = "/updatejsd")
+    public Result<?> updatejsd(@RequestParam(name = "id", defaultValue = "") String id) {
+        Map<Object, Object> list = rlservice.updatejsd(id);
+        return Result.ok(list);
+    }
     /**
      * 精粉手动添加结算单
      *
@@ -89,6 +101,7 @@ public class RanLiaoController extends JeecgController<T, IRanLiaoService> {
     @PostMapping(value = "/addjsd")
     public Result<?> addjsd(@RequestBody Map<Object, Object> jsd) {
         String htbh = jsd.get("HeTongBianHao").toString();//合同编号
+        String id = jsd.get("id").toString();
         Integer pzh =Integer.parseInt(jsd.get("voucherno").toString());//凭证号
         String shdw = jsd.get("receiving").toString();//收货单位
         //物资编码
@@ -113,7 +126,7 @@ public class RanLiaoController extends JeecgController<T, IRanLiaoService> {
         }
         //SL  税率
         BigDecimal sl =null;
-        if(oConvertUtils.isNotEmpty(jsd.get("ShuiLv").toString())){
+        if(jsd.get("ShuiLv")!=null){
             sl = new BigDecimal(jsd.get("ShuiLv").toString());
         }
         //HS 含税
@@ -121,28 +134,28 @@ public class RanLiaoController extends JeecgController<T, IRanLiaoService> {
         //检验量
         BigDecimal weighing = null;
         if(jsd.containsKey("weighing")){
-            if(jsd.containsValue("weighing")){
+            if(jsd.get("weighing")!=null){
                 weighing = new BigDecimal(jsd.get("weighing").toString());
             }
         }
         //总运杂费
         BigDecimal zyzf = null;
         if(jsd.containsKey("zyzf")){
-            if(jsd.containsValue("zyzf")){
+            if(jsd.get("zyzf")!=null){
                 weighing = new BigDecimal(jsd.get("weighing").toString());
             }
         }
         //贷款
         BigDecimal daikuan = null;
         if(jsd.containsKey("daikuan")){
-            if(jsd.containsValue("daikuan")){
+            if(jsd.get("daikuan")!=null){
                 weighing = new BigDecimal(jsd.get("daikuan").toString());
             }
         }
         //税金
         BigDecimal shuijin = null;
         if(jsd.containsKey("shuijin")){
-            if(jsd.containsValue("shuijin")){
+            if(jsd.get("shuijin")!=null){
                 weighing = new BigDecimal(jsd.get("shuijin").toString());
             }
         }
@@ -169,87 +182,94 @@ public class RanLiaoController extends JeecgController<T, IRanLiaoService> {
         cinfo.setShipping(zyzf);
         cinfo.setIsDelete(0);
         cinfo.setSettlementIdentification(0);
-        contractInformationService.save(cinfo);
+        cinfo.setManual(1);
+        if(id.equals("1")){
+            contractInformationService.save(cinfo);
+        }else{
+            cinfo.setId(id);
+            contractInformationService.updateById(cinfo);
+        }
         //添加合同元素表
         //Ad
+        BigDecimal Ad=null;
         if(jsd.containsKey("Ad")){
-            if(oConvertUtils.isNotEmpty(jsd.get("Ad").toString())){
-                BigDecimal Ad = new BigDecimal(jsd.get("Ad").toString());
-                saveelement(uuid, htbh, pzh, "Ad", Ad);
+            if(jsd.get("Ad")!=null){
+                 Ad = new BigDecimal(jsd.get("Ad").toString());
             }
         }
+        saveelement(uuid, htbh, pzh, "Ad", Ad,id);
         //Vdaf
+        BigDecimal Vdaf=null;
         if(jsd.containsKey("Vdaf")){
-            if(oConvertUtils.isNotEmpty(jsd.get("Vdaf").toString())){
-                BigDecimal Vdaf = new BigDecimal(jsd.get("Vdaf").toString());
-                saveelement(uuid, htbh, pzh, "Vdaf", Vdaf);
+            if(jsd.get("Vdaf")!=null){
+                 Vdaf = new BigDecimal(jsd.get("Vdaf").toString());
             }
         }
+        saveelement(uuid, htbh, pzh, "Vdaf", Vdaf,id);
         //Std
+        BigDecimal Std =null;
         if(jsd.containsKey("Std")){
-            if(oConvertUtils.isNotEmpty(jsd.get("Std").toString())){
-                BigDecimal Std = new BigDecimal(jsd.get("Std").toString());
-                saveelement(uuid, htbh, pzh, "Std", Std);
+            if(jsd.get("Std")!=null){
+                 Std = new BigDecimal(jsd.get("Std").toString());
             }
         }
-
+        saveelement(uuid, htbh, pzh, "Std", Std,id);
         //H2O
+        BigDecimal H2O =null;
         if(jsd.containsKey("H2O")){
-            if(oConvertUtils.isNotEmpty(jsd.get("H2O").toString())){
-                BigDecimal H2O = new BigDecimal(jsd.get("H2O").toString());
-                saveelement(uuid, htbh, pzh, "H2O", H2O);
+            if(jsd.get("H2O")!=null){
+                 H2O = new BigDecimal(jsd.get("H2O").toString());
             }
-
         }
+        saveelement(uuid, htbh, pzh, "H2O", H2O,id);
         //Xmm
+        BigDecimal AL2O3 =null;
         if(jsd.containsKey("Xmm")){
-            if(oConvertUtils.isNotEmpty(jsd.get("Xmm").toString())){
-                BigDecimal AL2O3 = new BigDecimal(jsd.get("Xmm").toString());
-                saveelement(uuid, htbh, pzh, "Xmm", AL2O3);
+            if(jsd.get("Xmm")!=null){
+                 AL2O3 = new BigDecimal(jsd.get("Xmm").toString());
             }
         }
-
+        saveelement(uuid, htbh, pzh, "Xmm", AL2O3,id);
         //Ymm
+        BigDecimal Ymm =null;
         if(jsd.containsKey("Ymm")){
-            if(oConvertUtils.isNotEmpty(jsd.get("Ymm").toString())){
-                BigDecimal Ymm = new BigDecimal(jsd.get("Ymm").toString());
-                saveelement(uuid, htbh, pzh, "Ymm", Ymm);
+            if(jsd.get("Ymm")!=null){
+                 Ymm = new BigDecimal(jsd.get("Ymm").toString());
             }
-
         }
-
+        saveelement(uuid, htbh, pzh, "Ymm", Ymm,id);
         //Q
+        BigDecimal Q =null;
         if(jsd.containsKey("Q")){
-            if(oConvertUtils.isNotEmpty(jsd.get("Q").toString())){
-                BigDecimal Q = new BigDecimal(jsd.get("Q").toString());
-                saveelement(uuid, htbh, pzh, "Q", Q);
+            if(jsd.get("Q")!=null){
+                 Q = new BigDecimal(jsd.get("Q").toString());
             }
         }
-
+        saveelement(uuid, htbh, pzh, "Q", Q,id);
         //粘度
+        BigDecimal midu =null;
         if(jsd.containsKey("midu")){
-            if(oConvertUtils.isNotEmpty(jsd.get("midu").toString())){
-                BigDecimal midu = new BigDecimal(jsd.get("midu").toString());
-                saveelement(uuid, htbh, pzh, "粘度", midu);
+            if(jsd.get("midu")!=null){
+                 midu = new BigDecimal(jsd.get("midu").toString());
             }
-
         }
-
+        saveelement(uuid, htbh, pzh, "粘度", midu,id);
         //M10
+        BigDecimal M10 =null;
         if(jsd.containsKey("M10")){
-            if(oConvertUtils.isNotEmpty(jsd.get("cu").toString())){
-                BigDecimal M10 = new BigDecimal(jsd.get("M10").toString());
-                saveelement(uuid, htbh, pzh, "M10", M10);
+            if(jsd.get("cu")!=null){
+                 M10 = new BigDecimal(jsd.get("M10").toString());
             }
         }
-
+        saveelement(uuid, htbh, pzh, "M10", M10,id);
         //M25
+        BigDecimal M25 =null;
         if(jsd.containsKey("M25")){
-            if(oConvertUtils.isNotEmpty(jsd.get("M25").toString())){
-                BigDecimal M25 = new BigDecimal(jsd.get("M25").toString());
-                saveelement(uuid, htbh, pzh, "M25", M25);
+            if(jsd.get("M25")!=null){
+                 M25 = new BigDecimal(jsd.get("M25").toString());
             }
         }
+        saveelement(uuid, htbh, pzh, "M25", M25,id);
         return Result.ok("添加成功！");
     }
 
@@ -314,33 +334,43 @@ public class RanLiaoController extends JeecgController<T, IRanLiaoService> {
             cinfo.setWorkNumber(pgdh);
             contractInformationService.save(cinfo);
             //添加合同元素表
-            saveelement(uuid, htbh, pzh, "Ad", Ad);
-            saveelement(uuid, htbh, pzh, "Vdaf", Vdaf);
-            saveelement(uuid, htbh, pzh, "Std", Std);
-            saveelement(uuid, htbh, pzh, "H2O", H2O);
-            saveelement(uuid, htbh, pzh, "Xmm", Xmm);
-            saveelement(uuid, htbh, pzh, "Ymm", Ymm);
-            saveelement(uuid, htbh, pzh, "Q", Q);
-            saveelement(uuid, htbh, pzh, "密度", midu);
-            saveelement(uuid, htbh, pzh, "M10", M10);
-            saveelement(uuid, htbh, pzh, "M25", M25);
+            saveelement(uuid, htbh, pzh, "Ad", Ad,"1");
+            saveelement(uuid, htbh, pzh, "Vdaf", Vdaf,"1");
+            saveelement(uuid, htbh, pzh, "Std", Std,"1");
+            saveelement(uuid, htbh, pzh, "H2O", H2O,"1");
+            saveelement(uuid, htbh, pzh, "Xmm", Xmm,"1");
+            saveelement(uuid, htbh, pzh, "Ymm", Ymm,"1");
+            saveelement(uuid, htbh, pzh, "Q", Q,"1");
+            saveelement(uuid, htbh, pzh, "密度", midu,"1");
+            saveelement(uuid, htbh, pzh, "M10", M10,"1");
+            saveelement(uuid, htbh, pzh, "M25", M25,"1");
         }
         return Result.ok("添加成功！");
     }
 
-
     //导入合同元素表
-    public void saveelement(String uuid, String htbh, Integer pzh, String name, BigDecimal ele) {
-        ContractElements cele = new ContractElements();
-        String uuids = UUID.randomUUID().toString();
-        cele.setId(uuids);
-        cele.setCiId(uuid);
-        cele.setContractNo(htbh);
-        cele.setVoucherNo(pzh);
-        cele.setElement(name);
-        cele.setElelmentDate(ele);
-        cele.setIsDelete(0);
-        htelements.save(cele);
+    public void saveelement(String uuid, String htbh, Integer pzh, String name, BigDecimal ele,String id) {
+        if(id.equals("1")){
+            ContractElements cele = new ContractElements();
+            String uuids = UUID.randomUUID().toString();
+            cele.setId(uuids);
+            cele.setCiId(uuid);
+            cele.setContractNo(htbh);
+            cele.setVoucherNo(pzh);
+            cele.setElement(name);
+            cele.setElelmentDate(ele);
+            cele.setIsDelete(0);
+            htelements.save(cele);
+        }else{
+            UpdateWrapper<ContractElements> updateWrapper = new UpdateWrapper<ContractElements>();
+            System.out.println(name+"-----"+id);
+            updateWrapper.eq("element",name);
+            updateWrapper.eq("ci_id",id);
+            ContractElements celeupdate = new ContractElements();
+            celeupdate.setElelmentDate(ele);
+            htelements.update(celeupdate, updateWrapper);
+        }
+
     }
 
 

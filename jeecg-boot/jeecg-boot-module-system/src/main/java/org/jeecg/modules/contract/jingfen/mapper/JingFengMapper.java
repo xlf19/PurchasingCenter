@@ -25,4 +25,7 @@ public interface JingFengMapper extends BaseMapper<T> {
 
     //精粉打印查询
     IPage<Map<Object, String>> selectjfdy(IPage<Map<Object, String>> page, @Param("htbh") String htbh, @Param("pzh") Integer pzh);
+
+    //精粉编辑结算单
+     Map<Object,Object> updatejsd(@Param("id") String id);
 }

@@ -7,4 +7,10 @@
 	    #{pzh,jdbcType=INTEGER,mode=IN}
 	    )}
     </select>
+
+    <select id="updatejsd" resultType="map" statementType="CALLABLE">
+        {call dbo.ht_ranliao_jsdupdate(
+	    #{id,jdbcType=VARCHAR,mode=IN}
+	    )}
+    </select>
 </mapper>

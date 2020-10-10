@@ -3,6 +3,7 @@ package org.jeecg.modules.contract.jingfen.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
@@ -153,25 +154,25 @@ public class JingFengController extends JeecgController<T, IJingFengService> {
             cinfo.setJqId(jqid);
             contractInformationService.save(cinfo);
             //添加合同元素表
-            saveelement(uuid, htbh, pzh, "S", S);
-            saveelement(uuid, htbh, pzh, "P", P);
-            saveelement(uuid, htbh, pzh, "FEO", FEO);
-            saveelement(uuid, htbh, pzh, "H2O", h2o);
-            saveelement(uuid, htbh, pzh, "AL2O3", al2o3);
-            saveelement(uuid, htbh, pzh, "MnO", mno);
-            saveelement(uuid, htbh, pzh, "TiO2", tio2);
-            saveelement(uuid, htbh, pzh, "Cr", cr);
-            saveelement(uuid, htbh, pzh, "Cu", cu);
-            saveelement(uuid, htbh, pzh, "TFE", tfe);
-            saveelement(uuid, htbh, pzh, "MGO", mgo);
-            saveelement(uuid, htbh, pzh, "Pb", pb);
-            saveelement(uuid, htbh, pzh, "[As]", as1);
-            saveelement(uuid, htbh, pzh, "CAO", cao);
-            saveelement(uuid, htbh, pzh, "K2O", k2o);
-            saveelement(uuid, htbh, pzh, "SIO2", sio2);
-            saveelement(uuid, htbh, pzh, "Zn", zn);
-            saveelement(uuid, htbh, pzh, "抗压", compressive);
-            saveelement(uuid, htbh, pzh, "[粒度<5mm]", granularity);
+            saveelement(uuid, htbh, pzh, "S", S,"1");
+            saveelement(uuid, htbh, pzh, "P", P,"1");
+            saveelement(uuid, htbh, pzh, "FEO", FEO,"1");
+            saveelement(uuid, htbh, pzh, "H2O", h2o,"1");
+            saveelement(uuid, htbh, pzh, "AL2O3", al2o3,"1");
+            saveelement(uuid, htbh, pzh, "MnO", mno,"1");
+            saveelement(uuid, htbh, pzh, "TiO2", tio2,"1");
+            saveelement(uuid, htbh, pzh, "Cr", cr,"1");
+            saveelement(uuid, htbh, pzh, "Cu", cu,"1");
+            saveelement(uuid, htbh, pzh, "TFE", tfe,"1");
+            saveelement(uuid, htbh, pzh, "MGO", mgo,"1");
+            saveelement(uuid, htbh, pzh, "Pb", pb,"1");
+            saveelement(uuid, htbh, pzh, "[As]", as1,"1");
+            saveelement(uuid, htbh, pzh, "CAO", cao,"1");
+            saveelement(uuid, htbh, pzh, "K2O", k2o,"1");
+            saveelement(uuid, htbh, pzh, "SIO2", sio2,"1");
+            saveelement(uuid, htbh, pzh, "Zn", zn,"1");
+            saveelement(uuid, htbh, pzh, "抗压", compressive,"1");
+            saveelement(uuid, htbh, pzh, "[粒度<5mm]", granularity,"1");
         }
         return Result.ok("添加成功！");
     }
@@ -219,6 +220,19 @@ public class JingFengController extends JeecgController<T, IJingFengService> {
     }
 
     /**
+     * 编辑精粉手动结算单
+     *
+     * @return
+     */
+    @AutoLog(value = "编辑精粉手动结算单")
+    @ApiOperation(value = "编辑精粉手动结算单", notes = "编辑精粉手动结算单")
+    @GetMapping(value = "/updatejsd")
+    public Result<?> updatejsd(@RequestParam(name = "id", defaultValue = "") String id) {
+        Map<Object, Object> list = jfService.updatejsd(id);
+        return Result.ok(list);
+    }
+
+    /**
      * 精粉手动添加结算单
      *
      * @return
@@ -227,6 +241,7 @@ public class JingFengController extends JeecgController<T, IJingFengService> {
     @ApiOperation(value = "精粉手动添加结算单", notes = "精粉手动添加结算单")
     @PostMapping(value = "/addjsd")
     public Result<?> addjsd(@RequestBody Map<Object, Object> jsd) {
+        String id=jsd.get("id").toString();//合同信息表id
         String htbh = jsd.get("HeTongBianHao").toString();//合同编号
         Integer pzh =Integer.parseInt(jsd.get("voucherno").toString());//凭证号
         String shdw = jsd.get("receiving").toString();//收货单位
@@ -260,7 +275,7 @@ public class JingFengController extends JeecgController<T, IJingFengService> {
         //检验量
         BigDecimal weighing = null;
         if(jsd.containsKey("weighing")){
-            if(jsd.containsValue("weighing")){
+           if(jsd.get("weighing")!=null){
                 weighing = new BigDecimal(jsd.get("weighing").toString());
             }
         }
@@ -283,174 +298,197 @@ public class JingFengController extends JeecgController<T, IJingFengService> {
         cinfo.setWeighing(weighing);
         cinfo.setContractPrice(WZDanJia);
         cinfo.setIsDelete(0);
-        contractInformationService.save(cinfo);
+        cinfo.setSettlementIdentification(0);
+        cinfo.setManual(1);
+        if(id.equals("1")){
+            contractInformationService.save(cinfo);
+        }else{
+            cinfo.setId(id);
+            contractInformationService.updateById(cinfo);
+        }
         //添加合同元素表
         //S
+        BigDecimal S=null;
         if(jsd.containsKey("ss")){
-            if(oConvertUtils.isNotEmpty(jsd.get("ss").toString())){
-                BigDecimal S = new BigDecimal(jsd.get("ss").toString());
-                saveelement(uuid, htbh, pzh, "S", S);
+            if(jsd.get("ss")!=null){
+                S = new BigDecimal(jsd.get("ss").toString());
             }
         }
         //P
+        BigDecimal P =null;
         if(jsd.containsKey("pp")){
-            if(oConvertUtils.isNotEmpty(jsd.get("pp").toString())){
-                BigDecimal P = new BigDecimal(jsd.get("pp").toString());
-                saveelement(uuid, htbh, pzh, "P", P);
+            if(jsd.get("pp")!=null){
+                P = new BigDecimal(jsd.get("pp").toString());
             }
         }
         //FEO
+        BigDecimal FEO =null;
         if(jsd.containsKey("feo")){
-            if(oConvertUtils.isNotEmpty(jsd.get("feo").toString())){
-                BigDecimal FEO = new BigDecimal(jsd.get("feo").toString());
-                saveelement(uuid, htbh, pzh, "FEO", FEO);
+            if(jsd.get("feo")!=null){
+                 FEO = new BigDecimal(jsd.get("feo").toString());
             }
         }
 
         //H2O
+        BigDecimal H2O =null;
         if(jsd.containsKey("h2o")){
-            if(oConvertUtils.isNotEmpty(jsd.get("h2o").toString())){
-                BigDecimal H2O = new BigDecimal(jsd.get("h2o").toString());
-                saveelement(uuid, htbh, pzh, "H2O", H2O);
+            if(jsd.get("h2o")!=null){
+                 H2O = new BigDecimal(jsd.get("h2o").toString());
             }
-
         }
         //AL2O3
+        BigDecimal AL2O3 = null;
         if(jsd.containsKey("al2o3")){
-            if(oConvertUtils.isNotEmpty(jsd.get("al2o3").toString())){
-                BigDecimal AL2O3 = new BigDecimal(jsd.get("al2o3").toString());
-                saveelement(uuid, htbh, pzh, "AL2O3", AL2O3);
+            if(jsd.get("al2o3")!=null ){
+                System.out.println(1);
+                 AL2O3 = new BigDecimal(jsd.get("al2o3").toString());
             }
         }
-
         //MnO
+        BigDecimal MnO =null;
         if(jsd.containsKey("mno")){
-            if(oConvertUtils.isNotEmpty(jsd.get("mno").toString())){
-                BigDecimal MnO = new BigDecimal(jsd.get("mno").toString());
-                saveelement(uuid, htbh, pzh, "MnO", MnO);
+            if(jsd.get("mno")!=null){
+                 MnO = new BigDecimal(jsd.get("mno").toString());
             }
-
         }
-
         //TiO2
+        BigDecimal TiO2 =null;
         if(jsd.containsKey("tio2")){
-            if(oConvertUtils.isNotEmpty(jsd.get("tio2").toString())){
-                BigDecimal TiO2 = new BigDecimal(jsd.get("tio2").toString());
-                saveelement(uuid, htbh, pzh, "TiO2", TiO2);
+            if(jsd.get("tio2")!=null){
+                 TiO2 = new BigDecimal(jsd.get("tio2").toString());
             }
         }
-
         //Cr
+        BigDecimal Cr =null;
         if(jsd.containsKey("cr")){
-            if(oConvertUtils.isNotEmpty(jsd.get("cr").toString())){
-                BigDecimal Cr = new BigDecimal(jsd.get("cr").toString());
-                saveelement(uuid, htbh, pzh, "Cr", Cr);
+            if(jsd.get("cr")!=null){
+                 Cr = new BigDecimal(jsd.get("cr").toString());
+
             }
-
         }
-
         //Cu
+        BigDecimal Cu =null;
         if(jsd.containsKey("cu")){
-            if(oConvertUtils.isNotEmpty(jsd.get("cu").toString())){
-                BigDecimal Cu = new BigDecimal(jsd.get("cu").toString());
-                saveelement(uuid, htbh, pzh, "Cu", Cu);
+            if(jsd.get("cu")!=null){
+                 Cu = new BigDecimal(jsd.get("cu").toString());
             }
         }
-
         //TFE
+        BigDecimal TFE =null;
         if(jsd.containsKey("tfe")){
-            if(oConvertUtils.isNotEmpty(jsd.get("tfe").toString())){
-                BigDecimal TFE = new BigDecimal(jsd.get("tfe").toString());
-                saveelement(uuid, htbh, pzh, "TFE", TFE);
+            if(jsd.get("tfe")!=null){
+                 TFE = new BigDecimal(jsd.get("tfe").toString());
             }
         }
-
         //MGO
+        BigDecimal MGO =null;
         if(jsd.containsKey("mgo")){
-            if(oConvertUtils.isNotEmpty(jsd.get("mgo").toString())){
-                BigDecimal MGO = new BigDecimal(jsd.get("mgo").toString());
-                saveelement(uuid, htbh, pzh, "MGO", MGO);
+            if(jsd.get("mgo")!=null){
+                 MGO = new BigDecimal(jsd.get("mgo").toString());
             }
         }
-
         //Pb
+        BigDecimal Pb =null;
         if(jsd.containsKey("pb")){
-            if(oConvertUtils.isNotEmpty(jsd.get("pb").toString())){
-                BigDecimal Pb = new BigDecimal(jsd.get("pb").toString());
-                saveelement(uuid, htbh, pzh, "Pb", Pb);
+            if(jsd.get("pb")!=null){
+                 Pb = new BigDecimal(jsd.get("pb").toString());
             }
         }
-
         //As
+        BigDecimal As =null;
         if(jsd.containsKey("as1")){
-            if(oConvertUtils.isNotEmpty(jsd.get("as1").toString())){
-                BigDecimal As = new BigDecimal(jsd.get("as1").toString());
-                saveelement(uuid, htbh, pzh, "As", As);
+            if(jsd.get("as1")!=null){
+                 As = new BigDecimal(jsd.get("as1").toString());
             }
         }
-
         //CAO
+        BigDecimal CAO =null;
         if(jsd.containsKey("cao")){
-            if(oConvertUtils.isNotEmpty(jsd.get("cao").toString())){
-                BigDecimal CAO = new BigDecimal(jsd.get("cao").toString());
-                saveelement(uuid, htbh, pzh, "CAO", CAO);
+            if(jsd.get("cao")!=null){
+                 CAO = new BigDecimal(jsd.get("cao").toString());
             }
-
         }
-
         //K2O
+        BigDecimal K2O =null;
         if(jsd.containsKey("k2o")){
-            if(oConvertUtils.isNotEmpty(jsd.get("k2o").toString())){
-                BigDecimal K2O = new BigDecimal(jsd.get("k2o").toString());
-                saveelement(uuid, htbh, pzh, "K2O", K2O);
+            if(jsd.get("k2o")!=null){
+                 K2O = new BigDecimal(jsd.get("k2o").toString());
             }
         }
-
         //SIO2
+        BigDecimal SIO2 =null;
         if(jsd.containsKey("sio2")){
-            if(oConvertUtils.isNotEmpty(jsd.get("sio2").toString())){
-                BigDecimal SIO2 = new BigDecimal(jsd.get("sio2").toString());
-                saveelement(uuid, htbh, pzh, "SIO2", SIO2);
+            if(jsd.get("sio2")!=null){
+                 SIO2 = new BigDecimal(jsd.get("sio2").toString());
             }
         }
         //含粉
+        BigDecimal containsPowder =null;
         if(jsd.containsKey("containsPowder")){
-            if(oConvertUtils.isNotEmpty(jsd.get("containsPowder").toString())){
-                BigDecimal containsPowder = new BigDecimal(jsd.get("containsPowder").toString());
-                saveelement(uuid, htbh, pzh, "含粉", containsPowder);
+            if(jsd.get("containsPowder")!=null){
+                 containsPowder = new BigDecimal(jsd.get("containsPowder").toString());
             }
         }
         //抗压
+        BigDecimal compressive =null;
         if(jsd.containsKey("compressive")){
-            if(oConvertUtils.isNotEmpty(jsd.get("compressive").toString())){
-                BigDecimal compressive = new BigDecimal(jsd.get("compressive").toString());
-                saveelement(uuid, htbh, pzh, "抗压", compressive);
+            if(jsd.get("compressive")!=null){
+                 compressive = new BigDecimal(jsd.get("compressive").toString());
             }
-
         }
         //[粒度<5mm]
+        BigDecimal granularity =null;
         if(jsd.containsKey("granularity")){
-            if(oConvertUtils.isNotEmpty(jsd.get("granularity").toString())){
-                BigDecimal granularity = new BigDecimal(jsd.get("granularity").toString());
-                saveelement(uuid, htbh, pzh, "[粒度<5mm]", granularity);
+            if(jsd.get("granularity")!=null){
+                 granularity = new BigDecimal(jsd.get("granularity").toString());
             }
         }
+        saveelement(uuid, htbh, pzh, "S", S,id);
+        saveelement(uuid, htbh, pzh, "P", P,id);
+        saveelement(uuid, htbh, pzh, "FEO", FEO,id);
+        saveelement(uuid, htbh, pzh, "H2O", H2O,id);
+        saveelement(uuid, htbh, pzh, "AL2O3", AL2O3,id);
+        saveelement(uuid, htbh, pzh, "MnO", MnO,id);
+        saveelement(uuid, htbh, pzh, "TiO2", TiO2,id);
+        saveelement(uuid, htbh, pzh, "Cr", Cr,id);
+        saveelement(uuid, htbh, pzh, "Cu", Cu,id);
+        saveelement(uuid, htbh, pzh, "TFE", TFE,id);
+        saveelement(uuid, htbh, pzh, "MGO", MGO,id);
+        saveelement(uuid, htbh, pzh, "Pb", Pb,id);
+        saveelement(uuid, htbh, pzh, "As", As,id);
+        saveelement(uuid, htbh, pzh, "CAO", CAO,id);
+        saveelement(uuid, htbh, pzh, "K2O", K2O,id);
+        saveelement(uuid, htbh, pzh, "SIO2", SIO2,id);
+        saveelement(uuid, htbh, pzh, "含粉", containsPowder,id);
+        saveelement(uuid, htbh, pzh, "抗压", compressive,id);
+        saveelement(uuid, htbh, pzh, "[粒度<5mm]", granularity,id);
         return Result.ok("添加成功！");
     }
 
 
     //导入合同元素表
-    public void saveelement(String uuid, String htbh, Integer pzh, String name, BigDecimal ele) {
-        ContractElements cele = new ContractElements();
-        String uuids = UUID.randomUUID().toString();
-        cele.setId(uuids);
-        cele.setCiId(uuid);
-        cele.setContractNo(htbh);
-        cele.setVoucherNo(pzh);
-        cele.setElement(name);
-        cele.setElelmentDate(ele);
-        cele.setIsDelete(0);
-        htelements.save(cele);
+    public void saveelement(String uuid, String htbh, Integer pzh, String name, BigDecimal ele,String id) {
+       if(id.equals("1")){
+           ContractElements cele = new ContractElements();
+           String uuids = UUID.randomUUID().toString();
+           cele.setId(uuids);
+           cele.setCiId(uuid);
+           cele.setContractNo(htbh);
+           cele.setVoucherNo(pzh);
+           cele.setElement(name);
+           cele.setElelmentDate(ele);
+           cele.setIsDelete(0);
+           htelements.save(cele);
+       }else{
+           UpdateWrapper<ContractElements> updateWrapper = new UpdateWrapper<ContractElements>();
+           System.out.println(name+"-----"+id);
+           updateWrapper.eq("element",name);
+           updateWrapper.eq("ci_id",id);
+           ContractElements celeupdate = new ContractElements();
+           celeupdate.setElelmentDate(ele);
+           htelements.update(celeupdate, updateWrapper);
+       }
+
     }
 
     //打印查询列表
