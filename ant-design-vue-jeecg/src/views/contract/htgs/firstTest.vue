@@ -444,7 +444,7 @@ export default {
       var param = Object.assign(sqp, this.params, this.isorter)
       param.field = this.getQueryField()
       param.pageNo = this.ipagination.current
-      param.pageSize = this.ipagination.pageSize
+      param.pageSize = 200
       // var params = this.getQueryParams();//查询条件
       this.loading = true
       if (param.hetongId != '') {

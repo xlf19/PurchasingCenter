@@ -106,6 +106,7 @@ export default {
     DetailList,
     DetailListItem,
   },
+  inject: ['reload'],
   props: {
     contrac: {
       type: String,
@@ -320,12 +321,16 @@ export default {
                 this.$message.success("结算成功！")
                }
             });
-
+            //清空选着框中的数据
+            this.selectedRowKeys = []
+            this.selectionRows = []
           }
           if (res.code === 500) {
             this.$message.error(res.message)
+            //清空选着框中的数据
+            this.selectedRowKeys = []
+            this.selectionRows = []
           }
-          this.loading = false
         })
       }
     },
@@ -362,6 +367,9 @@ export default {
           console.log('item.id' + item.id)
           if (item.settlementIdentification > 0) {
             this.$message.warning('这批订单已经结算过，请不要重复结算！')
+            //清空选着框中的数据
+            this.selectedRowKeys = []
+            this.selectionRows = []
           } else {
             id.push(item.id)
           }
@@ -381,9 +389,14 @@ export default {
                 this.$message.success("结算成功！")
                }
             });
+            this.selectedRowKeys = []
+            this.selectionRows = []
           }
           if (res.code === 500) {
             this.$message.warning(res.message)
+            //查询完了后清空选着框中的数据
+            this.selectedRowKeys = []
+            this.selectionRows = []
           }
           this.loading = false
         })
@@ -431,6 +444,9 @@ export default {
           settlementIdentification : sno
         }
         this.loadData(this.arg, datas)
+        //查询完了后清空选着框中的数据
+        this.selectedRowKeys = []
+        this.selectionRows = []
       }
     },
 
