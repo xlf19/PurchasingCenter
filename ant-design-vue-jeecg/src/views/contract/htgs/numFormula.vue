@@ -14,7 +14,7 @@
         <a-form-item>
           <a-popconfirm
             class="mrgright"
-            v-if="selectedRowIds.length>0"
+            v-if="selectedRowIds.length > 0"
             :title="`确定要删除这 ${selectedRowIds.length} 项吗?`"
             @confirm="handleConfirmDelete"
           >
@@ -36,12 +36,12 @@
       :rowSelection="true"
       :actionButton="true"
       :dragSort="true"
-      style="margin-top: 8px;"
+      style="margin-top: 8px"
       @selectRowChange="handleSelectRowChange"
       @valueChange="handleValueChange"
     >
       <template v-slot:action="props">
-        <a-button style="background-color: red;" type="danger" @click="handleDelete(props)">删除</a-button>
+        <a-button style="background-color: red" type="danger" @click="handleDelete(props)">删除</a-button>
       </template>
     </j-editable-table-by-cj>
   </div>
@@ -95,7 +95,7 @@ export default {
           type: FormTypes.input,
           options: [],
           disabled: true,
-          defaultValue: '合同数值'
+          defaultValue: '合同数值',
         },
         {
           title: '右符号',
@@ -217,7 +217,7 @@ export default {
       templatename: '',
       url: {
         list: '/SysNumgongshi/sysNumgongshi/list',
-        
+
         delete: '/SysNumgongshi/sysNumgongshi/delete',
         deleteBatch: '/SysNumgongshi/sysNumgongshi/deleteBatch',
         savaHtGongShi: '/SysNumgongshi/sysNumgongshi/savaHtGongShi',
@@ -263,17 +263,21 @@ export default {
       param.pageSize = this.ipagination.pageSize
       // var params = this.getQueryParams();//查询条件
       this.loading = true
-      getAction(this.url.list, param).then((res) => {
-        console.log(res)
-        if (res.success) {
-          this.dataSourceSec = res.result.records
-          this.ipagination.total = res.result.total
-        }
-        if (res.code === 510) {
-          this.$message.warning(res.message)
-        }
+      if (param.hetongId != '') {
+        getAction(this.url.list, param).then((res) => {
+          console.log(res)
+          if (res.success) {
+            this.dataSourceSec = res.result.records
+            this.ipagination.total = res.result.total
+          }
+          if (res.code === 510) {
+            this.$message.warning(res.message)
+          }
+          this.loading = false
+        })
+      } else {
         this.loading = false
-      })
+      }
     },
     getQueryField() {
       //TODO 字段权限控制
@@ -428,8 +432,7 @@ export default {
       this.columns.forEach((item, idx) => {
         if (item.key == 'leftsysbol' || item.key == 'rightsysbol') {
           this.columns[idx].options = this.SysbolOptions
-        }
-        else if (item.key == 'isreduce') {
+        } else if (item.key == 'isreduce') {
           this.columns[idx].options = this.isReduceOptions
         }
       })

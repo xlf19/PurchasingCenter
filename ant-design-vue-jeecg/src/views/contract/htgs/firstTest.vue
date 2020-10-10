@@ -18,14 +18,15 @@
               :dictOptions="dictOptions"
               @change="searchChange($event)"
             ></j-search-select-tag-sec> -->
-            <a-select 
-              style="width: 160px" 
-              show-search 
-              ref="changeSelect" 
+            <a-select
+              style="width: 160px"
+              show-search
+              ref="changeSelect"
               :value="hetongId1"
               :filter-option="filterOption"
               option-filter-prop="children"
-              @change="searchChange">
+              @change="searchChange"
+            >
               <a-select-option v-for="item in dictOptions" :key="item.value">
                 {{ item.title }}
               </a-select-option>
@@ -140,8 +141,8 @@ export default {
     //   this.loadData(1)
     //   //this.setSyselements(newVal)
     // },
-    'contrac': {
-      handler(newVal){
+    contrac: {
+      handler(newVal) {
         this.params.hetongId = newVal
         // console.log(newVal,oldVal)
         this.hetongId1 = newVal
@@ -151,8 +152,7 @@ export default {
       //深度监听
       deep: true,
       immediate: true,
-    }
-
+    },
   },
   data() {
     return {
@@ -428,9 +428,7 @@ export default {
       })
     },
     filterOption(input, option) {
-      return (
-        option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
-      );
+      return option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
     },
     //加载数据
     loadData(arg) {
@@ -449,31 +447,21 @@ export default {
       param.pageSize = this.ipagination.pageSize
       // var params = this.getQueryParams();//查询条件
       this.loading = true
-      getAction(this.url.list, param).then((res) => {
-        // console.log(res)
-        if (res.success) {
-          //要根据后台返回的数据deductiontype给到不同tab模块
-          // let records = res.result.records
-          // let priceArr = []
-          // let numArr = []
-          // records.forEach((item, idx) => {
-          //   // console.log(item)
-          //   if (item.deductiontype == '0') {
-          //     priceArr.push(item)
-          //   } else {
-          //     numArr.push(item)
-          //   }
-          // })
-          // this.dataSourceSec = priceArr
-          // console.log(x)
-          this.dataSourceSec = res.result.records
-          this.ipagination.total = res.result.total
-        }
-        if (res.code === 510) {
-          this.$message.warning(res.message)
-        }
+      if (param.hetongId != '') {
+        getAction(this.url.list, param).then((res) => {
+          // console.log(res)
+          if (res.success) {
+            this.dataSourceSec = res.result.records
+            this.ipagination.total = res.result.total
+          }
+          if (res.code === 510) {
+            this.$message.warning(res.message)
+          }
+          this.loading = false
+        })
+      } else {
         this.loading = false
-      })
+      }
     },
     getQueryField() {
       //TODO 字段权限控制
@@ -559,7 +547,10 @@ export default {
                 if (itxItem.elements == element) {
                   //第一种情况左值不为空，右值为空,左符号值为<
                   if (left != '' && right == '' && leftFuHao == '0') {
-                    if (parseFloat(itxItem.leftnum) >= parseFloat(left) || parseFloat(itxItem.rightnum) > parseFloat(left)) {
+                    if (
+                      parseFloat(itxItem.leftnum) >= parseFloat(left) ||
+                      parseFloat(itxItem.rightnum) > parseFloat(left)
+                    ) {
                       // console.log("公式有错误")
                       this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复')
                       submitMark = 0
@@ -567,7 +558,10 @@ export default {
                   }
                   //第二种情况左值不为空，右值为空，左符号值为≤
                   if (left != '' && right == '' && leftFuHao == '1') {
-                    if (parseFloat(itxItem.leftnum) >= parseFloat(left) || parseFloat(itxItem.rightnum) > parseFloat(left)) {
+                    if (
+                      parseFloat(itxItem.leftnum) >= parseFloat(left) ||
+                      parseFloat(itxItem.rightnum) > parseFloat(left)
+                    ) {
                       // console.log("公式有错误")
                       this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复')
                       // this.$message.error(element + '元素公式区间有重复')
@@ -603,28 +597,40 @@ export default {
                     // }
                     // debugger;
                     if (itxItem.leftsysbol == '0') {
-                      if (parseFloat(itxItem.leftnum) > parseFloat(left) && parseFloat(itxItem.leftnum) < parseFloat(right)) {
+                      if (
+                        parseFloat(itxItem.leftnum) > parseFloat(left) &&
+                        parseFloat(itxItem.leftnum) < parseFloat(right)
+                      ) {
                         this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复')
                         submitMark = 0
                       }
                     } else if (itxItem.leftsysbol == '1') {
-                      if (parseFloat(itxItem.leftnum) > parseFloat(left) && parseFloat(itxItem.leftnum) < parseFloat(right)) {
+                      if (
+                        parseFloat(itxItem.leftnum) > parseFloat(left) &&
+                        parseFloat(itxItem.leftnum) < parseFloat(right)
+                      ) {
                         this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复')
                         submitMark = 0
                       }
                     }
                   }
-                  
+
                   //第六种情况左符号为≤，右符号为<，左右值都不为空
                   if (left != '' && right != '' && leftFuHao == '1' && rightFuHao == '0') {
                     // debugger;
                     if (itxItem.leftsysbol == '0') {
-                      if (parseFloat(itxItem.leftnum) > parseFloat(left) && parseFloat(itxItem.leftnum) < parseFloat(right)) {
+                      if (
+                        parseFloat(itxItem.leftnum) > parseFloat(left) &&
+                        parseFloat(itxItem.leftnum) < parseFloat(right)
+                      ) {
                         this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复')
                         submitMark = 0
                       }
                     } else if (itxItem.leftsysbol == '1') {
-                      if (parseFloat(itxItem.leftnum) > parseFloat(left) && parseFloat(itxItem.leftnum) < parseFloat(right)) {
+                      if (
+                        parseFloat(itxItem.leftnum) > parseFloat(left) &&
+                        parseFloat(itxItem.leftnum) < parseFloat(right)
+                      ) {
                         this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复')
                         submitMark = 0
                       }
@@ -639,12 +645,18 @@ export default {
                     // console.log('rightnum:',parseFloat(itxItem.rightnum))
                     //debugger;
                     if (itxItem.leftsysbol == '0') {
-                      if (parseFloat(itxItem.leftnum) > parseFloat(left) && parseFloat(itxItem.leftnum) < parseFloat(right)) {
+                      if (
+                        parseFloat(itxItem.leftnum) > parseFloat(left) &&
+                        parseFloat(itxItem.leftnum) < parseFloat(right)
+                      ) {
                         this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复')
                         submitMark = 0
                       }
                     } else if (itxItem.leftsysbol == '1') {
-                      if (parseFloat(itxItem.leftnum) > parseFloat(left) && parseFloat(itxItem.leftnum) <= parseFloat(right)) {
+                      if (
+                        parseFloat(itxItem.leftnum) > parseFloat(left) &&
+                        parseFloat(itxItem.leftnum) <= parseFloat(right)
+                      ) {
                         this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复')
                         submitMark = 0
                       }
@@ -653,19 +665,28 @@ export default {
                   //第八种情况左符号为≤，右符号为≤，左右值都不为空
                   if (left != '' && right != '' && leftFuHao == '1' && rightFuHao == '1') {
                     if (itxItem.leftsysbol == '0') {
-                      if (parseFloat(itxItem.leftnum) > parseFloat(left) && parseFloat(itxItem.leftnum) < parseFloat(right)) {
+                      if (
+                        parseFloat(itxItem.leftnum) > parseFloat(left) &&
+                        parseFloat(itxItem.leftnum) < parseFloat(right)
+                      ) {
                         this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复')
                         submitMark = 0
                       }
                     } else if (itxItem.leftsysbol == '1') {
-                      if (parseFloat(itxItem.leftnum) > parseFloat(left) && parseFloat(itxItem.leftnum) <= parseFloat(right)) {
+                      if (
+                        parseFloat(itxItem.leftnum) > parseFloat(left) &&
+                        parseFloat(itxItem.leftnum) <= parseFloat(right)
+                      ) {
                         this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复')
                         submitMark = 0
                       }
                     }
                   }
                   //第九种
-                  if (parseFloat(left) == parseFloat(itxItem.leftnum) && parseFloat(right) == parseFloat(itxItem.rightnum)) {
+                  if (
+                    parseFloat(left) == parseFloat(itxItem.leftnum) &&
+                    parseFloat(right) == parseFloat(itxItem.rightnum)
+                  ) {
                     this.$message.error('第' + (index + 1) + '行' + element + '元素公式区间有重复')
                     submitMark = 0
                   }
