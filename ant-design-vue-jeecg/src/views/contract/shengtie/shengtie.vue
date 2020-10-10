@@ -93,7 +93,11 @@
           :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
           class="j-table-force-nowrap"
           @change="handleTableChange"
-        ></a-table>
+        >
+          <template slot="ellipsisSlot" slot-scope="text">
+            <j-ellipsis :value="rmHtmlLabel(text)" :length="5"></j-ellipsis>
+          </template>
+        </a-table>
       </div>
       <!-- table区域-end -->
       <contract-list ref="ContractList"></contract-list>
@@ -110,6 +114,7 @@ import { JeecgListMixin } from '@/mixins/JeecgListMixin'
 import JDate from '@/components/jeecg/JDate.vue'
 import ContractList from '../shengtie/ContractInformationList'
 import moment from 'moment'
+import JEllipsis from '@/components/jeecg/JEllipsis'
 
 export default {
   name: 'shengtie',
@@ -117,6 +122,7 @@ export default {
   components: {
     JDate,
     ContractList,
+    JEllipsis,
   },
   data() {
     return {
@@ -227,6 +233,7 @@ export default {
           title: '化验备注',
           align: 'center',
           dataIndex: '化验备注',
+          scopedSlots: { customRender: 'ellipsisSlot' },
         },
         {
           title: '派工单号',
@@ -268,7 +275,10 @@ export default {
   },
   methods: {
     initDictConfig() {},
-
+    //剔除html标签
+    rmHtmlLabel(str) {
+      return str.replace(/<[^>]+>/g, '')
+    },
     //获取凭证号
     findpzh() {
       getAction(this.url.findpzh).then((res) => {
@@ -328,7 +338,7 @@ export default {
           this.$message.warning(res.message)
         }
         this.loading = false
-      })    
+      })
       if (hth != null && hth != '' && hth != undefined) {
         this.finlist(hth)
       }

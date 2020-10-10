@@ -35,12 +35,7 @@
           </a-col>
           <a-col :span="8">
             <a-form-item label="税率" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <a-input-number
-                v-decorator="['ShuiLv']"
-                placeholder="请输入税率"
-                style="width: 100%"
-                disabled
-              />
+              <a-input-number v-decorator="['ShuiLv']" placeholder="请输入税率" style="width: 100%" disabled />
             </a-form-item>
           </a-col>
           <a-col :span="8">
@@ -53,12 +48,7 @@
           </a-col>
           <a-col :span="8">
             <a-form-item label="检验量" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <a-input-number
-                v-decorator="['weighing']"
-                placeholder="请输入检验量"
-                :step="0.001"
-                style="width: 100%"
-              />
+              <a-input-number v-decorator="['weighing']" placeholder="请输入检验量" :step="0.001" style="width: 100%" />
             </a-form-item>
           </a-col>
           <a-col :span="8">
@@ -73,172 +63,87 @@
           </a-col>
           <a-col :span="8">
             <a-form-item label="S" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <a-input-number
-                v-decorator="['ss']"
-                placeholder="请输入S"
-                style="width: 100%"
-                :step="0.001"
-              />
+              <a-input-number v-decorator="['ss']" placeholder="请输入S" style="width: 100%" :step="0.001" />
             </a-form-item>
           </a-col>
           <a-col :span="8">
             <a-form-item label="P" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <a-input-number
-                v-decorator="['pp']"
-                placeholder="请输入P"
-                style="width: 100%"
-                :step="0.001"
-              />
+              <a-input-number v-decorator="['pp']" placeholder="请输入P" style="width: 100%" :step="0.001" />
             </a-form-item>
           </a-col>
           <a-col :span="8">
             <a-form-item label="FEO" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <a-input-number
-                v-decorator="['feo']"
-                placeholder="请输入FEO"
-                style="width: 100%"
-                :step="0.001"
-              />
+              <a-input-number v-decorator="['feo']" placeholder="请输入FEO" style="width: 100%" :step="0.001" />
             </a-form-item>
           </a-col>
           <a-col :span="8">
             <a-form-item label="H2O" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <a-input-number
-                v-decorator="['h2o']"
-                placeholder="请输入H2O"
-                style="width: 100%"
-                :step="0.001"
-              />
+              <a-input-number v-decorator="['h2o']" placeholder="请输入H2O" style="width: 100%" :step="0.001" />
             </a-form-item>
           </a-col>
           <a-col :span="8">
             <a-form-item label="AL2O3" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <a-input-number
-                v-decorator="['al2o3']"
-                placeholder="请输入AL2O3"
-                style="width: 100%"
-                :step="0.001"
-              />
+              <a-input-number v-decorator="['al2o3']" placeholder="请输入AL2O3" style="width: 100%" :step="0.001" />
             </a-form-item>
           </a-col>
           <a-col :span="8">
             <a-form-item label="MnO" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <a-input-number
-                v-decorator="['mno']"
-                placeholder="请输入MnO"
-                style="width: 100%"
-                :step="0.001"
-              />
+              <a-input-number v-decorator="['mno']" placeholder="请输入MnO" style="width: 100%" :step="0.001" />
             </a-form-item>
           </a-col>
           <a-col :span="8">
             <a-form-item label="TiO2" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <a-input-number
-                v-decorator="['tio2']"
-                placeholder="请输入TiO2"
-                style="width: 100%"
-                :step="0.001"
-              />
+              <a-input-number v-decorator="['tio2']" placeholder="请输入TiO2" style="width: 100%" :step="0.001" />
             </a-form-item>
           </a-col>
           <a-col :span="8">
             <a-form-item label="Cr" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <a-input-number
-                v-decorator="['cr']"
-                placeholder="请输入Cr"
-                style="width: 100%"
-                :step="0.001"
-              />
+              <a-input-number v-decorator="['cr']" placeholder="请输入Cr" style="width: 100%" :step="0.001" />
             </a-form-item>
           </a-col>
           <a-col :span="8">
             <a-form-item label="Cu" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <a-input-number
-                v-decorator="['cu']"
-                placeholder="请输入Cu"
-                style="width: 100%"
-                :step="0.001"
-              />
+              <a-input-number v-decorator="['cu']" placeholder="请输入Cu" style="width: 100%" :step="0.001" />
             </a-form-item>
           </a-col>
           <a-col :span="8">
             <a-form-item label="TFE" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <a-input-number
-                v-decorator="['tfe']"
-                placeholder="请输入TFE"
-                style="width: 100%"
-                :step="0.001"
-              />
+              <a-input-number v-decorator="['tfe']" placeholder="请输入TFE" style="width: 100%" :step="0.001" />
             </a-form-item>
           </a-col>
           <a-col :span="8">
             <a-form-item label="MGO" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <a-input-number
-                v-decorator="['mgo']"
-                placeholder="请输入MGO"
-                style="width: 100%"
-                :step="0.001"
-              />
+              <a-input-number v-decorator="['mgo']" placeholder="请输入MGO" style="width: 100%" :step="0.001" />
             </a-form-item>
           </a-col>
           <a-col :span="8">
             <a-form-item label="Pb" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <a-input-number
-                v-decorator="['pb']"
-                placeholder="请输入Pb"
-                style="width: 100%"
-                :step="0.001"
-              />
+              <a-input-number v-decorator="['pb']" placeholder="请输入Pb" style="width: 100%" :step="0.001" />
             </a-form-item>
           </a-col>
           <a-col :span="8">
             <a-form-item label="As" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <a-input-number
-                v-decorator="['as1']"
-                placeholder="请输入As"
-                style="width: 100%"
-                :step="0.001"
-              />
+              <a-input-number v-decorator="['as1']" placeholder="请输入As" style="width: 100%" :step="0.001" />
             </a-form-item>
           </a-col>
           <a-col :span="8">
             <a-form-item label="CAO" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <a-input-number
-                v-decorator="['cao']"
-                placeholder="请输入CAO"
-                style="width: 100%"
-                :step="0.001"
-              />
+              <a-input-number v-decorator="['cao']" placeholder="请输入CAO" style="width: 100%" :step="0.001" />
             </a-form-item>
           </a-col>
           <a-col :span="8">
             <a-form-item label="K2O" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <a-input-number
-                v-decorator="['k2o']"
-                placeholder="请输入K2O"
-                style="width: 100%"
-                :step="0.001"
-              />
+              <a-input-number v-decorator="['k2o']" placeholder="请输入K2O" style="width: 100%" :step="0.001" />
             </a-form-item>
           </a-col>
           <a-col :span="8">
             <a-form-item label="SIO2" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <a-input-number
-                v-decorator="['sio2']"
-                placeholder="请输入SIO2"
-                style="width: 100%"
-                :step="0.001"
-              />
+              <a-input-number v-decorator="['sio2']" placeholder="请输入SIO2" style="width: 100%" :step="0.001" />
             </a-form-item>
           </a-col>
           <a-col :span="8">
             <a-form-item label="Zn" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <a-input-number
-                v-decorator="['zn']"
-                placeholder="请输入Zn"
-                style="width: 100%"
-                :step="0.001"
-              />
+              <a-input-number v-decorator="['zn']" placeholder="请输入Zn" style="width: 100%" :step="0.001" />
             </a-form-item>
           </a-col>
           <a-col :span="8">
@@ -364,6 +269,7 @@ export default {
         this.form.setFieldsValue(
           pick(
             this.model,
+            'id',
             'HeTongBianHao',
             'voucherno',
             'WZCode',
@@ -438,6 +344,7 @@ export default {
       this.form.setFieldsValue(
         pick(
           row,
+          'id',
           'HeTongBianHao',
           'voucherno',
           'WZCode',

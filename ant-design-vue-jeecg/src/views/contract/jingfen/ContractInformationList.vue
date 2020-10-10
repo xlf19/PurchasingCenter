@@ -16,18 +16,23 @@
         :expandedRowKeys="expandedRowKeys"
         @expand="handleExpand"
       >
+        <template slot="ellipsisSlot" slot-scope="text">
+          <j-ellipsis :value="rmHtmlLabel(text)" :length="5"></j-ellipsis>
+        </template>
         <span slot="action" slot-scope="text, record">
+          <a @click="handleEditjsd(record.id)" v-if="record.settlementIdentification === 0 && record.manual === 1"
+            >编辑</a
+          >
+          <a-divider type="vertical" v-if="record.settlementIdentification === 0 && record.manual === 1" />
           <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
             <a>删除</a>
           </a-popconfirm>
         </span>
         <a-card style="margin: 0" slot="expandedRowRender" :bordered="false">
           <a-descriptions title="精粉富粉球团合同元素数据" :column="8">
-            <a-descriptions-item
-              :label="item.element"
-              :key="index"
-              v-for="(item,index) in stelements"
-            >{{item.elelmentDate}}</a-descriptions-item>
+            <a-descriptions-item :label="item.element" :key="index" v-for="(item, index) in stelements">{{
+              item.elelmentDate
+            }}</a-descriptions-item>
           </a-descriptions>
         </a-card>
       </a-table>
@@ -44,6 +49,7 @@ import DetailList from '@/components/tools/DetailList'
 import { JeecgListMixin } from '@/mixins/JeecgListMixin'
 import { filterObj } from '@/utils/util'
 import ContractInformModal from './htmodeules/ContractInformModal'
+import JEllipsis from '@/components/jeecg/JEllipsis'
 const DetailListItem = DetailList.Item
 
 export default {
@@ -53,6 +59,7 @@ export default {
     DetailList,
     DetailListItem,
     ContractInformModal,
+    JEllipsis,
   },
 
   data() {
@@ -157,6 +164,7 @@ export default {
           title: '备注',
           align: 'center',
           dataIndex: 'remarks',
+          scopedSlots: { customRender: 'ellipsisSlot' },
         },
 
         {
@@ -207,12 +215,14 @@ export default {
           scopedSlots: { customRender: 'action' },
         },
       ],
+      //元素信息
       stelements: [],
       url: {
         list: '/jingfen/jingfen/list',
         lists: '/elements/contractElements/elementslist',
         delete: '/elements/contractElements/delete',
         jiesuandan: '/jingfen/jingfen/listzjjfxx',
+        updatejsd: '/jingfen/jingfen/updatejsd',
       },
       dictOptions: {},
     }
@@ -225,6 +235,10 @@ export default {
   },
   methods: {
     initDictConfig() {},
+    //剔除html标签
+    rmHtmlLabel(str) {
+      return str.replace(/<[^>]+>/g, '')
+    },
     //展开行信息
     handleExpand(expanded, record) {
       this.expandedRowKeys = []
@@ -241,6 +255,7 @@ export default {
         })
       }
     },
+
     //查询合同信息
     htlist(hth) {
       this.hthone = hth
@@ -259,6 +274,7 @@ export default {
         this.loading = false
       })
     },
+
     //分页、排序、筛选
     handleTableChange(pagination, filters, sorter) {
       //分页、排序、筛选变化时触发
@@ -271,21 +287,37 @@ export default {
       let hth = this.hthone
       this.htlist(hth)
     },
+
     //删除
     handleDelete(id) {
       deleteAction(this.url.delete, { id: id }).then((res) => {
         if (res.success) {
-          this.loadData()
+          let hth = this.hthone
+          this.htlist(hth)
         } else {
           that.$message.warning(res.message)
         }
       })
     },
+
     //手工结算单
     addsgjsd(htbhs, voucherNo, receiving) {
       this.hthone = htbhs
       let jsdd = {}
       getAction(this.url.jiesuandan, { htbh: htbhs, voucherno: voucherNo, receiving: receiving }).then((res) => {
+        if (res.success) {
+          this.$refs.modalForm.edit(res.result)
+          this.$refs.modalForm.title = '手工结算单'
+          this.$refs.modalForm.disableSubmit = false
+        }
+        if (res.code === 510) {
+          this.$message.warning(res.message)
+        }
+      })
+    },
+    //编辑手工结算单
+    handleEditjsd(id) {
+      getAction(this.url.updatejsd, { id: id }).then((res) => {
         if (res.success) {
           this.$refs.modalForm.edit(res.result)
           this.$refs.modalForm.title = '手工结算单'

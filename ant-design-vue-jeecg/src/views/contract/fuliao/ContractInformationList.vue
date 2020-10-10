@@ -16,6 +16,9 @@
         :expandedRowKeys="expandedRowKeys"
         @expand="handleExpand"
       >
+        <template slot="ellipsisSlot" slot-scope="text">
+          <j-ellipsis :value="rmHtmlLabel(text)" :length="3"></j-ellipsis>
+        </template>
         <span slot="action" slot-scope="text, record">
           <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
             <a>删除</a>
@@ -23,11 +26,9 @@
         </span>
         <a-card style="margin: 0" slot="expandedRowRender" :bordered="false">
           <a-descriptions title="辅料合同元素数据" :column="8">
-            <a-descriptions-item
-              :label="item.element"
-              :key="index"
-              v-for="(item,index) in stelements"
-            >{{item.elelmentDate}}</a-descriptions-item>
+            <a-descriptions-item :label="item.element" :key="index" v-for="(item, index) in stelements">{{
+              item.elelmentDate
+            }}</a-descriptions-item>
           </a-descriptions>
         </a-card>
       </a-table>
@@ -42,6 +43,7 @@ import { mixinDevice } from '@/utils/mixin'
 import DetailList from '@/components/tools/DetailList'
 import { JeecgListMixin } from '@/mixins/JeecgListMixin'
 import { filterObj } from '@/utils/util'
+import JEllipsis from '@/components/jeecg/JEllipsis'
 const DetailListItem = DetailList.Item
 
 export default {
@@ -50,6 +52,7 @@ export default {
   components: {
     DetailList,
     DetailListItem,
+    JEllipsis,
   },
 
   data() {
@@ -108,13 +111,13 @@ export default {
           align: 'center',
           dataIndex: 'weighing',
         },
-        
+
         {
           title: '合同单价',
           align: 'center',
           dataIndex: 'contractPrice',
         },
-         {
+        {
           title: '点收',
           align: 'center',
           dataIndex: 'accept',
@@ -155,9 +158,10 @@ export default {
           title: '备注',
           align: 'center',
           dataIndex: 'remarks',
+          scopedSlots: { customRender: 'ellipsisSlot' },
         },
-       
-         {
+
+        {
           title: '结算日期',
           align: 'center',
           dataIndex: 'settlementDate',
@@ -165,7 +169,7 @@ export default {
             return !text ? '' : text.length > 10 ? text.substr(0, 10) : text
           },
         },
-         {
+        {
           title: '结算状态',
           align: 'center',
           dataIndex: 'settlementIdentification',
@@ -222,6 +226,10 @@ export default {
   },
   methods: {
     initDictConfig() {},
+    //剔除html标签
+    rmHtmlLabel(str) {
+      return str.replace(/<[^>]+>/g, '')
+    },
     //展开行信息
     handleExpand(expanded, record) {
       this.expandedRowKeys = []
@@ -272,7 +280,8 @@ export default {
     handleDelete(id) {
       deleteAction(this.url.delete, { id: id }).then((res) => {
         if (res.success) {
-          this.loadData()
+          let hth = this.hthone
+          this.htlist(hth)
         } else {
           that.$message.warning(res.message)
         }

@@ -1,7 +1,7 @@
 <!--
  * @descript: 
  * @Date: 2020-08-28 14:27:18
- * @LastEditTime: 2020-09-28 09:26:16
+ * @LastEditTime: 2020-09-30 15:21:12
  * @version: 0.0.1
 -->
 <template>
@@ -18,7 +18,14 @@
               :dictOptions="dictOptions"
               @change="searchChange($event)"
             ></j-search-select-tag-sec> -->
-            <a-select style="width: 160px" ref="changeSelect" :value="hetongId1" @change="searchChange">
+            <a-select 
+              style="width: 160px" 
+              show-search 
+              ref="changeSelect" 
+              :value="hetongId1"
+              :filter-option="filterOption"
+              option-filter-prop="children"
+              @change="searchChange">
               <a-select-option v-for="item in dictOptions" :key="item.value">
                 {{ item.title }}
               </a-select-option>
@@ -125,13 +132,27 @@ export default {
     },
   },
   watch: {
-    contrac(newVal, oldVal) {
-      this.params.hetongId = newVal
-      // console.log(newVal,oldVal)
-      this.hetongId1 = newVal
-      this.loadData(1)
-      //this.setSyselements(newVal)
-    },
+    // contrac(newVal, oldVal) {
+    //   this.params.hetongId = newVal
+    //   // console.log(newVal,oldVal)
+    //   this.hetongId1 = newVal
+    //   debugger;
+    //   this.loadData(1)
+    //   //this.setSyselements(newVal)
+    // },
+    'contrac': {
+      handler(newVal){
+        this.params.hetongId = newVal
+        // console.log(newVal,oldVal)
+        this.hetongId1 = newVal
+        // debugger;
+        this.loadData(1)
+      },
+      //深度监听
+      deep: true,
+      immediate: true,
+    }
+
   },
   data() {
     return {
@@ -362,6 +383,7 @@ export default {
     this.setSyselements(this.contrac)
     // this.setSysbolOptions()
     this.queryContractType()
+    // this.loadData(1)
   },
   methods: {
     //查询合同编号
@@ -404,6 +426,11 @@ export default {
           this.$message.warning(res.message)
         }
       })
+    },
+    filterOption(input, option) {
+      return (
+        option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
+      );
     },
     //加载数据
     loadData(arg) {

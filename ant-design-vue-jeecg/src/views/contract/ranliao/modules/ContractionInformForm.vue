@@ -294,6 +294,7 @@ export default {
         this.form.setFieldsValue(
           pick(
             this.model,
+            'id',
             'HeTongBianHao',
             'voucherno',
             'WZCode',
@@ -361,6 +362,7 @@ export default {
       this.form.setFieldsValue(
         pick(
           row,
+          'id',
           'HeTongBianHao',
           'voucherno',
           'WZCode',

@@ -14,6 +14,9 @@
         class="j-table-force-nowrap"
         @change="handleTableChange"
       >
+        <template slot="ellipsisSlot" slot-scope="text">
+          <j-ellipsis :value="rmHtmlLabel(text)" :length="3"></j-ellipsis>
+        </template>
         <span slot="action" slot-scope="text, record">
           <a @click="handleEdit(record)">结算</a>
           <a-divider type="vertical" />
@@ -35,6 +38,7 @@ import DetailList from '@/components/tools/DetailList'
 import { JeecgListMixin } from '@/mixins/JeecgListMixin'
 import { filterObj } from '@/utils/util'
 import ContractInformationModal from './modules/ContractInformationModal'
+import JEllipsis from '@/components/jeecg/JEllipsis'
 const DetailListItem = DetailList.Item
 
 export default {
@@ -44,6 +48,7 @@ export default {
     DetailList,
     DetailListItem,
     ContractInformationModal,
+    JEllipsis,
   },
 
   data() {
@@ -124,7 +129,7 @@ export default {
           align: 'center',
           dataIndex: 'taxes',
         },
-         {
+        {
           title: '结算税金',
           align: 'center',
           dataIndex: 'settlementTaxes',
@@ -154,6 +159,7 @@ export default {
           title: '备注',
           align: 'center',
           dataIndex: 'remarks',
+          scopedSlots: { customRender: 'ellipsisSlot' },
         },
         {
           title: '结算状态',
@@ -207,7 +213,10 @@ export default {
   },
   methods: {
     initDictConfig() {},
-
+    //剔除html标签
+    rmHtmlLabel(str) {
+      return str.replace(/<[^>]+>/g, '')
+    },
     //查询合同信息
     htlist(hth) {
       this.hthone = hth
@@ -243,7 +252,8 @@ export default {
     handleDelete(id) {
       deleteAction(this.url.delete, { id: id }).then((res) => {
         if (res.success) {
-          this.loadData()
+          let hth = this.hthone
+          this.htlist(hth)
         } else {
           that.$message.warning(res.message)
         }
