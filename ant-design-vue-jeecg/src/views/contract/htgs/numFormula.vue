@@ -260,7 +260,7 @@ export default {
       var param = Object.assign(sqp, this.params, this.isorter)
       param.field = this.getQueryField()
       param.pageNo = this.ipagination.current
-      param.pageSize = this.ipagination.pageSize
+      param.pageSize = 20
       // var params = this.getQueryParams();//查询条件
       this.loading = true
       if (param.hetongId != '') {
@@ -320,11 +320,14 @@ export default {
         })
       }
     },
-    /** 表单验证后保存数据 */
+      /** 表单验证后保存数据 */
     handleTableCheck() {
       this.$refs.editableTable.getValues((error, values) => {
         // console.log(values)
         if (error === 0) {
+          let id, left, right, leftFuHao, rightFuHao, element
+          //定义一个提交标志项
+          let submitMark = 1
           values.forEach((item, idx) => {
             //处理数据信息展示
             if (item.leftsysbol == '<') {
@@ -343,11 +346,140 @@ export default {
               values[idx].isreduce = '1'
             }
             values[idx].hetongId = this.contrac
+
+            console.log(item)
+            id = item.id
+            left = item.leftnum
+            leftFuHao = item.leftsysbol
+            element = item.elements
+            right = item.rightnum
+            rightFuHao = item.rightsysbol
+            values.forEach((itxItem, index) => {
+              if (itxItem.id != id) {
+                  //第一种情况左值不为空，右值为空,左符号值为<
+                  if (left != '' && right == '' && leftFuHao == '0') {
+                    if (parseFloat(itxItem.leftnum) >= parseFloat(left) || parseFloat(itxItem.rightnum) > parseFloat(left)) {
+                      // console.log("公式有错误")
+                      this.$message.error('第' + (index + 1) + '行' + element + '有重复')
+                      submitMark = 0
+                    }
+                  }
+                  //第二种情况左值不为空，右值为空，左符号值为≤
+                  if (left != '' && right == '' && leftFuHao == '1') {
+                    if (parseFloat(itxItem.leftnum) >= parseFloat(left) || parseFloat(itxItem.rightnum) > parseFloat(left)) {
+                      // console.log("公式有错误")
+                      this.$message.error('第' + (index + 1) + '行' + element + '有重复')
+                      // this.$message.error(element + '有重复')
+                      submitMark = 0
+                    }
+                  }
+                  //第三种情况左值为空，右值不为空，右符号为<
+                  if (left == '' && right != '' && rightFuHao == '0') {
+                    if (parseFloat(itxItem.leftnum) < parseFloat(right)) {
+                      // console.log("公式有错误")
+                      this.$message.error('第' + (index + 1) + '行' + element + '有重复')
+                      // this.$message.error(element + '有重复')
+                      submitMark = 0
+                    }
+                  }
+                  //第四种情况左值为空，右值不为空，右符号为≤
+                  if (left == '' && right != '' && rightFuHao == '1') {
+                    if (parseFloat(itxItem.leftnum) < parseFloat(right)) {
+                      // console.log("公式有错误")
+                      this.$message.error('第' + (index + 1) + '行' + element + '有重复')
+                      submitMark = 0
+                    }
+                  }
+                  //第五种情况左符号为<,右符号为<,左右值都不为空
+                  if (left != '' && right != '' && leftFuHao == '0' && rightFuHao == '0') {
+                    // console.log('left:',left)
+                    // console.log('right:',right)
+                    // console.log('leftnum:',parseFloat(itxItem.leftnum))
+                    // console.log('rightnum:',parseFloat(itxItem.rightnum))
+                    // if((left >parseFloat(itxItem.leftnum) && left < parseFloat(itxItem.rightnum))){
+                    //   this.$message.error('第'+(index+1)+'行'+element+'有重复')
+                    //   submitMark = 0
+                    // }
+                    // debugger;
+                    if (itxItem.leftsysbol == '0') {
+                      if (parseFloat(itxItem.leftnum) > parseFloat(left) && parseFloat(itxItem.leftnum) < parseFloat(right)) {
+                        this.$message.error('第' + (index + 1) + '行' + element + '有重复')
+                        submitMark = 0
+                      }
+                    } else if (itxItem.leftsysbol == '1') {
+                      if (parseFloat(itxItem.leftnum) > parseFloat(left) && parseFloat(itxItem.leftnum) < parseFloat(right)) {
+                        this.$message.error('第' + (index + 1) + '行' + element + '有重复')
+                        submitMark = 0
+                      }
+                    }
+                  }
+                  
+                  //第六种情况左符号为≤，右符号为<，左右值都不为空
+                  if (left != '' && right != '' && leftFuHao == '1' && rightFuHao == '0') {
+                    // debugger;
+                    if (itxItem.leftsysbol == '0') {
+                      if (parseFloat(itxItem.leftnum) > parseFloat(left) && parseFloat(itxItem.leftnum) < parseFloat(right)) {
+                        this.$message.error('第' + (index + 1) + '行' + element + '有重复')
+                        submitMark = 0
+                      }
+                    } else if (itxItem.leftsysbol == '1') {
+                      if (parseFloat(itxItem.leftnum) > parseFloat(left) && parseFloat(itxItem.leftnum) < parseFloat(right)) {
+                        this.$message.error('第' + (index + 1) + '行' + element + '有重复')
+                        submitMark = 0
+                      }
+                    }
+                  }
+                  //第七种情况左符号为<，右符号为≤，左右值都不为空
+                  if (left != '' && right != '' && leftFuHao == '0' && rightFuHao == '1') {
+                    if (itxItem.leftsysbol == '0') {
+                      if (parseFloat(itxItem.leftnum) > parseFloat(left) && parseFloat(itxItem.leftnum) < parseFloat(right)) {
+                        this.$message.error('第' + (index + 1) + '行' + element + '有重复')
+                        submitMark = 0
+                      }
+                    } else if (itxItem.leftsysbol == '1') {
+                      if (parseFloat(itxItem.leftnum) > parseFloat(left) && parseFloat(itxItem.leftnum) <= parseFloat(right)) {
+                        this.$message.error('第' + (index + 1) + '行' + element + '有重复')
+                        submitMark = 0
+                      }
+                    }
+                  }
+                  //第八种情况左符号为≤，右符号为≤，左右值都不为空
+                  if (left != '' && right != '' && leftFuHao == '1' && rightFuHao == '1') {
+                    if (itxItem.leftsysbol == '0') {
+                      if (parseFloat(itxItem.leftnum) > parseFloat(left) && parseFloat(itxItem.leftnum) < parseFloat(right)) {
+                        this.$message.error('第' + (index + 1) + '行' + element + '有重复')
+                        submitMark = 0
+                      }
+                    } else if (itxItem.leftsysbol == '1') {
+                      if (parseFloat(itxItem.leftnum) > parseFloat(left) && parseFloat(itxItem.leftnum) <= parseFloat(right)) {
+                        this.$message.error('第' + (index + 1) + '行' + element + '有重复')
+                        submitMark = 0
+                      }
+                    }
+                  }
+                  //第九种
+                  if (parseFloat(left) == parseFloat(itxItem.leftnum) && parseFloat(right) == parseFloat(itxItem.rightnum)) {
+                    this.$message.error('第' + (index + 1) + '行' + element + '有重复')
+                    submitMark = 0
+                  }
+                  //第十种
+                  if (parseFloat(left) == parseFloat(itxItem.leftnum) && parseFloat(itxItem.rightnum) > left) {
+                    this.$message.error('第' + (index + 1) + '行' + element + '有重复')
+                    submitMark = 0
+                  }
+                }
+              }
+            )
+            
           })
           // console.log('2222', values)
-          httpAction(this.url.savaHtGongShi, values, 'post').then((res) => {
-            this.$message.success(res.message)
-          })
+          if (submitMark == 1 && values.length != 0) {
+            httpAction(this.url.savaHtGongShi, values, 'post').then((res) => {
+              this.$message.success(res.message)
+            })
+          }else if (submitMark == 1 && values.length == 0){
+            this.$message.error('数据不可为空')
+          }
         } else {
           this.$message.error('验证未通过')
         }

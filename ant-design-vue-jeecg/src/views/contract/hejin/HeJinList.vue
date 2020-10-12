@@ -143,7 +143,7 @@
           @change="handleTableChange"
         >
           <template slot="ellipsisSlot" slot-scope="text">
-            <j-ellipsis :value="rmHtmlLabel(text)" :length="3"></j-ellipsis>
+            <j-ellipsis :value="text" :length="3"></j-ellipsis>
           </template>
         </a-table>
       </div>
@@ -565,10 +565,7 @@ export default {
   },
   methods: {
     initDictConfig() {},
-    //剔除html标签
-    rmHtmlLabel(str) {
-      return str.replace(/<[^>]+>/g, '')
-    },
+
     //判断合同来源是否选中
     checkend() {
       let ly = this.hetongly

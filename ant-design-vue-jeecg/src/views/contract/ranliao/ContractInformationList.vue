@@ -17,7 +17,7 @@
         @expand="handleExpand"
       >
         <template slot="ellipsisSlot" slot-scope="text">
-          <j-ellipsis :value="rmHtmlLabel(text)" :length="3"></j-ellipsis>
+          <j-ellipsis :value="text" :length="3"></j-ellipsis>
         </template>
         <span slot="action" slot-scope="text, record">
           <a @click="handleEditjsd(record.id)" v-if="record.settlementIdentification === 0 && record.manual === 1"
@@ -234,10 +234,7 @@ export default {
   },
   methods: {
     initDictConfig() {},
-    //剔除html标签
-    rmHtmlLabel(str) {
-      return str.replace(/<[^>]+>/g, '')
-    },
+
     //展开行信息
     handleExpand(expanded, record) {
       this.expandedRowKeys = []

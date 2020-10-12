@@ -95,7 +95,7 @@
           @change="handleTableChange"
         >
           <template slot="ellipsisSlot" slot-scope="text">
-            <j-ellipsis :value="rmHtmlLabel(text)" :length="5"></j-ellipsis>
+            <j-ellipsis :value="text" :length="5"></j-ellipsis>
           </template>
         </a-table>
       </div>
@@ -275,10 +275,7 @@ export default {
   },
   methods: {
     initDictConfig() {},
-    //剔除html标签
-    rmHtmlLabel(str) {
-      return str.replace(/<[^>]+>/g, '')
-    },
+ 
     //获取凭证号
     findpzh() {
       getAction(this.url.findpzh).then((res) => {

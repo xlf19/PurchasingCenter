@@ -106,7 +106,6 @@ export default {
     DetailList,
     DetailListItem,
   },
-  inject: ['reload'],
   props: {
     contrac: {
       type: String,

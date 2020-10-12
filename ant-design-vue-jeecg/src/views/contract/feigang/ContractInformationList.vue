@@ -15,7 +15,7 @@
         @change="handleTableChange"
       >
         <template slot="ellipsisSlot" slot-scope="text">
-          <j-ellipsis :value="rmHtmlLabel(text)" :length="3"></j-ellipsis>
+          <j-ellipsis :value="text" :length="3"></j-ellipsis>
         </template>
         <span slot="action" slot-scope="text, record">
           <a @click="handleEdit(record)">结算</a>
@@ -213,10 +213,7 @@ export default {
   },
   methods: {
     initDictConfig() {},
-    //剔除html标签
-    rmHtmlLabel(str) {
-      return str.replace(/<[^>]+>/g, '')
-    },
+
     //查询合同信息
     htlist(hth) {
       this.hthone = hth
