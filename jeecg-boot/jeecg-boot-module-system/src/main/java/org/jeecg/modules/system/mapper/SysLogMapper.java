@@ -23,7 +23,13 @@ public interface SysLogMapper extends BaseMapper<SysLog> {
 	 * @功能：清空所有日志记录
 	 */
 	public void removeAll();
-
+	/**
+	 *   首页：根据时间统计访问top6
+	 * @param dayStart
+	 * @param dayEnd
+	 * @return
+	 */
+	List<Map<String,Object>> findVisitTopSixCount(@Param("dayStart") Date dayStart, @Param("dayEnd") Date dayEnd, @Param("dbType") String dbType);
 	/**
 	 * 获取系统总访问次数
 	 *

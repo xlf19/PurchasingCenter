@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -192,7 +193,32 @@ public class LoginController {
 		result.setResult(oConvertUtils.toLowerCasePageList(list));
 		return result;
 	}
-	
+
+	/**
+	 * 获取访问量
+	 * @return
+	 */
+	@GetMapping("visitTopSixInfo")
+	public Result<List<Map<String,Object>>> visitTopSixInfo() {
+		Result<List<Map<String,Object>>> result = new Result<List<Map<String,Object>>>();
+		Calendar calendar = new GregorianCalendar();
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+		calendar.add(Calendar.MONTH, 0);
+		calendar.set(Calendar.DAY_OF_MONTH, 1);
+		Date dayStart = calendar.getTime();
+		calendar.set(Calendar.HOUR_OF_DAY, 23);
+		calendar.set(Calendar.MINUTE, 59);
+		calendar.set(Calendar.SECOND, 59);
+		calendar.add(Calendar.MONTH, 1);
+		calendar.set(Calendar.DAY_OF_MONTH, 0);
+		Date dayEnd = calendar.getTime();
+		List<Map<String,Object>> list = logService.findVisitTopSixCount(dayStart, dayEnd);
+		result.setResult(oConvertUtils.toLowerCasePageList(list));
+		return result;
+	}
 	
 	/**
 	 * 登陆成功选择用户当前部门

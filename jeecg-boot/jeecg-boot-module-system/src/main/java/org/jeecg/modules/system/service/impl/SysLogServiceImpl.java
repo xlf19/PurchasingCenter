@@ -66,4 +66,13 @@ public class SysLogServiceImpl extends ServiceImpl<SysLogMapper, SysLog> impleme
 		}
 		return null;
 	}
+	@Override
+	public List<Map<String, Object>> findVisitTopSixCount(Date dayStart, Date dayEnd) {
+		try {
+			String dbType = sysBaseAPI.getDatabaseType();
+			return sysLogMapper.findVisitTopSixCount(dayStart, dayEnd,dbType);
+		} catch (SQLException e) {
+		}
+		return null;
+	}
 }

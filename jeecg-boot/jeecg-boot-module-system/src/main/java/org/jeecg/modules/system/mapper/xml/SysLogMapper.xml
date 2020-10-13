@@ -21,7 +21,19 @@
     <select id="findTodayIp" resultType="long">
         select count(distinct(ip)) from sys_log where log_type = 1 and create_time &gt;= #{dayStart} and create_time &lt; #{dayEnd}
     </select>
-    
+
+    <!-- 首页访问统计 -->
+    <select id="findVisitTopSixCount" resultType="java.util.HashMap">
+        <if test="dbType == 'SQLSERVER'">
+            select top (6) userid,count(*) as visit
+            from sys_log
+            where log_type = 1
+            and userid is not null  and create_time &gt;= #{dayStart} and create_time &lt; #{dayEnd}
+            group by userid
+            order by visit desc
+        </if>
+    </select>
+
    	<!-- 首页访问统计 -->
     <select id="findVisitCount" resultType="java.util.HashMap">
        <if test="dbType == 'MYSQL'">

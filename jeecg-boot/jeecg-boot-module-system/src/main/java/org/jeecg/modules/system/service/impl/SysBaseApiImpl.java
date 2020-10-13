@@ -116,6 +116,15 @@ public class SysBaseApiImpl implements ISysBaseAPI {
 			sysLog.setUserid(sysUser.getUsername());
 			sysLog.setUsername(sysUser.getRealname());
 
+		}else{
+			// 查询用户信息
+			if(logType == 1){
+				LoginUser user = getUserByName(LogContent.split(":")[1].split(",")[0].trim());
+				if(user!=null){
+					sysLog.setUserid(user.getUsername());
+					sysLog.setUsername(user.getRealname());
+				}
+			}
 		}
 		sysLog.setCreateTime(new Date());
 		//保存系统日志
