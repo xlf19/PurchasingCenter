@@ -89,17 +89,6 @@
                     </a-card>
                   </a-list-item>
                 </a-list>
-
-                <!-- <a-card :loading="loading" :bordered="false" :body-style="{ padding: '0' }">
-                  <a-row>
-                    <a-col :xl="16" :lg="12" :md="12" :sm="24" :xs="24">
-                      <bar title="销售额排行" :dataSource="barData" />
-                    </a-col>
-                    <a-col :xl="8" :lg="12" :md="12" :sm="24" :xs="24">
-                      <rank-list title="门店销售排行榜" :list="rankList" />
-                    </a-col>
-                  </a-row>
-                </a-card> -->
               </a-row>
             </div>
           </a-card>
