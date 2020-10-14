@@ -12,7 +12,7 @@
               size="large"
               v-decorator="['username',validatorRules.username,{ validator: this.handleUsernameOrEmail }]"
               type="text"
-              placeholder="请输入帐户名 / jeecg"
+              placeholder="请输入帐户名 "
             >
               <a-icon slot="prefix" type="user" :style="{ color: 'rgba(0,0,0,.25)' }" />
             </a-input>
@@ -24,7 +24,7 @@
               size="large"
               type="password"
               autocomplete="false"
-              placeholder="密码 / 123456"
+              placeholder="请输入密码 "
             >
               <a-icon slot="prefix" type="lock" :style="{ color: 'rgba(0,0,0,.25)' }" />
             </a-input>
@@ -49,7 +49,7 @@
             </a-col>
           </a-row>-->
         </a-tab-pane>
-        <a-tab-pane key="tab2" tab="手机号登陆">
+        <!-- <a-tab-pane key="tab2" tab="手机号登陆">
           <a-form-item>
             <a-input
               v-decorator="['mobile',validatorRules.mobile]"
@@ -84,10 +84,10 @@
               ></a-button>
             </a-col>
           </a-row>
-        </a-tab-pane>
+        </a-tab-pane> -->
       </a-tabs>
 
-      <a-form-item>
+      <!-- <a-form-item>
         <a-checkbox
           v-decorator="['rememberMe', {initialValue: true, valuePropName: 'checked'}]"
         >自动登陆</a-checkbox>
@@ -97,7 +97,7 @@
           class="forge-password"
           style="float: right;margin-right: 10px"
         >注册账户</router-link>
-      </a-form-item>
+      </a-form-item> -->
 
       <a-form-item style="margin-top:24px">
         <a-button
@@ -111,7 +111,7 @@
         >确定</a-button>
       </a-form-item>
 
-      <div class="user-login-other">
+      <!-- <div class="user-login-other">
         <span>其他登陆方式</span>
         <a @click="onThirdLogin('github')" title="github">
           <a-icon class="item-icon" type="github"></a-icon>
@@ -122,7 +122,7 @@
         <a @click="onThirdLogin('dingtalk')" title="钉钉">
           <a-icon class="item-icon" type="dingding"></a-icon>
         </a>
-      </div>
+      </div> -->
     </a-form>
 
     <two-step-captcha

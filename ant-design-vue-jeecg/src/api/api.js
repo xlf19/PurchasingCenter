@@ -83,6 +83,7 @@ const doReovkeData = (params) => getAction("/sys/annountCement/doReovkeData", pa
 const getLoginfo = (params) => getAction("/sys/loginfo", params);
 const getVisitInfo = (params) => getAction("/sys/visitInfo", params);
 const getVisitTopSixInfo = (params) => getAction("/sys/visitTopSixInfo", params);
+const getVisitSetInfo = (params)=>getAction("/sys/visitSetInfo",params);
 
 // 根据部门主键查询用户信息
 const queryUserByDepId = (params) => getAction("/sys/user/queryUserByDepId", params);
@@ -105,6 +106,7 @@ export const transitRESTful = {
 
 export {
   getVisitTopSixInfo,
+  getVisitSetInfo,
   addRole,
   editRole,
   checkRoleCode,

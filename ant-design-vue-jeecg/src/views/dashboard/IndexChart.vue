@@ -1,68 +1,25 @@
 <template>
   <div class="page-header-index-wide">
-    <a-row :gutter="24">
-      <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
-        <chart-card :loading="loading" title="总销售额" total="￥126,560">
-          <a-tooltip title="指标说明" slot="action">
-            <a-icon type="info-circle-o" />
-          </a-tooltip>
-          <div>
-            <trend flag="up" style="margin-right: 16px">
-              <span slot="term">周同比</span>
-              12%
-            </trend>
-            <trend flag="down">
-              <span slot="term">日同比</span>
-              11%
-            </trend>
-          </div>
-          <template slot="footer">日均销售额<span>￥ 234.56</span></template>
-        </chart-card>
-      </a-col>
-      <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
-        <chart-card :loading="loading" title="订单量" :total="8846 | NumberFormat">
-          <a-tooltip title="指标说明" slot="action">
-            <a-icon type="info-circle-o" />
-          </a-tooltip>
-          <div>
-            <mini-area />
-          </div>
-          <template slot="footer"
-            >日订单量<span> {{ '1234' | NumberFormat }}</span></template
-          >
-        </chart-card>
-      </a-col>
-      <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
-        <chart-card :loading="loading" title="支付笔数" :total="6560 | NumberFormat">
-          <a-tooltip title="指标说明" slot="action">
-            <a-icon type="info-circle-o" />
-          </a-tooltip>
-          <div>
-            <mini-bar :height="40" />
-          </div>
-          <template slot="footer">转化率 <span>60%</span></template>
-        </chart-card>
-      </a-col>
-      <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
-        <chart-card :loading="loading" title="运营活动效果" total="78%">
-          <a-tooltip title="指标说明" slot="action">
-            <a-icon type="info-circle-o" />
-          </a-tooltip>
-          <div>
-            <mini-progress color="rgb(19, 194, 194)" :target="80" :percentage="78" :height="8" />
-          </div>
-          <template slot="footer">
-            <trend flag="down" style="margin-right: 16px">
-              <span slot="term">同周比</span>
-              12%
-            </trend>
-            <trend flag="up">
-              <span slot="term">日环比</span>
-              80%
-            </trend>
-          </template>
-        </chart-card>
-      </a-col>
+    <a-row :gutter="24" style="margin-left: 1px; margin-right: 1px">
+      <a-list :dataSource="visitSetInfo" :grid="{ gutter: 16, column: 4 }">
+        <a-list-item slot="renderItem" slot-scope="item">
+          <chart-card :loading="loading" :title="item.name" :total="item.allnum + ''">
+            <a-tooltip title="指标说明" slot="action">
+              <a-icon type="info-circle-o" />
+            </a-tooltip>
+            <template slot="footer">
+              <trend flag="down" style="margin-right: 16px">
+                <span slot="term">本月</span>
+                {{ item.monthallnum }}
+              </trend>
+              <trend flag="up">
+                <span slot="term">最近一周</span>
+                {{ item.weekallnum }}
+              </trend>
+            </template>
+          </chart-card>
+        </a-list-item>
+      </a-list>
     </a-row>
 
     <a-row :gutter="24" style="margin-left: 1px; margin-right: 1px">
@@ -144,16 +101,9 @@ import Bar from '@/components/chart/Bar'
 import LineChartMultid from '@/components/chart/LineChartMultid'
 import HeadInfo from '@/components/tools/HeadInfo.vue'
 import Trend from '@/components/Trend'
-import { getLoginfo, getVisitInfo,getVisitTopSixInfo } from '@/api/api'
+import { getLoginfo, getVisitInfo, getVisitTopSixInfo, getVisitSetInfo } from '@/api/api'
 import { initDictOptions, filterDictText } from '@/components/dict/JDictSelectUtil'
 
-const rankList = []
-for (let i = 0; i < 7; i++) {
-  rankList.push({
-    name: '白鹭岛 ' + (i + 1) + ' 号店',
-    total: 1234.56 - i * 100,
-  })
-}
 const barData = []
 for (let i = 0; i < 12; i += 1) {
   barData.push({
@@ -181,12 +131,12 @@ export default {
       principalDictOptions: [],
       loading: true,
       center: null,
-      rankList,
       barData,
       loginfo: {},
       visitFields: ['ip', 'visit'],
       visitInfo: [],
       visitTopSixInfo: [],
+      visitSetInfo: [],
       indicator: <a-icon type="loading" style="font-size: 24px" spin />,
     }
   },
@@ -198,12 +148,18 @@ export default {
     //初始化字典 - 项目状态
     initDictOptions('sys_user,realname,username').then((res) => {
       if (res.success) {
-        console.log(res.result)
         this.principalDictOptions = res.result
       }
     })
   },
   methods: {
+    handleColor(index) {
+      if (index % 2 == 0) {
+        return 'rgb(19, 194, 194)'
+      } else {
+        return 'red'
+      }
+    },
     getRealname(text) {
       return filterDictText(this.principalDictOptions, text)
     },
@@ -223,8 +179,12 @@ export default {
       })
       getVisitTopSixInfo().then((res) => {
         if (res.success) {
-           console.log(res.result)
           this.visitTopSixInfo = res.result
+        }
+      })
+      getVisitSetInfo().then((res) => {
+        if (res.success) {
+          this.visitSetInfo = res.result
         }
       })
     },
