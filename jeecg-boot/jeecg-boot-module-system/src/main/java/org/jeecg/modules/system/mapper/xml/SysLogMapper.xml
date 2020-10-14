@@ -77,5 +77,54 @@
          order by CONVERT(varchar(100), create_time, 23) asc	  
      </if>
     </select>
+    <!-- 首页访问统计 -->
+    <select id="findVisitSetCount" resultType="java.util.HashMap">
+    <if test="dbType == 'SQLSERVER'">
+        SELECT '合同总数' as name, t1.AllNum,t2.monthAllNum,t3.weekAllNum
+        FROM
+        (select count(*) as AllNum FROM  contract_information where is_delete=0 ) as t1
+        left join
+        (select count(*) as monthAllNum FROM  contract_information where is_delete=0 and create_time &gt;= #{monthStart} and create_time &lt; #{monthEnd}) as t2
+        on 1=1
+        left join
+        (select count(*) as weekAllNum FROM contract_information where is_delete=0 and create_time &gt;= #{weekStart} and create_time &lt; #{weekEnd}) as t3
+        on 1=1
 
+        union
+
+        SELECT '未结算' as name, t1.AllNum,t2.monthAllNum,t3.weekAllNum
+        FROM
+        (select count(*) as AllNum FROM  contract_information where is_delete=0 and settlement_identification=0 ) as t1
+        left join
+        (select count(*) as monthAllNum FROM  contract_information where is_delete=0 and settlement_identification=0 and create_time &gt;= #{monthStart} and create_time &lt; #{monthEnd}) as t2
+        on 1=1
+        left join
+        (select count(*) as weekAllNum FROM  contract_information where is_delete=0 and settlement_identification=0 and create_time &gt;= #{weekStart} and create_time &lt; #{weekEnd}) as t3
+        on 1=1
+
+        union
+
+        SELECT '结算成功' as name, t1.AllNum,t2.monthAllNum,t3.weekAllNum
+        FROM
+        (select count(*) as AllNum FROM  contract_information where is_delete=0 and settlement_identification=1 ) as t1
+        left join
+        (select count(*) as monthAllNum FROM  contract_information where is_delete=0 and settlement_identification=1 and create_time &gt;= #{monthStart} and create_time &lt; #{monthEnd}) as t2
+        on 1=1
+        left join
+        (select count(*) as weekAllNum FROM  contract_information where is_delete=0 and settlement_identification=1 and create_time &gt;= #{weekStart} and create_time &lt; #{weekEnd}) as t3
+        on 1=1
+
+        union
+
+        SELECT '结算失败' as name, t1.AllNum,t2.monthAllNum,t3.weekAllNum
+        FROM
+        (select count(*) as AllNum FROM  contract_information where is_delete=0 and settlement_identification=2 ) as t1
+        left join
+        (select count(*) as monthAllNum FROM  contract_information where is_delete=0 and settlement_identification=2 and create_time &gt;= #{monthStart} and create_time &lt; #{monthEnd}) as t2
+        on 1=1
+        left join
+        (select count(*) as weekAllNum FROM  contract_information where is_delete=0 and settlement_identification=2 and create_time &gt;= #{weekStart} and create_time &lt; #{weekEnd}) as t3
+        on 1=1
+    </if>
+    </select>
 </mapper>

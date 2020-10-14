@@ -75,4 +75,14 @@ public class SysLogServiceImpl extends ServiceImpl<SysLogMapper, SysLog> impleme
 		}
 		return null;
 	}
+
+	@Override
+	public List<Map<String, Object>> findVisitSetCount(Date monthStart, Date monthEnd, Date weekStart, Date weekEnd) {
+		try {
+			String dbType = sysBaseAPI.getDatabaseType();
+			return sysLogMapper.findVisitSetCount(monthStart, monthEnd, weekStart, weekEnd, dbType);
+		} catch (SQLException e) {
+		}
+		return null;
+	}
 }

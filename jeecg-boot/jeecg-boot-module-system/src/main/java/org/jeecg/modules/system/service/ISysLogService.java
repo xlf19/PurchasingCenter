@@ -61,4 +61,14 @@ public interface ISysLogService extends IService<SysLog> {
 	 * @return
 	 */
 	List<Map<String,Object>> findVisitTopSixCount(Date dayStart, Date dayEnd);
+
+	/**
+	 *   首页：根据时间统计访问数量排行6
+	 * @param monthStart
+	 * @param monthEnd
+	 * @param weekStart
+	 * @param weekEnd
+	 * @return
+	 */
+	List<Map<String,Object>> findVisitSetCount(Date monthStart, Date monthEnd, Date weekStart, Date weekEnd);
 }
