@@ -14,7 +14,7 @@ public interface HeTongMapper extends BaseMapper<T> {
     //获取收货单位
     public List<Map<Object,String>> findshdw();
 
-    //获取供货单位和物资名称
+    //获取废钢/生铁/精粉/燃料供货单位和物资名称
     public Object findOne(@Param("hth")String hth);
 
     //获取生铁合同信息
