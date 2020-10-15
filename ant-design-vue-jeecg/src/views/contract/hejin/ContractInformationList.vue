@@ -168,9 +168,11 @@ export default {
           dataIndex: 'settlementIdentification',
           customRender: function (t, r, index) {
             if (t === 1) {
-              return '结算'
-            } else {
+              return '结算成功'
+            } else if (t === 0) {
               return '未结算'
+            } else {
+              return '结算失败'
             }
           },
         },

@@ -1,23 +1,18 @@
 <template>
-  <a-card :bordered="false" :class="{'abcdefg':true}">
+  <a-card :bordered="false" :class="{ abcdefg: true }">
     <div class="table-page-search-wrapper">
       <a-form layout="inline" @keyup.enter.native="searchQuery" :form="form">
         <a-row :gutter="24">
           <a-col :xl="6" :lg="7" :md="8" :sm="24">
             <a-form-item label="合同编号">
-              <a-select
-                v-model="queryParam.contractNo"
-                show-search
-                allowClear
-                @search="findHt"
-                @change="findOne"
-              >
+              <a-select v-model="queryParam.contractNo" show-search allowClear @search="findHt" @change="findOne">
                 <a-select-option
                   placeholder="请选择合同号"
                   :value="item"
-                  v-for="(item,index) in contractNos"
+                  v-for="(item, index) in contractNos"
                   :key="index"
-                >{{item}}</a-select-option>
+                  >{{ item }}</a-select-option
+                >
               </a-select>
             </a-form-item>
           </a-col>
@@ -27,14 +22,15 @@
                 <a-select-option
                   placeholder="请选择凭证号"
                   :value="item"
-                  v-for="(item,index) in voucherNos"
+                  v-for="(item, index) in voucherNos"
                   :key="index"
-                >{{item}}</a-select-option>
+                  >{{ item }}</a-select-option
+                >
               </a-select>
             </a-form-item>
           </a-col>
           <a-col :xl="6" :lg="7" :md="8" :sm="24">
-            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+            <span style="float: left; overflow: hidden" class="table-page-search-submitButtons">
               <a-button type="primary" @click="searchHtbh" icon="search" ghost>查询</a-button>
               <a-button v-print="'#printContent'" type="primary" style="margin-left: 8px" ghost>打印</a-button>
             </span>
@@ -45,33 +41,32 @@
 
     <section ref="print" id="printContent" class="abcdefg">
       <div style="text-align: center">
-        <p style="font-size: 24px;font-weight: 800">炼钢生铁&nbsp;&nbsp;&nbsp;自动结算单</p>
+        <p style="font-size: 24px; font-weight: 800">炼钢生铁&nbsp;&nbsp;&nbsp;自动结算单</p>
       </div>
       <a-row :gutter="24" style="text-align: left">
         <a-col :span="6"></a-col>
         <a-col :span="8">
-          <span>执行:{{queryParam.contractNo}} 合同标准</span>
+          <span>执行:{{ queryParam.contractNo }} 合同标准</span>
         </a-col>
         <a-col :span="9">
-          <span>供货单位:{{supplier}}</span>
+          <span>供货单位:{{ supplier }}</span>
         </a-col>
       </a-row>
-      <a-row :gutter="24" style="text-align: left;margin-top: 10px">
+      <a-row :gutter="24" style="text-align: left; margin-top: 10px">
         <a-col :span="6"></a-col>
         <a-col :span="8">
-          <span>收货单位:{{receivingUnit}}</span>
+          <span>收货单位:{{ receivingUnit }}</span>
         </a-col>
         <a-col :span="9">
-          <span>凭证号:汇--{{queryParam.voucherNo}}</span>
+          <span>凭证号:汇--{{ queryParam.voucherNo }}</span>
         </a-col>
       </a-row>
       <!--签字-->
-      <div style="margin-top: 10px;">
+      <div style="margin-top: 10px">
         <a-table
           ref="table"
           size="middle"
           bordered
-          style="color: black;"
           rowKey="id"
           :columns="columns"
           :dataSource="dataSource"
@@ -80,20 +75,20 @@
         ></a-table>
       </div>
       <div>
-        <a-row :gutter="24" style="text-align: center;margin-top: 10px">
+        <a-row :gutter="24" style="text-align: center; margin-top: 10px">
           <a-col :span="24">
-            <span>总贷款：{{loan}}+{{taxes}}={{zprice}}</span>
+            <span>总贷款：{{ loan }}+{{ taxes }}={{ zprice }}</span>
           </a-col>
         </a-row>
       </div>
       <div>
-        <a-row :gutter="24" style="text-align: left;margin-top: 10px">
+        <a-row :gutter="24" style="text-align: left; margin-top: 10px">
           <a-col :span="6"></a-col>
           <a-col :span="9">
-            <span>结算人：{{clearingHouse}}</span>
+            <span>结算人：{{ clearingHouse }}</span>
           </a-col>
           <a-col :span="9">
-            <span>结算日期：{{settlementDate}}</span>
+            <span>结算日期：{{ settlementDate }}</span>
           </a-col>
         </a-row>
       </div>
@@ -354,13 +349,21 @@ export default {
 }
 </script>
 <style scoped>
+.ant-table-thead {
+  border: 3px solid red;
+  padding: 5px 10px;
+}
+.ant-table-tbody {
+  border: 3px solid red;
+  padding: 5px 10px;
+}
+
 /*update_begin author:scott date:20191203 for:打印机打印的字体模糊问题 */
 * {
   color: #000000 !important;
   -webkit-tap-highlight-color: #000000 !important;
 }
 /*update_end author:scott date:20191203 for:打印机打印的字体模糊问题 */
-
 .abcdefg .ant-card-body {
   margin-left: 0%;
   margin-right: 0%;
@@ -395,4 +398,5 @@ export default {
   margin-top: 8px;
   color: #666;
 }
+
 </style>
