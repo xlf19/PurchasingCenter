@@ -10,7 +10,7 @@
           <a-form-item>
             <a-input
               size="large"
-              v-decorator="['username',validatorRules.username,{ validator: this.handleUsernameOrEmail }]"
+              v-decorator="['username', validatorRules.username, { validator: this.handleUsernameOrEmail }]"
               type="text"
               placeholder="请输入帐户名 "
             >
@@ -20,7 +20,7 @@
 
           <a-form-item>
             <a-input
-              v-decorator="['password',validatorRules.password]"
+              v-decorator="['password', validatorRules.password]"
               size="large"
               type="password"
               autocomplete="false"
@@ -99,7 +99,7 @@
         >注册账户</router-link>
       </a-form-item> -->
 
-      <a-form-item style="margin-top:24px">
+      <a-form-item style="margin-top: 24px">
         <a-button
           size="large"
           type="primary"
@@ -108,7 +108,8 @@
           :loading="loginBtn"
           @click.stop.prevent="handleSubmit"
           :disabled="loginBtn"
-        >确定</a-button>
+          >确定</a-button
+        >
       </a-form-item>
 
       <!-- <div class="user-login-other">
@@ -471,8 +472,13 @@ export default {
   }
 }
 </style>
-<style>
+<style lang="less">
 .valid-error .ant-select-selection__placeholder {
   color: #f5222d;
+}
+.user-layout-login{
+  .ant-tabs-nav .ant-tabs-tab-active{
+    color: black;
+  }
 }
 </style>
