@@ -538,7 +538,6 @@ export default {
         findHt: '/hetong/hetong/findListHt',
         findHtwz: '/hetong/hetong/findListHtwz',
         findshdw: '/hetong/hetong/findshdw',
-        findyllht: '/hetong/hetong/findyllhthj',
         findwzht: '/hetong/hetong/findwzhthj',
         htadd: '/hejin/hejin/htadd',
         finwzname: '/hetong/hetong/finwzname',

@@ -3,8 +3,8 @@
     <a-row :gutter="24" style="margin-left: 1px; margin-right: 1px">
       <a-list :dataSource="visitSetInfo" :grid="{ gutter: 16, column: 4 }">
         <a-list-item slot="renderItem" slot-scope="item">
-          <chart-card :loading="loading" :title="item.name" :total="item.allnum + ''">
-            <a-tooltip title="指标说明" slot="action">
+          <chart-card :loading="loading" :style="{background: item.colorBg}" :title="item.name" :total="item.allnum + ''">
+            <a-tooltip :title="item.introInfo" slot="action">
               <a-icon type="info-circle-o" />
             </a-tooltip>
             <template slot="footer">
@@ -44,6 +44,7 @@
                         </template>
                       </a-statistic>
                     </a-card>
+                    <img class="loginNumBg" :src="item.imgbg" v-if="item.imgbg !=''">
                   </a-list-item>
                 </a-list>
               </a-row>
@@ -138,6 +139,10 @@ export default {
       visitTopSixInfo: [],
       visitSetInfo: [],
       indicator: <a-icon type="loading" style="font-size: 24px" spin />,
+      img1:require('../../assets/1.png'),
+      img2:require('../../assets/2.png'),
+      img3:require('../../assets/3.png'),
+      // imgArr:[img1,img2,img3]
     }
   },
   created() {
@@ -179,12 +184,38 @@ export default {
       })
       getVisitTopSixInfo().then((res) => {
         if (res.success) {
-          this.visitTopSixInfo = res.result
+          // console.log(res.result)
+          let TopSixInfo = []
+          let colorBg = ['#e4f3e3','#45b97c','#afb4db','#faa755']
+          res.result.forEach((item,idx) =>{
+            let x = {}
+            x.userid = item.userid
+            x.visit = item.visit
+            x.imgbg = idx == 0 ? this.img1 : idx == 1 ? this.img2 : idx == 2 ? this.img3:''
+            TopSixInfo.push(x)
+          })
+          console.log(TopSixInfo)
+          this.visitTopSixInfo = TopSixInfo
         }
       })
       getVisitSetInfo().then((res) => {
         if (res.success) {
-          this.visitSetInfo = res.result
+          // console.log(res.result)
+          let InfoArr = []
+          let colorBg = ['#e4f3e3','#45b97c','#afb4db','#faa755']
+          let introInfo = ['合同总数','结算成功','结算失败','未结算']
+          res.result.forEach((item,idx) =>{
+            let x = {}
+            x.allnum = item.allnum
+            x.monthallnum = item.monthallnum
+            x.name = item.name
+            x.colorBg = colorBg[idx]
+            x.introInfo = introInfo[idx]
+            x.weekallnum = item.weekallnum
+            InfoArr.push(x)
+          })
+          // console.log(InfoArr)
+          this.visitSetInfo = InfoArr
         }
       })
     },
@@ -238,6 +269,30 @@ export default {
       font-weight: 600;
       font-size: 1rem;
     }
+  }
+
+}
+.loginNumBg{
+    width: 60px;
+    position: absolute;
+    height: 60px;
+    top: 2px;
+    right: 9px;
+}
+</style>
+<style lang="less">
+.page-header-index-wide{
+  .chart-card-title{
+    font-weight: 700;
+    color: black;
+  }
+  .ant-card-head-title{
+    font-weight: 700;
+    color: black;
+  }
+  .ant-card-head{
+    background: #fffef9;
+    padding-left: 20px;
   }
 }
 </style>

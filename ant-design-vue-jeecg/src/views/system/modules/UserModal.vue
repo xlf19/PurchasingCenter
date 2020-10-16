@@ -234,7 +234,7 @@
           //  sex:{initialValue:((!this.model.sex)?"": (this.model.sex+""))}
           workNo: {
             rules: [
-              { required: true, message: '请输入工号' },
+              // { required: true, message: '请输入工号' },
               { validator: this.validateWorkNo }
             ]
           },
