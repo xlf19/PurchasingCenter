@@ -46,7 +46,7 @@
              <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
                 <a-button type="primary" @click="searchList" setTimeout="200" icon="search">查询</a-button>
                 <a-button type="primary" @click="accountSettle" icon="account-book" style="margin-left: 8px">结算</a-button>
-                <a-button type="primary" v-has="types" @click="againAccountSettle" icon="plus" style="margin-left: 8px">再次结算</a-button>
+                <a-button type="primary" v-has="types" @click="deleteAccountSettle" icon="delete" style="margin-left: 8px">删除</a-button>
              </span>
           </a-col>
 
@@ -71,6 +71,9 @@
         class="j-table-force-nowrap"
         @change="handleTableChange"
       >
+        <template slot="ellipsisSlot" slot-scope="text">
+          <j-ellipsis :value="text" :length="5"></j-ellipsis>
+        </template>
         <div slot="expandedRowRender" style="margin: 0">
           <a-row :gutter="24" :style="{ marginBottom: '240px' }">
             <a-descriptions title="生铁合同元素数据" :column="8">
@@ -96,6 +99,7 @@ import { deleteAction, getAction, postAction } from '@/api/manage'
 import { mixinDevice } from '@/utils/mixin'
 import DetailList from '@/components/tools/DetailList'
 import { JeecgListMixin } from '@/mixins/JeecgListMixin'
+import JEllipsis from '@/components/jeecg/JEllipsis'
 import { validateDuplicateValue, randomUUID, handleStatus, filterObj } from '@/utils/util'
 const DetailListItem = DetailList.Item
 
@@ -105,6 +109,7 @@ export default {
   components: {
     DetailList,
     DetailListItem,
+    JEllipsis,
   },
   props: {
     contrac: {
@@ -247,6 +252,11 @@ export default {
           dataIndex: 'settlementQuantity',
         },
         {
+          title: '税金',
+          align: 'center',
+          dataIndex: 'taxes',
+        },
+        {
           title: '结算结果',
           align: 'center',
           dataIndex: 'settlementResults',
@@ -275,9 +285,16 @@ export default {
             }
           },
         },
+        {
+          title: '结算备注',
+          align: 'center',
+          dataIndex: 'settlementNotes',
+          scopedSlots: { customRender: 'ellipsisSlot'}
+        }
       ],
       stelements: [],
       url: {
+        deleteAccount : '/settleAccounts/settleAccounts/deleteAccountSettle',
         findContractNo: '/settleAccounts/settleAccounts/contractNos',
         findVoucherNo: '/settleAccounts/settleAccounts/voucherNos',
         findContractList: '/settleAccounts/settleAccounts/contractList',
@@ -301,6 +318,28 @@ export default {
   computed: {},
   methods: {
     initDictConfig() {},
+
+    //高权限的人删除结算失败的合同
+    deleteAccountSettle() {
+        let id = this.selectedRowKeys
+        if (id == '' || id == undefined || id == null) {
+            this.$message.warning("请选择要删除的合同！")
+        } else {
+          postAction(this.url.deleteAccount,{id:id}).then((res) =>{
+              if (res.success) {
+                  this.$message.success("删除成功！");
+                  this.dataValue = res.result
+              } else {
+                  this.$message.error(res.message);
+              }
+          })
+
+      }
+
+      //清空选着框中的数据
+      this.selectedRowKeys = []
+      this.selectionRows = []
+    },
     //再一次结算
     againAccountSettle() {
       let id = this.selectedRowKeys
@@ -356,7 +395,7 @@ export default {
       }
     },
     //合同结算
-    accountSettle() {
+     accountSettle() {
       let id = []
       if (this.selectedRowKeys == '' || this.selectedRowKeys == undefined || this.selectedRowKeys == null) {
         this.message = '请在选择合同后在结算'
@@ -378,7 +417,7 @@ export default {
         postAction(this.url.accountSettlement, { id: id }).then((res) => {
           console.log(res.result)
           if (res.success) {
-            this.dataValue = res.result //  this.ipagination.total = res.result.total
+            this.dataValue = res.result //  this.ipagination.total = res.result.total
             res.result.forEach(element => {
                if(element.settlementIdentification === 501){
                  this.$message.error("结算的订单中有条数据结算失败请根据返回的结算状况检查相应的合同公式的填写是否正确！")
@@ -443,7 +482,7 @@ export default {
           settlementIdentification : sno
         }
         this.loadData(this.arg, datas)
-        //查询完了后清空选着框中的数据
+         //查询完了后清空选着框中的数据
         this.selectedRowKeys = []
         this.selectionRows = []
       }
