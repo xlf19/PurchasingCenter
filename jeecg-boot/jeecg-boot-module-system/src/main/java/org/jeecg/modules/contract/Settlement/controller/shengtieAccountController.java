@@ -9,10 +9,12 @@ import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.aspect.annotation.AutoLog;
 import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.modules.contract.Settlement.service.impl.shengtieAccountService;
+import org.jeecg.modules.contract.Settlement.util.accountSettlementUtil;
 import org.jeecg.modules.contract.contract.entity.ContractInformation;
 
 import org.jeecg.modules.contract.elements.entity.ContractElements;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -96,32 +98,46 @@ public class shengtieAccountController {
   @ApiOperation(value = "合同结算", notes = "合同结算")
   @PostMapping(value = "/settlements")
   public Result<?> settlement(@RequestBody String id) {
+    //处理传过来的id
+    String[] ci_id = accountSettlementUtil.handleById(id);
 
-    JSONObject cid = JSONObject.parseObject(id);
-    JSONArray conid = cid.getJSONArray("id");
-    String[] ci_id = new String[conid.size()];
-    for (int j=0; j<conid.size(); j++) {
-      System.out.println(conid.get(j));
-      ci_id[j] = (String) conid.get(j);
-    }
-    List<ContractInformation> contractInformations = shengtie.contractAccount(ci_id);
-    if (contractInformations != null) {
-      for (ContractInformation c : contractInformations) {
-        if (c.getSettlementIdentification() == 2) {
-          //Result.error(501,"结算的订单中有条数据结算失败请根据返回的结算状况检查相应的合同公式的填写是否正确！");
-          c.setSettlementIdentification(501);
-          System.out.println("结算的订单中有条数据结算失败请根据返回的结算状况检查相应的合同公式的填写是否正确！");
-        } else if (c.getSettlementIdentification() == 0) {
-          //Result.error(502,"结算过程中发生了一些系统性错误，亲联系程序班");
-          c.setSettlementIdentification(502);
-          System.out.println("结算过程中发生了一些系统性错误，亲联系程序班");
+    List<ContractInformation> contractInformations = shengtie.settlementCalculation(ci_id);
+
+      if (contractInformations != null) {
+        for (ContractInformation c : contractInformations) {
+          if (c.getSettlementIdentification() == 2) {
+            //Result.error(501,"结算的订单中有条数据结算失败请根据返回的结算状况检查相应的合同公式的填写是否正确！");
+            c.setSettlementIdentification(501);
+            System.out.println("结算的订单中有条数据结算失败请根据返回的结算状况检查相应的合同公式的填写是否正确！");
+          } else if (c.getSettlementIdentification() == 0) {
+            //Result.error(502,"结算过程中发生了一些系统性错误，亲联系程序班");
+            c.setSettlementIdentification(502);
+            System.out.println("结算过程中发生了一些系统性错误，亲联系程序班");
+          }
         }
+      }else {
+        return Result.error("结算失败！");
       }
-    }else {
-      return Result.error("结算失败！");
-    }
+
+
     return Result.ok(contractInformations);
   }
 
+  //删除合同
+  @AutoLog(value = "删除合同")
+  @ApiOperation(value = "删除合同", notes = "删除合同")
+  @PostMapping(value = "/deleteAccountSettle")
+  public Result<?> deleteAccountSettle(@RequestBody String id) {
+    //处理传过来的id
+    String[] ci_id = accountSettlementUtil.handleById(id);
+
+    boolean flag = shengtie.deleteAccount(ci_id);
+    if (flag) {
+      List<ContractInformation> list = shengtie.selectConstractList(ci_id);
+      return Result.ok(list);
+    }
+
+    return Result.error("删除失败!");
+  }
 
 }

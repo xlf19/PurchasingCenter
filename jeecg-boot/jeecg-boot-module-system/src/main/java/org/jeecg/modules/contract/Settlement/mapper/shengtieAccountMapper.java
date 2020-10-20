@@ -5,6 +5,9 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.apache.ibatis.annotations.Param;
 import org.apache.poi.ss.formula.functions.T;
 import org.jeecg.modules.contract.Hetonggongshi.entity.SysHetonggongshi;
+import org.jeecg.modules.contract.Settlement.entity.ContractNumber;
+import org.jeecg.modules.contract.Settlement.entity.countElementNum;
+import org.jeecg.modules.contract.Settlement.entity.elementCalculation;
 import org.jeecg.modules.contract.SysNumgongshi.entity.SysNumgongshi;
 import org.jeecg.modules.contract.contract.entity.ContractInformation;
 
@@ -45,13 +48,10 @@ public interface shengtieAccountMapper extends BaseMapper<T> {
   List<SysHetonggongshi> findHtGs(@Param("cno") String cno);
 
   //将计算好的元素数据存入
-  Integer depositElementData(@Param("element") String element, @Param("ci_id") String ci_id, @Param("deduction_result")BigDecimal deduction_result);
+  Integer depositElementData(List<ContractElements> list);
 
   //更新合同信息表中的数据
-  Integer updataContractInformation(@Param("settlement_date")Date settlement_date,@Param("settlement_quantity")BigDecimal settlement_quantity,
-  @Param("settlemenPrice")BigDecimal settlemenPrice,@Param("settlementResults")BigDecimal settlementResults,@Param("taxes")BigDecimal taxes,
-  @Param("clearing_house")String clearing_house,@Param("settlement_identification")Integer settlement_identification,
-  @Param("id") String id);
+  Integer updataContractInformation(List<ContractInformation> list);
 
   //查询数量表的数据
   List<SysNumgongshi> selectNumgongshi(@Param("hetongId")String hetongId);
@@ -63,4 +63,15 @@ public interface shengtieAccountMapper extends BaseMapper<T> {
   //查询结算信息
   List<Map<Object,String>> hejiesuan(@Param("id")String id);
 
+  //元素数据公式匹配
+  List<elementCalculation> elementCalculations(String[] ci_id);
+
+  //计算每次结算中的元素个数
+  List<countElementNum> countElementNum(String[] ci_id);
+
+  //通过筛选后的合同唯一ID获取合同数量对比公式
+  List<ContractNumber> cotractNumberById(List<String> cid);
+
+  //<!--删除合同信息表中的结算信息假删除
+  Integer deleteAccount(String[] ids);
 }

@@ -51,16 +51,16 @@ public interface HeTongMapper extends BaseMapper<T> {
     //获取耐材供货单位  原炉料合同
     Map<Object,Object>  finhtyllxxnc(@Param("hth")String hth);
 
-    //耐材 物资名称 物资合同
+    //耐材/合金 物资名称 物资合同
     public List<Map<Object,String>> findhtncwzname(@Param("hth")String hth);
 
-    //耐材 物资名称 原炉料合同
+    //耐材/合金 物资名称 原炉料合同
     public List<Map<Object,String>> findhtncyllname(@Param("hth")String hth);
 
-    //耐材 物资编码 物资合同
+    //耐材/合金 物资编码 物资合同
     public  String findwznamewz(@Param("hth")String hth,@Param("wzname")String wzname);
 
-    //耐材 物资编码 原炉料合同
+    //耐材/合金 物资编码 原炉料合同
     public  String findwznameyll(@Param("hth")String hth,@Param("wzname")String wzname);
 
     //获取耐材合同信息 物资合同

@@ -10,6 +10,7 @@
         <if test="contracttype !=null and  contracttype !='' ">
             and contract_type =#{contracttype}
         </if>
+            and is_delete = 0
     </select>
 
     <select id="findVoucherNo" resultType="map">
@@ -33,6 +34,7 @@
         <if test="identification !=null ">
             and settlement_identification =#{identification}
         </if>
+            and is_delete = 0
 
     </select>
 
@@ -51,6 +53,7 @@
         <foreach collection="array" item="id" open="(" close=")" separator=",">
             #{id}
         </foreach>
+        and	is_delete = 0
 
     </select>
     
@@ -71,30 +74,51 @@
     </select>
     
     <!--将计算好的元素数据存入-->
-    <update id="depositElementData">
-        update contract_elements
-        set deduction_result = #{deduction_result}
-        where 1=1
-        <if test="element !=null and element !='' ">
-            and element = #{element}
-        </if>
-
-        <if test="ci_id !=null and ci_id !='' ">
-            and ci_id = #{ci_id}
-        </if>
+    <update id="depositElementData" parameterType="java.util.List">
+       <foreach collection="list" item="bean" index="index" open="" close="" separator=";">
+          update contract_elements
+           set
+           <if test="bean.deductionResult !=null and bean.deductionResult != ''">
+              deduction_result = #{bean.deductionResult}
+           </if>
+          where  ci_id = #{bean.ciId}
+           and element = #{bean.element}
+       </foreach>
     </update>
 
     <!--更新合同信息表中的数据-->
-    <update id="updataContractInformation">
-        update contract_information
-        set settlement_date = #{settlement_date},
-        settlement_quantity = #{settlement_quantity},
-        settlemen_price = #{settlemenPrice},
-        settlement_results = #{settlementResults},
-        clearing_house = #{clearing_house},
-        taxes = #{taxes},
-        settlement_identification = #{settlement_identification}
-        where id = #{id}
+    <update id="updataContractInformation" parameterType="java.util.List">
+
+        <foreach collection="list" item="bean" index="index" open="" close="" separator=";">
+          update contract_information
+          <set>
+              <if test="bean.settlementDate !=null ">
+              settlement_date = #{bean.settlementDate},
+              </if>
+              <if test="bean.settlementQuantity !=null and bean.settlementQuantity !=''">
+                  settlement_quantity = #{bean.settlementQuantity},
+              </if>
+              <if test="bean.settlemenPrice !=null and bean.settlemenPrice !=''">
+                  settlemen_price = #{bean.settlemenPrice},
+              </if>
+              <if test="bean.settlementResults !=null and bean.settlementResults !=''">
+                  settlement_results = #{bean.settlementResults},
+              </if>
+              <if test="bean.clearingHouse !=null and bean.clearingHouse !=''">
+                  clearing_house = #{bean.clearingHouse},
+              </if>
+              <if test="bean.taxes !=null and bean.taxes !=''">
+                  taxes = #{bean.taxes},
+              </if>
+              <if test="bean.settlementIdentification !=null">
+                  settlement_identification = #{bean.settlementIdentification},
+              </if>
+              <if test="bean.settlementNotes !=null">
+                  settlement_notes = #{bean.settlementNotes},
+              </if>
+          </set>
+            where id = #{bean.id}
+        </foreach>
 
     </update>
     
@@ -116,4 +140,65 @@
 	    #{id,jdbcType=VARCHAR,mode=IN}
 	    )}
     </select>
+
+    <!--元素数据公式匹配-->
+    <select id="elementCalculations" resultType="org.jeecg.modules.contract.Settlement.entity.elementCalculation">
+        select a.id as cid,a.contract_no as contractNo, a.contract_price as contractPrice, a.tax_rate as taxRate,
+        b.element as elements,b.elelment_date as elelmentData,s.isreduce as isreDuce,s.basedata as baseData,
+        s.deductions as deduction,s.leftnum as leftElementData,
+        (case when s.leftsysbol = 0 then cast(s.leftnum as varchar)+'<![CDATA[ < ]]>'+cast( b.elelment_date as varchar)
+        when s.leftsysbol =1 then cast(s.leftnum as varchar)+'<![CDATA[ <= ]]>'+cast( b.elelment_date as varchar) end )
+        as leftFormula,
+        (case when s.leftsysbol =0 then cast( b.elelment_date as varchar)+'<![CDATA[ < ]]>'+cast( s.rightnum as varchar)
+        when s.leftsysbol =1 then cast( b.elelment_date as varchar)+'<![CDATA[ <= ]]>'+cast( s.rightnum as varchar)end )
+        as rightFormula
+        from contract_information a
+        left join contract_elements b on a.id = b.ci_id
+        left join sys_hetonggongshi s on s.hetong_id=b.contract_no and b.element =s.elements
+        where a.id in
+        <foreach collection="array" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
+    <!--计算每次结算中的元素个数-->
+    <select id="countElementNum" resultType="org.jeecg.modules.contract.Settlement.entity.countElementNum">
+       select ci_id as cid, COUNT(*) as elementNum  FROM contract_elements
+       where ci_id in
+       <foreach collection="array" item="id" open="(" close=")" separator=",">
+           #{id}
+       </foreach>
+        GROUP by ci_id
+    </select>
+
+    <!--通过筛选后的合同唯一ID获取合同数量对比公式-->
+    <select id="cotractNumberById" parameterType="java.util.List" resultType="org.jeecg.modules.contract.Settlement.entity.ContractNumber">
+      select a.id as cid,a.contract_no as contractNo,a.weighing as contractWeight ,
+      s.basedata as baseData,s.leftnum as leftNumber,s.deductions as numberDeductions,
+      (case when s.leftsysbol = 0 then cast(s.leftnum as varchar)+'<![CDATA[ < ]]>'+cast( a.weighing as varchar)
+      when s.leftsysbol =1 then cast(s.leftnum as varchar)+'<![CDATA[ <= ]]>'+cast( a.weighing as varchar) end )
+      as leftFormula,
+      (case when s.leftsysbol =0 then cast( a.weighing as varchar)+'<![CDATA[ < ]]>'+cast( s.rightnum as varchar)
+      when s.leftsysbol =1 then cast( a.weighing as varchar)+'<![CDATA[ <= ]]>'+cast( s.rightnum as varchar)end )
+      as rightFormula
+      from contract_information a
+      left join sys_numgongshi s on s.hetong_id=a.contract_no
+      where a.id in
+
+      <foreach collection="list" item="items" index="index=" open="(" close=")" separator=",">
+         #{items}
+      </foreach>
+      
+    </select>
+
+    <!--删除合同信息表中的结算信息假删除deleteAccount-->
+    <update id="deleteAccount">
+        <foreach collection="array" item="id" index="index" open="" close="" separator=";">
+            update contract_information
+            set is_delete = 2
+            where id = #{id}
+        </foreach>
+    </update>
+
+
 </mapper>

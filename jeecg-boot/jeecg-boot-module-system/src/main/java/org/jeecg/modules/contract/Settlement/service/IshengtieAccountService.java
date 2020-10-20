@@ -42,6 +42,14 @@ public interface IshengtieAccountService extends IService<T> {
   //查询结算信息
   List<Map<Object,String>> hejiesuan(String id);
 
+  //结算
+  List<ContractInformation> settlementCalculation(String[] ci_id);
+
+  //<!--删除合同信息表中的结算信息假删除
+  Boolean deleteAccount(String[] ids);
+
+  //查询合同信息
+  List<ContractInformation> selectConstractList (String[] ids);
 
 
 }
