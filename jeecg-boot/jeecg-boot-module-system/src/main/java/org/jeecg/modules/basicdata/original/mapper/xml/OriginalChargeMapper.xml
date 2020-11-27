@@ -9,4 +9,13 @@
             #{ids}
         </foreach>
     </update>
+
+    <update id="usestatus"  parameterType="java.lang.String">
+        update  original_charge
+        set use_status =#{status}
+        where id in
+        <foreach item="ids" collection="ids" open="(" separator="," close=")">
+            #{ids}
+        </foreach>
+    </update>
 </mapper>

@@ -150,12 +150,14 @@ public class OriginalChargeController extends JeecgController<OriginalCharge, IO
 
 	 @AutoLog(value = "原炉料供应商-使用状态")
 	 @ApiOperation(value="原炉料供应商-使用状态", notes="原炉料供应商-使用状态")
-	 @DeleteMapping(value = "/deleteBatch")
+	 @DeleteMapping(value = "/usestatus")
 	 public Result<?> usestatus(@RequestParam(name="ids",required=true) String ids,@RequestParam(name="status",required=true) Integer status) {
 		 String[] s = ids.split(",");
-		 this.originalChargeService.deleteOrilist(s);
-		 //this.originalChargeService.removeByIds(Arrays.asList(ids.split(",")));
-		 return Result.ok("批量删除成功!");
+		 this.originalChargeService.usestatus(s,status);
+		 if(status==1){
+			 return Result.ok("数据设为可用!");
+		 }
+		 return Result.ok("数据设为不可用!");
 	 }
 
 	/**
