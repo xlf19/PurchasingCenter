@@ -152,7 +152,6 @@ public class ContractInformationController extends JeecgController<ContractInfor
     }
 
 
-
     /**
      * 通过excel导入数据
      *
@@ -165,23 +164,23 @@ public class ContractInformationController extends JeecgController<ContractInfor
         return super.importExcel(request, response, ContractInformation.class);
     }
 
-	//获取凭证号
-	@AutoLog(value = "合同信息表-凭证号")
-	@ApiOperation(value = "合同信息表-凭证号", notes = "合同信息表-凭证号")
-	@GetMapping(value = "/findpzh")
-	public Result<?> findpzh() {
-		Integer number=contractInformationService.findpzh();
-		return Result.ok(number);
-	}
+    //获取凭证号
+    @AutoLog(value = "合同信息表-凭证号")
+    @ApiOperation(value = "合同信息表-凭证号", notes = "合同信息表-凭证号")
+    @GetMapping(value = "/findpzh")
+    public Result<?> findpzh() {
+        Integer number = contractInformationService.findpzh();
+        return Result.ok(number);
+    }
 
 
-	//查询合同编号
+    //查询合同编号
     @AutoLog(value = "查询合同编号")
     @ApiOperation(value = "查询合同编号", notes = "查询合同编号")
     @GetMapping(value = "/selectHtbh")
     public Result<?> selectHtbh(@RequestParam(name = "htbh") String htbh,
                                 @RequestParam(name = "httype", required = true) String httype) {
-        List<String> list =contractInformationService.selectHtbh(htbh,httype);
+        List<String> list = contractInformationService.selectHtbh(htbh, httype);
         return Result.ok(list);
     }
 
@@ -190,8 +189,8 @@ public class ContractInformationController extends JeecgController<ContractInfor
     @ApiOperation(value = "查询合同凭证号", notes = "查询合同凭证号")
     @GetMapping(value = "/selectHtpzh")
     public Result<?> selectHtpzh(@RequestParam(name = "htbh") String htbh,
-                                @RequestParam(name = "httype", required = true) String httype) {
-        List<String> list =contractInformationService.selectHtpzh(htbh,httype);
+                                 @RequestParam(name = "httype", required = true) String httype) {
+        List<String> list = contractInformationService.selectHtpzh(htbh, httype);
         return Result.ok(list);
     }
 
@@ -209,9 +208,9 @@ public class ContractInformationController extends JeecgController<ContractInfor
     @ApiOperation(value = "合同信息表-分页列表查询", notes = "合同信息表-分页列表查询")
     @GetMapping(value = "/listhtxx")
     public Result<?> listhtxx(ContractInformation contractInformation,
-                                   @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
-                                   @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
-                                   HttpServletRequest req) {
+                              @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
+                              @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
+                              HttpServletRequest req) {
         contractInformation.setIsDelete(0);
         contractInformation.setSettlementIdentification(1);
         QueryWrapper<ContractInformation> queryWrapper = QueryGenerator.initQueryWrapper(contractInformation, req.getParameterMap());

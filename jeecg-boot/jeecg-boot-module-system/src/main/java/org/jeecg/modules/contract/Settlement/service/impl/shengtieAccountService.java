@@ -86,7 +86,7 @@ public class shengtieAccountService extends ServiceImpl<shengtieAccountMapper, T
 
   @Override
   @Transactional
-  public List<ContractInformation> settlementCalculation(String[] ci_id) {
+  public Boolean settlementCalculation(String[] ci_id) {
     //通过元素数据匹配元素公式所查询的结果
     List<elementCalculation> li = shengtieHth.elementCalculations(ci_id);
 
@@ -596,7 +596,7 @@ public class shengtieAccountService extends ServiceImpl<shengtieAccountMapper, T
       //更新合同表中数据信息
       Integer tag = shengtieHth.updataContractInformation(informationList);
       if (flag == 1 && tag == 1) {
-        resultSettlement = shengtieHth.findContractInformations(ci_id);
+         return true;
       }
 
 
@@ -604,7 +604,7 @@ public class shengtieAccountService extends ServiceImpl<shengtieAccountMapper, T
       e.printStackTrace();
     }
     System.out.println("result"+resultSettlement);
-    return resultSettlement;
+    return false;
   }
 
 

@@ -100,8 +100,13 @@ public class shengtieAccountController {
   public Result<?> settlement(@RequestBody String id) {
     //处理传过来的id
     String[] ci_id = accountSettlementUtil.handleById(id);
+    List<ContractInformation> contractInformations = null;
 
-    List<ContractInformation> contractInformations = shengtie.settlementCalculation(ci_id);
+    boolean flag = shengtie.settlementCalculation(ci_id);
+
+    contractInformations = shengtie.selectConstractList(ci_id);
+
+
 
       if (contractInformations != null) {
         for (ContractInformation c : contractInformations) {

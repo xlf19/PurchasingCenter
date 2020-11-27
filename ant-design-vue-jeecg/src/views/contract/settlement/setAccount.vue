@@ -7,10 +7,13 @@
           <a-col :xl="6" :lg="7" :md="8" :sm="24">
             <!-- 第一个输入框 -->
             <a-form-item label="合同编号">
-              <a-select v-model="contractNo" show-search allowClear
-              @search="handleSearch"
-              @change="handleChange"
-              style="width: 200px;"
+              <a-select
+                v-model="contractNo"
+                show-search
+                allowClear
+                @search="handleSearch"
+                @change="handleChange"
+                style="width: 200px"
               >
                 <a-select-option v-for="(item, index) in contracts" :value="item.contract_no" :key="index">{{
                   item.contract_no
@@ -21,7 +24,7 @@
           <!-- 第二个输入框 -->
           <a-col :xl="6" :lg="7" :md="8" :sm="24">
             <a-form-item label="凭证号">
-              <a-select v-model="voucherNo" allowClear style="width: 200px;">
+              <a-select v-model="voucherNo" allowClear style="width: 200px">
                 <!-- 会将下拉框中的key中所对应的值给上面的:value中多对应的值 -->
                 <a-select-option v-for="(item, index) in voucherNos" :value="item.voucher_no" :key="index">{{
                   item.voucher_no
@@ -32,26 +35,26 @@
           <!-- 第三个结算类型 选择框-->
           <a-col :xl="6" :lg="7" :md="8" :sm="24">
             <a-form-item label="结算状况">
-              <a-select v-model="settlementIdentification"
-              style="width: 200px;"
-              >
-                <a-select-option value = 0>未结算</a-select-option>
-                <a-select-option value = 1>结算成功</a-select-option>
-                <a-select-option value = 2>结算失败</a-select-option>
+              <a-select v-model="settlementIdentification" style="width: 200px">
+                <a-select-option value="0">未结算</a-select-option>
+                <a-select-option value="1">结算成功</a-select-option>
+                <a-select-option value="2">结算失败</a-select-option>
               </a-select>
             </a-form-item>
           </a-col>
 
           <a-col :xl="6" :lg="7" :md="8" :sm="24">
-             <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-                <a-button type="primary" @click="searchList" setTimeout="200" icon="search">查询</a-button>
-                <a-button type="primary" @click="accountSettle" icon="account-book" style="margin-left: 8px">结算</a-button>
-                <a-button type="primary" v-has="types" @click="deleteAccountSettle" icon="delete" style="margin-left: 8px">删除</a-button>
-             </span>
+            <span style="float: left; overflow: hidden" class="table-page-search-submitButtons">
+              <a-button type="primary" @click="searchList" setTimeout="200" icon="search">查询</a-button>
+              <a-button type="primary" @click="accountSettle" icon="account-book" style="margin-left: 8px"
+                >结算</a-button
+              >
+              <a-button type="primary" v-has="types" @click="deleteAccountSettle" icon="delete" style="margin-left: 8px"
+                >删除</a-button
+              >
+            </span>
           </a-col>
-
         </a-row>
-
       </a-form>
     </div>
     <!-- table区域-begin rowSelection选中事件设置 -->
@@ -124,14 +127,13 @@ export default {
     contrac(newVal, oldVal) {
       this.contractNo = newVal
       this.handleChange(newVal)
-    }
+    },
   },
 
   data() {
     return {
-
-     types: '',//再次结算按钮的授权标识
-      settlementIdentification:'',//合同订单结算状况标识
+      types: '', //再次结算按钮的授权标识
+      settlementIdentification: '', //合同订单结算状况标识
       message: '',
       voucherNo: '', //凭证编号列表的索引值
       contractNo: this.contrac, //合同编号列表的索引值
@@ -289,12 +291,12 @@ export default {
           title: '结算备注',
           align: 'center',
           dataIndex: 'settlementNotes',
-          scopedSlots: { customRender: 'ellipsisSlot'}
-        }
+          scopedSlots: { customRender: 'ellipsisSlot' },
+        },
       ],
       stelements: [],
       url: {
-        deleteAccount : '/settleAccounts/settleAccounts/deleteAccountSettle',
+        deleteAccount: '/settleAccounts/settleAccounts/deleteAccountSettle',
         findContractNo: '/settleAccounts/settleAccounts/contractNos',
         findVoucherNo: '/settleAccounts/settleAccounts/voucherNos',
         findContractList: '/settleAccounts/settleAccounts/contractList',
@@ -313,7 +315,6 @@ export default {
     if (contractNo != null && contractNo != '') {
       this.handleChange(contractNo)
     }
-
   },
   computed: {},
   methods: {
@@ -321,19 +322,18 @@ export default {
 
     //高权限的人删除结算失败的合同
     deleteAccountSettle() {
-        let id = this.selectedRowKeys
-        if (id == '' || id == undefined || id == null) {
-            this.$message.warning("请选择要删除的合同！")
-        } else {
-          postAction(this.url.deleteAccount,{id:id}).then((res) =>{
-              if (res.success) {
-                  this.$message.success("删除成功！");
-                  this.dataValue = res.result
-              } else {
-                  this.$message.error(res.message);
-              }
-          })
-
+      let id = this.selectedRowKeys
+      if (id == '' || id == undefined || id == null) {
+        this.$message.warning('请选择要删除的合同！')
+      } else {
+        postAction(this.url.deleteAccount, { id: id }).then((res) => {
+          if (res.success) {
+            this.$message.success('删除成功！')
+            this.dataValue = res.result
+          } else {
+            this.$message.error(res.message)
+          }
+        })
       }
 
       //清空选着框中的数据
@@ -344,21 +344,23 @@ export default {
     againAccountSettle() {
       let id = this.selectedRowKeys
       if (id == '' || id == undefined || id == null) {
-        this.$message.warning("请选择要结算的合同结算！")
+        this.$message.warning('请选择要结算的合同结算！')
       } else {
         postAction(this.url.accountSettlement, { id: id }).then((res) => {
           console.log(res.result)
           if (res.success) {
             this.dataValue = res.result
-            res.result.forEach(element => {
-               if(element.settlementIdentification === 501){
-                 this.$message.error("结算的订单中有条数据结算失败请根据返回的结算状况检查相应的合同公式的填写是否正确！")
-               }else if(element.settlementIdentification === 502) {
-                 this.$message.error("结算过程中发生了一些系统性错误，亲联系程序班！")
-               }else if(element.settlementIdentification === 1) {
-                this.$message.success("结算成功！")
-               }
-            });
+            res.result.forEach((element) => {
+              if (element.settlementIdentification === 501) {
+                this.$message.error(
+                  '结算的订单中有条数据结算失败请根据返回的结算状况检查相应的合同公式的填写是否正确！'
+                )
+              } else if (element.settlementIdentification === 502) {
+                this.$message.error('结算过程中发生了一些系统性错误，亲联系程序班！')
+              } else if (element.settlementIdentification === 1) {
+                this.$message.success('结算成功！')
+              }
+            })
             //清空选着框中的数据
             this.selectedRowKeys = []
             this.selectionRows = []
@@ -395,7 +397,7 @@ export default {
       }
     },
     //合同结算
-     accountSettle() {
+    accountSettle() {
       let id = []
       if (this.selectedRowKeys == '' || this.selectedRowKeys == undefined || this.selectedRowKeys == null) {
         this.message = '请在选择合同后在结算'
@@ -418,15 +420,17 @@ export default {
           console.log(res.result)
           if (res.success) {
             this.dataValue = res.result //  this.ipagination.total = res.result.total
-            res.result.forEach(element => {
-               if(element.settlementIdentification === 501){
-                 this.$message.error("结算的订单中有条数据结算失败请根据返回的结算状况检查相应的合同公式的填写是否正确！")
-               }else if(element.settlementIdentification === 502) {
-                 this.$message.error("结算过程中发生了一些系统性错误，亲联系程序班！")
-               }else if(element.settlementIdentification === 1) {
-                this.$message.success("结算成功！")
-               }
-            });
+            res.result.forEach((element) => {
+              if (element.settlementIdentification === 501) {
+                this.$message.error(
+                  '结算的订单中有条数据结算失败请根据返回的结算状况检查相应的合同公式的填写是否正确！'
+                )
+              } else if (element.settlementIdentification === 502) {
+                this.$message.error('结算过程中发生了一些系统性错误，亲联系程序班！')
+              } else if (element.settlementIdentification === 1) {
+                this.$message.success('结算成功！')
+              }
+            })
             this.selectedRowKeys = []
             this.selectionRows = []
           }
@@ -464,7 +468,6 @@ export default {
 
       this.selectedRowKeys = selectedRowKeys
       this.selectionRows = selectionRows
-
     },
 
     //根据合同编号和凭证号查询数据列表
@@ -473,16 +476,26 @@ export default {
       let cno = this.contractNo
       let sno = this.settlementIdentification
       // alert(sno.constructor)
-      if (vno === "" || vno === null || vno === undefined || cno === "" || cno === null || cno === undefined||sno === "" || sno === null || sno === undefined) {
+      if (
+        vno === '' ||
+        vno === null ||
+        vno === undefined ||
+        cno === '' ||
+        cno === null ||
+        cno === undefined ||
+        sno === '' ||
+        sno === null ||
+        sno === undefined
+      ) {
         this.$message.warning('请输入合同编号,凭证号以及结算状况后再查询！')
       } else {
         let datas = {
           vno: vno,
           cno: cno,
-          settlementIdentification : sno
+          settlementIdentification: sno,
         }
         this.loadData(this.arg, datas)
-         //查询完了后清空选着框中的数据
+        //查询完了后清空选着框中的数据
         this.selectedRowKeys = []
         this.selectionRows = []
       }

@@ -3,29 +3,30 @@
 <mapper namespace="org.jeecg.modules.contract.contract.mapper.ContractInformationMapper">
 
     <select id="findpzh" resultType="java.lang.Integer">
-              select top(1) isnull(voucher_no,0)+1 from contract_information
+             select top(1) isnull(voucher_no,0)+1
+             from contract_information
              order by voucher_no desc
     </select>
 
     <select id="selectHtbh" resultType="java.lang.String">
-              select distinct top(30)  contract_no
-              from contract_information
+        select distinct top(30) contract_no
+        from contract_information
         where 1=1
---         where is_delete=0 and settlement_identification=1
-              <if test="htbh !=null and  htbh !='' ">
-                 and contract_no like '%'+#{htbh}+'%'
-              </if>
-              <if test="httype !=null and  httype !='' ">
-                  and contract_type = #{httype}
-              </if>
-              order by contract_no desc
+        -- where is_delete=0 and settlement_identification=1
+        <if test="htbh !=null and  htbh !='' ">
+            and contract_no like '%'+#{htbh}+'%'
+        </if>
+        <if test="httype !=null and  httype !='' ">
+            and contract_type = #{httype}
+        </if>
+        order by contract_no desc
     </select>
 
     <select id="selectHtpzh" resultType="java.lang.String">
-        select distinct  voucher_no
+        select distinct voucher_no
         from contract_information
         where 1=1
---         where is_delete=0 and settlement_identification=1
+        -- where is_delete=0 and settlement_identification=1
         <if test="htbh !=null and  htbh !='' ">
             and contract_no = #{htbh}
         </if>

@@ -32,28 +32,28 @@ export default {
     firstTest,
     FuLiaoList,
     setAccount,
-    FuLiaoPrint,
+    FuLiaoPrint
   },
   data() {
     return {
       description: '辅料结算管理页面',
       dictOptions: {},
       contrac: '',
-      contracttype: '辅料',
+      contracttype: '辅料'
     }
   },
   created() {},
   computed: {
-    importExcelUrl: function () {
+    importExcelUrl: function() {
       return `${window._CONFIG['domianURL']}/${this.url.importExcelUrl}`
-    },
+    }
   },
   methods: {
     initDictConfig() {},
     gethtbh(data) {
       this.contrac = data
-    },
-  },
+    }
+  }
 }
 </script>
 <style scoped>

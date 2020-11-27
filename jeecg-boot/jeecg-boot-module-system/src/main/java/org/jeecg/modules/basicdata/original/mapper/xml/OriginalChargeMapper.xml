@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jeecg.modules.basicdata.original.mapper.OriginalChargeMapper">
+    <update id="deleteOrilist"  parameterType="java.lang.String">
+        update  original_charge
+        set isdelete =2
+        where id in
+        <foreach item="ids" collection="ids" open="(" separator="," close=")">
+            #{ids}
+        </foreach>
+    </update>
+</mapper>
