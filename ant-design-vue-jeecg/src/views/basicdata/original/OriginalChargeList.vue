@@ -21,7 +21,7 @@
           </a-col>
           <a-col :xl="5" :lg="7" :md="8" :sm="24">
             <a-form-item label="使用状态">
-              <a-select v-model="queryParam.useStatus">
+              <a-select v-model="queryParam.useStatus" placeholder="请选择使用状态" allowClear>
                 <a-select-option value="">全部</a-select-option>
                 <a-select-option value="1">使用中</a-select-option>
                 <a-select-option value="2">已禁用</a-select-option>
@@ -43,8 +43,8 @@
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
       <a-button @click="batchDel" type="primary" icon="delete">删除</a-button>
-      <a-button @click="batchDel" type="primary" icon="check">设为可用</a-button>
-      <a-button @click="batchDel" type="primary" icon="close">设为不可用</a-button>
+      <a-button @click="usestatus(1)" type="primary" icon="check">设为可用</a-button>
+      <a-button @click="usestatus(2)" type="primary" icon="close">设为不可用</a-button>
     </div>
 
     <!-- table区域-begin -->
@@ -93,6 +93,8 @@ import '@/assets/less/TableExpand.less'
 import { mixinDevice } from '@/utils/mixin'
 import { JeecgListMixin } from '@/mixins/JeecgListMixin'
 import OriginalChargeModal from './modules/OriginalChargeModal'
+import { deleteAction, getAction, downFile, getFileAccessHttpUrl } from '@/api/manage'
+import { initDictOptions , filterMultiDictText } from '@/components/dict/JDictSelectUtil'
 import JEllipsis from '@/components/jeecg/JEllipsis'
 export default {
   name: 'OriginalChargeList',
@@ -104,6 +106,7 @@ export default {
   data() {
     return {
       description: '原炉料供应商管理页面',
+      provinciallist: [],
       // 表头
       columns: [
         {
@@ -140,12 +143,12 @@ export default {
           title: '使用状态',
           align: 'center',
           dataIndex: 'useStatus',
-           customRender: function(t, r, index) {
+          customRender: function(t, r, index) {
             if (t === 1) {
               return '使用中'
             } else if (t === 2) {
               return '已停用'
-            } 
+            }
           }
         },
         {
@@ -187,13 +190,17 @@ export default {
               return '供方单位'
             } else if (t === 2) {
               return '需方单位'
-            } 
+            }
           }
         },
         {
           title: '所在省级',
           align: 'center',
-          dataIndex: 'provincial'
+          dataIndex: 'provincial',
+          customRender: text => {
+            //字典值替换通用方法
+            return filterMultiDictText(this.provinciallist, text)
+          }
         },
         {
           title: '注册资金',
@@ -216,7 +223,7 @@ export default {
               return '国企'
             } else if (t === 2) {
               return '民营'
-            } 
+            }
           }
         },
         {
@@ -228,19 +235,19 @@ export default {
               return '正常'
             } else if (t === 2) {
               return '异常'
-            } 
+            }
           }
         },
         {
           title: '临时供应商',
           align: 'center',
           dataIndex: 'temporarySupplier',
-           customRender: function(t, r, index) {
+          customRender: function(t, r, index) {
             if (t === 1) {
               return '是'
             } else if (t === 2) {
               return '否'
-            } 
+            }
           }
         },
         {
@@ -252,7 +259,7 @@ export default {
               return '是'
             } else if (t === 2) {
               return '否'
-            } 
+            }
           }
         },
         {
@@ -303,7 +310,8 @@ export default {
         delete: '/original/originalCharge/delete',
         deleteBatch: '/original/originalCharge/deleteBatch',
         exportXlsUrl: '/original/originalCharge/exportXls',
-        importExcelUrl: 'original/originalCharge/importExcel'
+        importExcelUrl: 'original/originalCharge/importExcel',
+        usestatus: 'original/originalCharge/usestatus'
       },
       dictOptions: {}
     }
@@ -315,8 +323,44 @@ export default {
     }
   },
   methods: {
-    initDictConfig() {}
-    
+    initDictConfig() {
+      //初始化字典 - 所在省级
+      initDictOptions('G_ShengBianMa,ShengName,ShengCode').then(res => {
+        if (res.success) {
+          this.provinciallist = res.result
+        }
+      })
+    },
+    usestatus: function(status) {
+      if (!this.url.usestatus) {
+        this.$message.error('请设置url.usestatus属性!')
+        return
+      }
+      if (this.selectedRowKeys.length <= 0) {
+        this.$message.warning('请选择一条记录！')
+        return
+      } else {
+        var ids = ''
+        for (var a = 0; a < this.selectedRowKeys.length; a++) {
+          ids += this.selectedRowKeys[a] + ','
+        }
+        var that = this
+        that.loading = true
+        deleteAction(that.url.usestatus, { ids: ids, status: status })
+          .then(res => {
+            if (res.success) {
+              that.$message.success(res.message)
+              that.loadData()
+              that.onClearSelected()
+            } else {
+              that.$message.warning(res.message)
+            }
+          })
+          .finally(() => {
+            that.loading = false
+          })
+      }
+    }
   }
 }
 </script>
