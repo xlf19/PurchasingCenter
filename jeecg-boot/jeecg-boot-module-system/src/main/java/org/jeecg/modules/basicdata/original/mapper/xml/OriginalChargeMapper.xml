@@ -18,4 +18,17 @@
             #{ids}
         </foreach>
     </update>
+
+    <select id="shengbima" parameterType="java.lang.String" resultType="org.jeecg.modules.basicdata.original.entity.ShengBianMa">
+        select *  from G_ShengBianMa
+    </select>
+
+    <select id="shibima" parameterType="java.lang.String" resultType="org.jeecg.modules.basicdata.original.entity.ShiBianMa">
+       select *  from G_ShiBianMa where ShiParentCode = #{code}
+    </select>
+
+    <select id="supplierCode" parameterType="java.lang.String" resultType="java.lang.String">
+       select SUBSTRING(MAX(supplier_code),6,3)  from original_charge where LEFT(supplier_code, 5)  = #{code} and LEN(supplier_code)='8'
+    </select>
+
 </mapper>

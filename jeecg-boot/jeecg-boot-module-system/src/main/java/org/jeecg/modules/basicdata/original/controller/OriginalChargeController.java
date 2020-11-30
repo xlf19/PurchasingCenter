@@ -13,6 +13,8 @@ import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.util.oConvertUtils;
 import org.jeecg.modules.basicdata.original.entity.OriginalCharge;
+import org.jeecg.modules.basicdata.original.entity.ShengBianMa;
+import org.jeecg.modules.basicdata.original.entity.ShiBianMa;
 import org.jeecg.modules.basicdata.original.service.IOriginalChargeService;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -200,4 +202,54 @@ public class OriginalChargeController extends JeecgController<OriginalCharge, IO
         return super.importExcel(request, response, OriginalCharge.class);
     }
 
+	 /**
+	  * 查询省级信息
+	  *
+	  * @return
+	  */
+	 @AutoLog(value = "原炉料供应商-查询省级信息")
+	 @ApiOperation(value="原炉料供应商-查询省级信息", notes="原炉料供应商-查询省级信息")
+	 @GetMapping(value = "/shengbima")
+	 public Result<?> shengbima() {
+		 List<ShengBianMa> list=originalChargeService.shengbima();
+		 return Result.ok(list);
+	 }
+
+	 /**
+	  * 查询市级信息
+	  *
+	  * @return
+	  */
+	 @AutoLog(value = "原炉料供应商-查询市级信息")
+	 @ApiOperation(value="原炉料供应商-查询市级信息", notes="原炉料供应商-查询市级信息")
+	 @GetMapping(value = "/shibima")
+	 public Result<?> shibima(@RequestParam(name = "code")String code) {
+		 List<ShiBianMa> list=originalChargeService.shibima(code);
+		 return Result.ok(list);
+	 }
+
+	 /**
+	  * 生成供应商编码
+	  *
+	  * @return
+	  */
+	 @AutoLog(value = "原炉料供应商-生成供应商编码")
+	 @ApiOperation(value="原炉料供应商-生成供应商编码", notes="原炉料供应商-生成供应商编码")
+	 @GetMapping(value = "/supplierCode")
+	 public Result<?> supplierCode(@RequestParam(name = "code")String code) {
+		 String suppliercode =originalChargeService.supplierCode(code);
+		 if (oConvertUtils.isEmpty(suppliercode)) {
+			 suppliercode = code + "001";
+		 }else{
+			 int num = Integer.parseInt(suppliercode)+1;
+			 suppliercode=String.valueOf(num);
+			 if(suppliercode.length()==2){
+				 suppliercode= "0"+suppliercode;
+			 }else if(suppliercode.length()==1){
+				 suppliercode= "00"+suppliercode;
+			 }
+			 suppliercode = code + suppliercode;
+		 }
+		 return Result.ok(suppliercode);
+	 }
 }
