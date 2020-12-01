@@ -3,9 +3,9 @@
     <j-form-container :disabled="formDisabled">
       <a-form :form="form" slot="detail">
         <a-row>
-          <a-col :span="24">
+          <a-col :span="24" v-if="showMaterialCode">
             <a-form-item label="物资编码" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <a-input v-decorator="['materialCode',{rules: [{required: true, message: '请输入物资编码'}]}]" placeholder="请输入物资编码"></a-input>
+              <a-input v-decorator="['materialCode']" :disabled="isShow" placeholder="请输入物资编码"></a-input>
             </a-form-item>
           </a-col>
           <a-col :span="24">
@@ -102,7 +102,9 @@
           add: "/materialcode/materialcode/add",
           edit: "/materialcode/materialcode/edit",
           queryById: "/materialcode/materialcode/queryById"
-        }
+        },
+        showMaterialCode: true,
+        isShow: false,
       }
     },
     computed: {
@@ -131,9 +133,12 @@
     methods: {
       add () {
         this.edit({});
+        this.showMaterialCode = false
       },
       edit (record) {
         this.form.resetFields();
+        this.isShow = true;
+        this.showMaterialCode = true
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
