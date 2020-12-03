@@ -75,4 +75,5 @@ public class Materialcode implements Serializable {
 	@Excel(name = "备注", width = 15)
     @ApiModelProperty(value = "备注")
     private java.lang.String remake;
+
 }

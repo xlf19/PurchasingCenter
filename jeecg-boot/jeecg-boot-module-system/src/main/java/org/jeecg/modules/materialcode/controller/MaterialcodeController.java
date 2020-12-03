@@ -1,6 +1,8 @@
 package org.jeecg.modules.materialcode.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -9,6 +11,10 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.extension.conditions.query.QueryChainWrapper;
+import org.apache.poi.ss.formula.functions.T;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.util.oConvertUtils;
@@ -20,23 +26,22 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 
-import org.jeecgframework.poi.excel.ExcelImportUtil;
-import org.jeecgframework.poi.excel.def.NormalExcelConstants;
-import org.jeecgframework.poi.excel.entity.ExportParams;
-import org.jeecgframework.poi.excel.entity.ImportParams;
-import org.jeecgframework.poi.excel.view.JeecgEntityExcelView;
 import org.jeecg.common.system.base.controller.JeecgController;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.jdbc.JdbcTemplateAutoConfiguration;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSON;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.jeecg.common.aspect.annotation.AutoLog;
 
- /**
+import org.springframework.jdbc.core.JdbcTemplate;
+
+import static java.lang.Integer.parseInt;
+import static org.jeecg.common.system.query.QueryGenerator.installMplus;
+
+/**
  * @Description: 物资编码表
  * @Author: MountCao
  * @Date:   2020-11-30
@@ -46,10 +51,12 @@ import org.jeecg.common.aspect.annotation.AutoLog;
 @RestController
 @RequestMapping("/materialcode/materialcode")
 @Slf4j
+
 public class MaterialcodeController extends JeecgController<Materialcode, IMaterialcodeService> {
 	@Autowired
 	private IMaterialcodeService materialcodeService;
-	
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
 	/**
 	 * 分页列表查询
 	 *
@@ -81,7 +88,14 @@ public class MaterialcodeController extends JeecgController<Materialcode, IMater
 	@AutoLog(value = "物资编码表-添加")
 	@ApiOperation(value="物资编码表-添加", notes="物资编码表-添加")
 	@PostMapping(value = "/add")
-	public Result<?> add(@RequestBody Materialcode materialcode) {
+	public Result<?> add(@RequestBody Materialcode materialcode){
+		SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+		String code = "WX"+df.format(new Date());
+		String sql = "SELECT count(*) as sum from materialcode where material_code like '" + code + "%'";
+		String str = jdbcTemplate.queryForObject(sql, String.class);
+		String y = code+String.format("%04d", parseInt(str)+1);
+		System.out.println(y);
+		materialcode.setMaterialCode(y);
 		materialcodeService.save(materialcode);
 		return Result.ok("添加成功！");
 	}

@@ -89,8 +89,8 @@
         </span>        
         <!-- 状态值 -->
         <span slot="status" slot-scope="text, record">
-          <a-button class="using_btn" v-if="record.status == '使用中'">{{record.status}}</a-button>
-          <a-button class="ban_btn" v-if="record.status == '已禁用'">{{record.status}}</a-button>
+          <a-button class="using_btn" v-if="record.status == '1'">使用中</a-button>
+          <a-button class="ban_btn" v-if="record.status == '0'">已禁用</a-button>
         </span>
       </a-table>
     </div>
@@ -218,7 +218,8 @@
         this.loading = true
         getAction(this.url.list, params).then((res) => {
           if (res.success) {
-            this.dataSource = this.formatData(res.result.records)
+            this.dataSource = res.result.records
+            // this.dataSource = this.formatData(res.result.records)
             this.ipagination.total = res.result.total
           }
           if (res.code === 510) {
