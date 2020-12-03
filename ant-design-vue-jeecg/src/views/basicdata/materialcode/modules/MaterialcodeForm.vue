@@ -22,8 +22,16 @@
           </a-col>
           <a-col :span="24">
             <a-form-item label="单位" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <a-input v-decorator="['unit',{rules: [{required: true, message: '请输入单位'}]}]" placeholder="请输入单位">
-              </a-input>
+              <!-- <a-select v-decorator="['unit',{rules: [{required: true, message: '请输入单位'}]}]">
+                <a-select-option v-for="item in unitList" :key="item.key" :value="item.value">{{item.value}}</a-select-option>
+              </a-select> -->
+              <a-select v-decorator="['unit',{rules: [{required: true, message: '请选择单位'}]}]">
+                <a-select-option v-for="item in unitList" :key="item.key" :value="item.value">
+                  {{item.value}}
+                </a-select-option>
+              </a-select>
+              <!-- <a-input  placeholder="请输入单位"> -->
+              <!-- </a-input> -->
             </a-form-item>
           </a-col>
           <a-col :span="24">
@@ -87,7 +95,7 @@
         type: Boolean,
         default: false,
         required: false
-      }
+      },
     },
     data() {
       return {
@@ -119,6 +127,16 @@
         },
         showMaterialCode: true,
         isShow: false,
+        // 单位
+        unitList: [
+          {
+            key: 1,
+            value: '吨'
+          },{
+            key: 2,
+            value: '千克'
+          }
+        ]
       }
     },
     computed: {

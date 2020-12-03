@@ -63,26 +63,11 @@
         <a style="font-weight: 600">{{ selectedRowKeys.length }}</a>项
         <a style="margin-left: 24px" @click="onClearSelected">清空</a>
       </div>
-
       <a-table ref="table" size="middle" :scroll="{ x: true }" bordered rowKey="id" :columns="columns"
         :dataSource="dataSource" :pagination="ipagination" :loading="loading"
         :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }" class="j-table-force-nowrap"
         @change="handleTableChange">
-        <template slot="htmlSlot" slot-scope="text">
-          <div v-html="text"></div>
-        </template>
-        <template slot="imgSlot" slot-scope="text">
-          <span v-if="!text" style="font-size: 12px; font-style: italic">无图片</span>
-          <img v-else :src="getImgView(text)" height="25px" alt=""
-            style="max-width: 80px; font-size: 12px; font-style: italic" />
-        </template>
-        <template slot="fileSlot" slot-scope="text">
-          <span v-if="!text" style="font-size: 12px; font-style: italic">无文件</span>
-          <a-button v-else :ghost="true" type="primary" icon="download" size="small" @click="downloadFile(text)">
-            下载
-          </a-button>
-        </template>
-
+        <!-- 操作栏 -->
         <span slot="action" slot-scope="text, record">
           <a-button type='primary' @click="handleEdit(record)">编辑</a-button>
           <a-button type="danger" class="action_btn" @click="handleDelete(record.id)">删除</a-button>

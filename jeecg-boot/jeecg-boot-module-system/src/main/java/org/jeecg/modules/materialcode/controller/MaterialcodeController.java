@@ -94,7 +94,6 @@ public class MaterialcodeController extends JeecgController<Materialcode, IMater
 		String sql = "SELECT count(*) as sum from materialcode where material_code like '" + code + "%'";
 		String str = jdbcTemplate.queryForObject(sql, String.class);
 		String y = code+String.format("%04d", parseInt(str)+1);
-		System.out.println(y);
 		materialcode.setMaterialCode(y);
 		materialcodeService.save(materialcode);
 		return Result.ok("添加成功！");
