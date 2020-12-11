@@ -1,7 +1,7 @@
 <!--
  * @descript: 
  * @Date: 2020-08-28 14:27:18
- * @LastEditTime: 2020-09-14 21:10:40
+ * @LastEditTime: 2020-11-30 15:48:23
  * @version: 0.0.1
 -->
 <template>
@@ -525,8 +525,8 @@ export default {
       // console.log(data)
       let newData = []
       data.forEach((item) => {
-        let itx = {}
-        ;(itx.id = item.id),
+        let itx = {};
+          (itx.id = item.id),
           (itx.elements = item.elements),
           (itx.leftnum = item.leftnum),
           (itx.rightnum = item.rightnum),
