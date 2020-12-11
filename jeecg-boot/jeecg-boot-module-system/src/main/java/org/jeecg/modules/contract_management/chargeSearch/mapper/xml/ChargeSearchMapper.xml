@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jeecg.modules.contract_management.chargeSearch.mapper.ChargeSearchMapper">
+
+    <select id="list" resultType="map">
+        select cp.*,pif.total_price from contract_purchase as cp
+        left join product_information as pif on pif.contract_id =cp.id
+        where cp.isdelete=1
+        <if test="startdate !=null and startdate!=''">
+            and CONVERT(varchar(100), cp.create_time, 23)>=CONVERT(varchar(100), #{startdate}, 23)
+        </if>
+        <if test="enddate !=null and enddate!=''">
+            and CONVERT(varchar(100), cp.create_time, 23) &lt;=CONVERT(varchar(100), #{enddate}, 23)
+        </if>
+    </select>
+
+    <select id="findDetail" resultType="map" parameterType="java.lang.String">
+          select pif.*,pl.january,pl.february,
+	      pl.march,pl.april,pl.may,pl.june
+	      ,pl.july,pl.august,pl.september,pl.october
+	      ,pl.november,pl.december
+          from product_information as pif
+          left join product_list as pl on pl.product_id=pif.id
+          where pif.contract_id=#{contractid}
+    </select>
+</mapper>

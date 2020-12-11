@@ -32,4 +32,7 @@ public interface IOriginalChargeService extends IService<OriginalCharge> {
     //供应商编码
     String supplierCode(String code);
 
+    //查询供应商
+    List<OriginalCharge> searchname(String companyName);
+
 }

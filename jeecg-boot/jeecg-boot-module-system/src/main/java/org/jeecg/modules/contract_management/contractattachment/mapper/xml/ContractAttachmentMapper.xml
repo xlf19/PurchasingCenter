@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jeecg.modules.contract_management.contractattachment.mapper.ContractAttachmentMapper">
+
+    <select id="list" resultType="map">
+        select cp.*,pif.total_price,cp.contract_no as contractNo,cp.file_path as filePath from contract_purchase as cp
+        left join product_information as pif on pif.contract_id =cp.id
+        where cp.isdelete=1
+        <if test="startdate !=null and startdate!=''">
+            and CONVERT(varchar(100), cp.create_time, 23)>=CONVERT(varchar(100), #{startdate}, 23)
+        </if>
+        <if test="enddate !=null and enddate!=''">
+            and CONVERT(varchar(100), cp.create_time, 23) &lt;=CONVERT(varchar(100), #{enddate}, 23)
+        </if>
+    </select>
+
+
+</mapper>

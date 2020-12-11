@@ -48,4 +48,9 @@ public class OriginalChargeServiceImpl extends ServiceImpl<OriginalChargeMapper,
     public String supplierCode(String code) {
         return ori.supplierCode(code);
     }
+
+    @Override
+    public List<OriginalCharge> searchname(String companyName) {
+        return ori.searchname(companyName);
+    }
 }

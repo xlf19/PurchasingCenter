@@ -31,4 +31,7 @@ public interface OriginalChargeMapper extends BaseMapper<OriginalCharge> {
 
     //供应商编码
     String supplierCode(@Param("code")String code);
+
+    //查询供应商
+    List<OriginalCharge> searchname(@Param("companyName")String companyName);
 }
