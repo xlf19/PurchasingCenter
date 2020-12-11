@@ -53,6 +53,7 @@
             width: '300px',
             type: FormTypes.input,
             defaultValue: '',
+          
             placeholder: '请输入${title}',
             validateRules: [
               {
