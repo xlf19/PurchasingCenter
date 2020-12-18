@@ -11,6 +11,7 @@ import org.jeecg.common.aspect.annotation.AutoLog;
 import org.jeecg.common.system.base.controller.JeecgController;
 import org.jeecg.modules.contract_management.contractattachment.service.IContractAttachmentService;
 import org.jeecg.modules.contract_management.contractpurchase.entity.ContractPurchase;
+import org.jeecg.modules.contract_management.contractpurchase.entity.ContractSerach;
 import org.jeecg.modules.contract_management.contractpurchase.service.IContractPurchaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -39,12 +40,12 @@ public class ContractAttachmentController extends JeecgController<T, IContractAt
     @AutoLog(value = "合同附件管理-分页列表查询")
     @ApiOperation(value = "合同附件管理-分页列表查询", notes = "合同附件管理-分页列表查询")
     @GetMapping(value = "/list")
-    public Result<?> selectfldy(ContractPurchase contractPurchase,
+    public Result<?> selectfldy(ContractSerach contractSerach,
                                 @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
                                 @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
                                 HttpServletRequest req) {
         Page<Map<Object, String>> page = new Page<Map<Object, String>>(pageNo, pageSize);
-        IPage<Map<Object, String>> pageList = iContractAttachmentService.list(page, contractPurchase.getStartingTime(), contractPurchase.getStopTime());
+        IPage<Map<Object, String>> pageList = iContractAttachmentService.list(page, contractSerach.getStartingTime(), contractSerach.getStopTime());
         return Result.ok(pageList);
     }
 

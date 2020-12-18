@@ -123,7 +123,7 @@ public class ProductInformationController extends JeecgController<ProductInforma
 	@AutoLog(value = "产品信息-批量删除")
 	@ApiOperation(value="产品信息-批量删除", notes="产品信息-批量删除")
 	@DeleteMapping(value = "/deleteBatch")
-	public Result<?> deleteBatch(@RequestParam(name="ids",required=true) String ids) {
+	public Result<?> deleteBatch(@RequestParam(name="ids") String ids) {
 		this.productInformationService.removeByIds(Arrays.asList(ids.split(",")));
 		return Result.ok("批量删除成功!");
 	}

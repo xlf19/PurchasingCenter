@@ -1,6 +1,8 @@
 package org.jeecg.modules.contract_management.contractpurchase.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.jeecg.common.api.vo.Result;
@@ -20,8 +22,11 @@ import org.springframework.web.servlet.ModelAndView;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.jeecg.common.aspect.annotation.AutoLog;
+import org.jeecg.common.util.oConvertUtils;
 
- /**
+import static java.lang.Integer.parseInt;
+
+/**
  * @Description: 采购合同表
  * @Author: jeecg-boot
  * @Date:   2020-12-04
@@ -163,7 +168,14 @@ public class ContractPurchaseController extends JeecgController<ContractPurchase
      @GetMapping(value = "/hthfind")
      public Result<?> hthfind() {
          String contractNo=contractPurchaseService.hthfind();
-         return Result.ok(contractNo);
+		 SimpleDateFormat df = new SimpleDateFormat("yyyyMM");
+		 String code = "WX"+df.format(new Date());
+         if(oConvertUtils.isEmpty(contractNo)){
+			 code=code+"0001";
+		 }else{
+			 code = code+String.format("%04d", parseInt(contractNo)+1);
+		 }
+         return Result.ok(code);
      }
 
 }

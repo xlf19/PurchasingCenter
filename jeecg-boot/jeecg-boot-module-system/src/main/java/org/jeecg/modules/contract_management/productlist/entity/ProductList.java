@@ -61,55 +61,55 @@ public class ProductList implements Serializable {
 	/**总量*/
 	@Excel(name = "总量", width = 15)
     @ApiModelProperty(value = "总量")
-    private java.lang.String total;
+    private java.math.BigDecimal total;
 	/**1月*/
 	@Excel(name = "1月", width = 15)
     @ApiModelProperty(value = "1月")
-    private java.lang.String january;
+    private java.math.BigDecimal january;
 	/**2月*/
 	@Excel(name = "2月", width = 15)
     @ApiModelProperty(value = "2月")
-    private java.lang.String february;
+    private java.math.BigDecimal february;
 	/**3月*/
 	@Excel(name = "3月", width = 15)
     @ApiModelProperty(value = "3月")
-    private java.lang.String march;
+    private java.math.BigDecimal march;
 	/**4月*/
 	@Excel(name = "4月", width = 15)
     @ApiModelProperty(value = "4月")
-    private java.lang.String april;
+    private java.math.BigDecimal april;
 	/**5月*/
 	@Excel(name = "5月", width = 15)
     @ApiModelProperty(value = "5月")
-    private java.lang.String may;
+    private java.math.BigDecimal may;
 	/**6月*/
 	@Excel(name = "6月", width = 15)
     @ApiModelProperty(value = "6月")
-    private java.lang.String june;
+    private java.math.BigDecimal june;
 	/**7月*/
 	@Excel(name = "7月", width = 15)
     @ApiModelProperty(value = "7月")
-    private java.lang.String july;
+    private java.math.BigDecimal july;
 	/**8月*/
 	@Excel(name = "8月", width = 15)
     @ApiModelProperty(value = "8月")
-    private java.lang.String august;
+    private java.math.BigDecimal august;
 	/**9月*/
 	@Excel(name = "9月", width = 15)
     @ApiModelProperty(value = "9月")
-    private java.lang.String september;
+    private java.math.BigDecimal september;
 	/**10月*/
 	@Excel(name = "10月", width = 15)
     @ApiModelProperty(value = "10月")
-    private java.lang.String october;
+    private java.math.BigDecimal october;
 	/**11月*/
 	@Excel(name = "11月", width = 15)
     @ApiModelProperty(value = "11月")
-    private java.lang.String november;
+    private java.math.BigDecimal november;
 	/**12月*/
 	@Excel(name = "12月", width = 15)
     @ApiModelProperty(value = "12月")
-    private java.lang.String december;
+    private java.math.BigDecimal december;
 	/**是否删除*/
 	@Excel(name = "是否删除", width = 15)
     @ApiModelProperty(value = "是否删除")

@@ -54,4 +54,19 @@ public class QualityDateController extends JeecgController<QualityDate, IQuality
 		 IPage<Map<Object, String>> pageList = qualityDateService.queryPageListjf(page, htbh);
 		 return Result.ok(pageList);
 	 }
+
+	 /**
+	  * 批量删除
+	  *
+	  * @param ids
+	  * @return
+	  */
+	 @AutoLog(value = "加权平均-批量删除")
+	 @ApiOperation(value = "加权平均-批量删除", notes = "加权平均-批量删除")
+	 @DeleteMapping(value = "/deleteBatch")
+	 public Result<?> deleteBatch(@RequestParam(name = "ids", required = true) String ids) {
+		 this.qualityDateService.removeByIds(Arrays.asList(ids.split(",")));
+		 return Result.ok("批量删除成功!");
+	 }
+
 }

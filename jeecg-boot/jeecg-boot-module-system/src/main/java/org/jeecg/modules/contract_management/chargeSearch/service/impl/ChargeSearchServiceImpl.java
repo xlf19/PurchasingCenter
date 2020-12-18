@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.poi.ss.formula.functions.T;
 import org.jeecg.modules.contract_management.chargeSearch.mapper.ChargeSearchMapper;
 import org.jeecg.modules.contract_management.chargeSearch.service.IChargeSearchService;
+import org.jeecg.modules.contract_management.productinformation.entity.ProductInformation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,5 +25,15 @@ public class ChargeSearchServiceImpl extends ServiceImpl<ChargeSearchMapper, T> 
     @Override
     public List<Map<Object, String>> findDetail(String contractid) {
         return chargeSearchMapper.findDetail(contractid);
+    }
+
+    @Override
+    public List<Map<Object, String>> productid(String contractid) {
+        return chargeSearchMapper.productid(contractid);
+    }
+
+    @Override
+    public List<Map<Object, String>> productidlist(String pid) {
+        return chargeSearchMapper.productidlist(pid);
     }
 }

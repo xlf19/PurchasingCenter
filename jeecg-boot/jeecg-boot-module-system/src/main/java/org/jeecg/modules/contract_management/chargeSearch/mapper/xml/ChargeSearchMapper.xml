@@ -3,15 +3,19 @@
 <mapper namespace="org.jeecg.modules.contract_management.chargeSearch.mapper.ChargeSearchMapper">
 
     <select id="list" resultType="map">
-        select cp.*,pif.total_price from contract_purchase as cp
-        left join product_information as pif on pif.contract_id =cp.id
+        select cp.id,  CONVERT(varchar(100), cp.signing_time, 23)as signingdata,SUM(pif.total_price) as total_price,
+        cp.contract_no, cp.contract_type, cp.supplier, cp.contract_notes, cp.create_by, cp.tax_rate
+        from contract_purchase as cp
+        left join product_information as pif on pif.contract_id =cp.id and pif.isdelete=1
         where cp.isdelete=1
         <if test="startdate !=null and startdate!=''">
-            and CONVERT(varchar(100), cp.create_time, 23)>=CONVERT(varchar(100), #{startdate}, 23)
+            and CONVERT(varchar(100), cp.signing_time, 23)>=CONVERT(varchar(100), #{startdate}, 23)
         </if>
         <if test="enddate !=null and enddate!=''">
-            and CONVERT(varchar(100), cp.create_time, 23) &lt;=CONVERT(varchar(100), #{enddate}, 23)
+            and CONVERT(varchar(100), cp.signing_time, 23) &lt;=CONVERT(varchar(100), #{enddate}, 23)
         </if>
+        group by cp.id,cp.signing_time,cp.contract_no,cp.contract_type,cp.supplier,cp.contract_notes,cp.create_by
+        ,cp.tax_rate
     </select>
 
     <select id="findDetail" resultType="map" parameterType="java.lang.String">
@@ -20,7 +24,19 @@
 	      ,pl.july,pl.august,pl.september,pl.october
 	      ,pl.november,pl.december
           from product_information as pif
-          left join product_list as pl on pl.product_id=pif.id
-          where pif.contract_id=#{contractid}
+          left join product_list as pl on pl.product_id=pif.id and pl.isdelete=1
+          where pif.contract_id=#{contractid} and pif.isdelete=1
+    </select>
+    <select id="productid" resultType="map" parameterType="java.lang.String">
+           select top(1)id,material_code as materialCode,material_name as materialName,specification_model as specificationModel,
+           unit as unit,unit_price as unitPrice,quantity as quantity,total_price as totalPrice,taxes as taxes,remarks as remarks,
+           contract_id as contract_id
+           from product_information
+           where contract_id=#{contractid} and isdelete=1
+    </select>
+
+    <select id="productidlist" resultType="map" parameterType="java.lang.String">
+             select top(1)* from product_list
+             where product_id=#{pid} and isdelete=1
     </select>
 </mapper>

@@ -80,33 +80,9 @@ public class ContractPurchase implements Serializable {
     private java.lang.String contractTitle;
 	/**含税*/
 	@Excel(name = "含税", width = 15)
-    private transient java.lang.String taxIncludedString;
+    @ApiModelProperty(value = "含税")
+    private  java.lang.Integer taxIncluded;
 
-    private byte[] taxIncluded;
-
-    public byte[] getTaxIncluded(){
-        if(taxIncludedString==null){
-            return null;
-        }
-        try {
-            return taxIncludedString.getBytes("UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public String getTaxIncludedString(){
-        if(taxIncluded==null || taxIncluded.length==0){
-            return "";
-        }
-        try {
-            return new String(taxIncluded,"UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
 	/**税率*/
 	@Excel(name = "税率", width = 15)
     @ApiModelProperty(value = "税率")
@@ -128,19 +104,25 @@ public class ContractPurchase implements Serializable {
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern="yyyy-MM-dd")
     @ApiModelProperty(value = "签订时间")
-    private java.util.Date signingTime;
+    private Date signingTime;
 	/**交货时间*/
-	@Excel(name = "交货时间", width = 15)
+	@Excel(name = "交货时间", width = 15,format = "yyyy-MM-dd")
+    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern="yyyy-MM-dd")
     @ApiModelProperty(value = "交货时间")
-    private java.lang.String deliveryTime;
+    private Date deliveryTime;
 	/**开始时间*/
-	@Excel(name = "开始时间", width = 15)
+	@Excel(name = "开始时间", width = 15,format = "yyyy-MM-dd")
+    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern="yyyy-MM-dd")
     @ApiModelProperty(value = "开始时间")
-    private java.lang.String startingTime;
+    private Date startingTime;
 	/**终止时间*/
-	@Excel(name = "终止时间", width = 15)
+	@Excel(name = "终止时间", width = 15,format = "yyyy-MM-dd")
+    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern="yyyy-MM-dd")
     @ApiModelProperty(value = "终止时间")
-    private java.lang.String stopTime;
+    private Date stopTime;
 	/**合同备注*/
 	@Excel(name = "合同备注", width = 15)
     @ApiModelProperty(value = "合同备注")
