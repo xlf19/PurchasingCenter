@@ -46,51 +46,46 @@
         :loading="loading"
         :expandedRowKeys="expandedRowKeys"
         class="j-table-force-nowrap"
-        @change="handleTableChange"
         @expand="handleExpand"
       >
         <span slot="action" slot-scope="text, record">
-          <a @click="handleEdit(record)">编辑</a>
+          <a href="javascript:;" @click="handleEdit(record)">编辑</a>
           <a-divider type="vertical" />
-          <a @click="handleDetail(record)">打印</a>
+          <a href="javascript:;" @click="handleprint(record)">打印</a>
         </span>
         <a-table
           slot="expandedRowRender"
           :columns="innerColumns"
+          :dataSource="innerData"
           size="middle"
-          :scroll="{ x: true }"
           bordered
           rowKey="id"
           :loading="loading"
-          :dataSource="innerData"
           :pagination="false"
         >
         </a-table>
       </a-table>
     </div>
-
-    <contract-purchase-modal ref="modalForm" @ok="modalFormOk"></contract-purchase-modal>
   </a-card>
 </template>
 
 <script>
 import '@/assets/less/TableExpand.less'
 import { mixinDevice } from '@/utils/mixin'
-import { deleteAction, getAction, downFile, getFileAccessHttpUrl } from '@/api/manage'
+import { deleteAction, getAction, getFileAccessHttpUrl } from '@/api/manage'
+import { initDictOptions, filterDictText, filterMultiDictText } from '@/components/dict/JDictSelectUtil'
 import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-import ContractPurchaseModal from './modules/ContractPurchaseModal'
 import moment from 'moment'
 
 export default {
   name: 'ContractPurchaseList',
   mixins: [JeecgListMixin, mixinDevice],
-  components: {
-    ContractPurchaseModal
-  },
+  components: {},
   data() {
     return {
       description: '采购合同表管理页面',
       rangeDate: [moment(this.date), moment(this.date)],
+      namelist: [],
       // 表头
       columns: [
         {
@@ -131,12 +126,16 @@ export default {
         {
           title: '业务员',
           align: 'center',
-          dataIndex: 'create_by'
+          dataIndex: 'create_by',
+          customRender: text => {
+            //字典值替换通用方法
+            return filterMultiDictText(this.namelist, text)
+          }
         },
         {
           title: '签订时间',
           align: 'center',
-          dataIndex: 'signing_time',
+          dataIndex: 'signingdata',
           customRender: function(text) {
             return !text ? '' : text.length > 10 ? text.substr(0, 10) : text
           }
@@ -163,17 +162,17 @@ export default {
         {
           title: '物资编码',
           align: 'center',
-          dataIndex: 'materialCode'
+          dataIndex: 'material_code'
         },
         {
           title: '物资名称',
           align: 'center',
-          dataIndex: 'materialName'
+          dataIndex: 'material_name'
         },
         {
           title: '规格型号',
           align: 'center',
-          dataIndex: 'specificationModel'
+          dataIndex: 'specification_model'
         },
         {
           title: '单位',
@@ -183,7 +182,7 @@ export default {
         {
           title: '单价',
           align: 'center',
-          dataIndex: 'unitPrice'
+          dataIndex: 'unit_price'
         },
         {
           title: '数量',
@@ -193,7 +192,7 @@ export default {
         {
           title: '总价',
           align: 'center',
-          dataIndex: 'totalPrice'
+          dataIndex: 'total_price'
         },
         {
           title: '税金',
@@ -202,55 +201,68 @@ export default {
         },
         {
           title: '1月',
-          align: 'center'
+          align: 'center',
+          dataIndex: 'january'
         },
         {
           title: '2月',
-          align: 'center'
+          align: 'center',
+          dataIndex: 'february'
         },
         {
           title: '3月',
-          align: 'center'
+          align: 'center',
+          dataIndex: 'march'
         },
         {
           title: '4月',
-          align: 'center'
+          align: 'center',
+          dataIndex: 'april'
         },
         {
           title: '5月',
-          align: 'center'
+          align: 'center',
+          dataIndex: 'may'
         },
         {
           title: '6月',
-          align: 'center'
+          align: 'center',
+          dataIndex: 'june'
         },
         {
           title: '7月',
-          align: 'center'
+          align: 'center',
+          dataIndex: 'july'
         },
         {
           title: '8月',
-          align: 'center'
+          align: 'center',
+          dataIndex: 'august'
         },
         {
           title: '9月',
-          align: 'center'
+          align: 'center',
+          dataIndex: 'september'
         },
         {
           title: '10月',
-          align: 'center'
+          align: 'center',
+          dataIndex: 'october'
         },
         {
           title: '11月',
-          align: 'center'
+          align: 'center',
+          dataIndex: 'november'
         },
         {
           title: '12月',
-          align: 'center'
+          align: 'center',
+          dataIndex: 'december'
         },
         {
           title: '备注',
-          align: 'center'
+          align: 'center',
+          dataIndex: 'remarks'
         }
       ],
       innerData: [],
@@ -273,7 +285,15 @@ export default {
     }
   },
   methods: {
-    initDictConfig() {},
+    initDictConfig() {
+      //初始化字典 - 业务员
+      initDictOptions('sys_user,realname,username').then(res => {
+        if (res.success) {
+          this.namelist = res.result
+        }
+      })
+    },
+
     initRangeDate() {
       this.rangeDate = [moment(this.date), moment(this.date)]
     },
@@ -300,10 +320,18 @@ export default {
         getAction(this.url.findDetail, { contractid: record.id }).then(res => {
           if (res.success) {
             this.loading = false
-            this.innerData = res.result.records
+            this.innerData = res.result
           }
         })
       }
+    },
+    //打印
+    handleprint(record) {
+      this.$router.push({ path: '/contract_management/chargesearch/ContractPrint', query: { data: record } })
+    },
+    //编辑
+    handleEdit(record) {
+      this.$router.push({ path: '/contract_management/chargesearch/ContractEditTab', query: { data: record } })
     }
   }
 }

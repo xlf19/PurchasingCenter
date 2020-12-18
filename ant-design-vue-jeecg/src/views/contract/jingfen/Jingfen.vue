@@ -77,6 +77,7 @@
       <div class="table-operator">
         <a-button @click="htAdd" type="primary" icon="plus">导入加权均值</a-button>
         <a-button @click="htAddOne" type="primary" icon="plus">手工添加结算单</a-button>
+        <a-button @click="batchDelete" type="primary" icon="delete">删除</a-button>
       </div>
       <!-- table区域-begin -->
       <div>
@@ -111,7 +112,7 @@
 
 <script>
 import '@/assets/less/TableExpand.less'
-import { getAction, postAction } from '@/api/manage'
+import { getAction, postAction,deleteAction } from '@/api/manage'
 import { validateDuplicateValue, randomUUID, handleStatus, filterObj } from '@/utils/util'
 import { initDictOptions, filterDictText, filterMultiDictText } from '@/components/dict/JDictSelectUtil'
 import { mixinDevice } from '@/utils/mixin'
@@ -127,7 +128,7 @@ export default {
   components: {
     JDate,
     ContractList,
-    JiaQuanModal,
+    JiaQuanModal
   },
   data() {
     return {
@@ -150,12 +151,12 @@ export default {
         },
         showQuickJumper: true,
         showSizeChanger: true,
-        total: 0,
+        total: 0
       },
       /* 排序参数 */
       isorter: {
         column: 'createTime',
-        order: 'desc',
+        order: 'desc'
       },
       /* table选中keys*/
       selectedRowKeys: [],
@@ -181,134 +182,134 @@ export default {
           key: 'rowIndex',
           width: 60,
           align: 'center',
-          customRender: function (t, r, index) {
+          customRender: function(t, r, index) {
             return parseInt(index) + 1
-          },
+          }
         },
         {
           title: '供货单位',
           align: 'center',
-          dataIndex: 'supplier',
+          dataIndex: 'supplier'
         },
         {
           title: '收货单位',
           align: 'center',
-          dataIndex: 'receivingunit',
+          dataIndex: 'receivingunit'
         },
         {
           title: '物资名称',
           align: 'center',
-          dataIndex: 'material_name',
+          dataIndex: 'material_name'
         },
         {
           title: '取样日期',
           align: 'center',
           dataIndex: 'riqi',
-          customRender: function (text) {
+          customRender: function(text) {
             return !text ? '' : text.length > 10 ? text.substr(0, 10) : text
-          },
+          }
         },
         {
           title: '检验量',
           align: 'center',
-          dataIndex: 'weighing',
+          dataIndex: 'weighing'
         },
 
         {
           title: 'S',
           align: 'center',
-          dataIndex: 'ss',
+          dataIndex: 'ss'
         },
         {
           title: 'P',
           align: 'center',
-          dataIndex: 'pp',
+          dataIndex: 'pp'
         },
         {
           title: 'FEO',
           align: 'center',
-          dataIndex: 'feo',
+          dataIndex: 'feo'
         },
         {
           title: 'H2O',
           align: 'center',
-          dataIndex: 'h2o',
+          dataIndex: 'h2o'
         },
         {
           title: 'Al2O3',
           align: 'center',
-          dataIndex: 'al2o3',
+          dataIndex: 'al2o3'
         },
         {
           title: 'MnO',
           align: 'center',
-          dataIndex: 'mno',
+          dataIndex: 'mno'
         },
         {
           title: 'TiO2',
           align: 'center',
-          dataIndex: 'tio2',
+          dataIndex: 'tio2'
         },
         {
           title: 'Cr',
           align: 'center',
-          dataIndex: 'cr',
+          dataIndex: 'cr'
         },
         {
           title: 'Cu',
           align: 'center',
-          dataIndex: 'cu',
+          dataIndex: 'cu'
         },
         {
           title: 'TFE',
           align: 'center',
-          dataIndex: 'tfe',
+          dataIndex: 'tfe'
         },
         {
           title: 'MGO',
           align: 'center',
-          dataIndex: 'mgo',
+          dataIndex: 'mgo'
         },
         {
           title: 'Pb',
           align: 'center',
-          dataIndex: 'pb',
+          dataIndex: 'pb'
         },
         {
           title: '[As]',
           align: 'center',
-          dataIndex: 'as1',
+          dataIndex: 'as1'
         },
         {
           title: 'CaO',
           align: 'center',
-          dataIndex: 'cao',
+          dataIndex: 'cao'
         },
         {
           title: 'K2O',
           align: 'center',
-          dataIndex: 'k2o',
+          dataIndex: 'k2o'
         },
         {
           title: 'SiO2',
           align: 'center',
-          dataIndex: 'sio2',
+          dataIndex: 'sio2'
         },
         {
           title: 'Zn',
           align: 'center',
-          dataIndex: 'zn',
+          dataIndex: 'zn'
         },
         {
           title: '抗压',
           align: 'center',
-          dataIndex: 'compressive',
+          dataIndex: 'compressive'
         },
         {
           title: '[粒度<5mm]',
           align: 'center',
-          dataIndex: 'granularity',
-        },
+          dataIndex: 'granularity'
+        }
       ],
 
       columns: [],
@@ -320,130 +321,130 @@ export default {
           key: 'rowIndex',
           width: 60,
           align: 'center',
-          customRender: function (t, r, index) {
+          customRender: function(t, r, index) {
             return parseInt(index) + 1
-          },
+          }
         },
         {
           title: '供货单位',
           align: 'center',
-          dataIndex: 'supplier',
+          dataIndex: 'supplier'
         },
         {
           title: '收货单位',
           align: 'center',
-          dataIndex: 'receivingunit',
+          dataIndex: 'receivingunit'
         },
         {
           title: '物资名称',
           align: 'center',
-          dataIndex: 'material_name',
+          dataIndex: 'material_name'
         },
         {
           title: '取样日期',
           align: 'center',
           dataIndex: 'riqi',
-          customRender: function (text) {
+          customRender: function(text) {
             return !text ? '' : text.length > 10 ? text.substr(0, 10) : text
-          },
+          }
         },
         {
           title: '检验量',
           align: 'center',
-          dataIndex: 'weighing',
+          dataIndex: 'weighing'
         },
 
         {
           title: 'S',
           align: 'center',
-          dataIndex: 'ss',
+          dataIndex: 'ss'
         },
         {
           title: 'P',
           align: 'center',
-          dataIndex: 'pp',
+          dataIndex: 'pp'
         },
         {
           title: 'FEO',
           align: 'center',
-          dataIndex: 'feo',
+          dataIndex: 'feo'
         },
         {
           title: 'H2O',
           align: 'center',
-          dataIndex: 'h2o',
+          dataIndex: 'h2o'
         },
         {
           title: 'Al2O3',
           align: 'center',
-          dataIndex: 'al2o3',
+          dataIndex: 'al2o3'
         },
         {
           title: 'MnO',
           align: 'center',
-          dataIndex: 'mno',
+          dataIndex: 'mno'
         },
         {
           title: 'TiO2',
           align: 'center',
-          dataIndex: 'tio2',
+          dataIndex: 'tio2'
         },
         {
           title: 'Cr',
           align: 'center',
-          dataIndex: 'cr',
+          dataIndex: 'cr'
         },
         {
           title: 'Cu',
           align: 'center',
-          dataIndex: 'cu',
+          dataIndex: 'cu'
         },
         {
           title: 'TFE',
           align: 'center',
-          dataIndex: 'tfe',
+          dataIndex: 'tfe'
         },
         {
           title: 'MGO',
           align: 'center',
-          dataIndex: 'mgo',
+          dataIndex: 'mgo'
         },
         {
           title: 'Pb',
           align: 'center',
-          dataIndex: 'pb',
+          dataIndex: 'pb'
         },
         {
           title: '[As]',
           align: 'center',
-          dataIndex: 'as1',
+          dataIndex: 'as1'
         },
         {
           title: 'CaO',
           align: 'center',
-          dataIndex: 'cao',
+          dataIndex: 'cao'
         },
         {
           title: 'K2O',
           align: 'center',
-          dataIndex: 'k2o',
+          dataIndex: 'k2o'
         },
         {
           title: 'SiO2',
           align: 'center',
-          dataIndex: 'sio2',
+          dataIndex: 'sio2'
         },
         {
           title: 'Zn',
           align: 'center',
-          dataIndex: 'zn',
-        },
+          dataIndex: 'zn'
+        }
       ],
 
       validatorRules: {
         contractNo: { rules: [{ required: true, message: '请选择合同号!' }] },
         material_type: { rules: [{ required: true, message: '请选择物资类别!' }] },
-        receivingUnit: { rules: [{ required: true, message: '请选择收货单位!' }] },
+        receivingUnit: { rules: [{ required: true, message: '请选择收货单位!' }] }
       },
 
       url: {
@@ -453,9 +454,10 @@ export default {
         findshdw: '/hetong/hetong/findshdw',
         findOne: '/hetong/hetong/findOne',
         htadd: '/jingfen/jingfen/htadd',
+        deleteBatch: '/qualitydate/qualityDate/deleteBatch'
       },
 
-      dictOptions: {},
+      dictOptions: {}
     }
   },
   created() {
@@ -465,9 +467,9 @@ export default {
     this.findshdw()
   },
   computed: {
-    importExcelUrl: function () {
+    importExcelUrl: function() {
       return `${window._CONFIG['domianURL']}/${this.url.importExcelUrl}`
-    },
+    }
   },
   methods: {
     initDictConfig() {},
@@ -495,7 +497,7 @@ export default {
 
     //获取凭证号
     findpzh() {
-      getAction(this.url.findpzh).then((res) => {
+      getAction(this.url.findpzh).then(res => {
         if (res.success) {
           if (res.result != null) {
             this.voucherNo = res.result
@@ -510,7 +512,7 @@ export default {
 
     //获取合同号
     findHt(hth) {
-      getAction(this.url.findHt, { hth: hth }).then((res) => {
+      getAction(this.url.findHt, { hth: hth }).then(res => {
         if (res.success) {
           this.contractNos = res.result
         }
@@ -528,7 +530,7 @@ export default {
 
     //获取收货单位
     findshdw(hth) {
-      getAction(this.url.findshdw).then((res) => {
+      getAction(this.url.findshdw).then(res => {
         if (res.success) {
           this.receivingUnits = res.result
         }
@@ -547,7 +549,7 @@ export default {
       }
       this.htbhs = hth
       let datas = {
-        htbh: hth,
+        htbh: hth
       }
       this.loadData(this.arg, datas)
       this.$emit('gethtbh', hth)
@@ -555,7 +557,7 @@ export default {
 
     //获取供货单位、物资名称
     finghuandwzmc(hth) {
-      getAction(this.url.findOne, { hth: hth }).then((res) => {
+      getAction(this.url.findOne, { hth: hth }).then(res => {
         if (res.success) {
           if (res.result != null && res.result != '') {
             this.supplier = res.result.DanWeiName
@@ -588,14 +590,14 @@ export default {
         if (!err) {
           let shdw = values.receivingUnit
           let htbhs = values.contractNo
-          postAction(this.url.htadd, { htxx: htxx, htbhs: htbhs, pzh: pzh, shdw: shdw }).then((res) => {
+          postAction(this.url.htadd, { htxx: htxx, htbhs: htbhs, pzh: pzh, shdw: shdw }).then(res => {
             if (res.success) {
               this.$message.success(res.message)
               this.$refs.ContractList.htlist(htbhs)
               this.selectedRowKeys = []
               this.selectionRows = []
               let datas = {
-                htbh: htbhs,
+                htbh: htbhs
               }
               this.loadData(this.arg, datas)
             }
@@ -621,7 +623,46 @@ export default {
         }
       })
     },
-
+    //批量删除
+    batchDelete() {
+      if (!this.url.deleteBatch) {
+        this.$message.error('请设置url.deleteBatch属性!')
+        return
+      }
+      if (this.selectedRowKeys.length <= 0) {
+        this.$message.warning('请选择一条记录！')
+        return
+      } else {
+        var ids = ''
+        for (var a = 0; a < this.selectedRowKeys.length; a++) {
+          ids += this.selectedRowKeys[a] + ','
+        }
+        var that = this
+        this.$confirm({
+          title: '确认删除',
+          content: '是否删除选中数据?',
+          onOk: function() {
+            that.loading = true
+            deleteAction(that.url.deleteBatch, { ids: ids })
+              .then(res => {
+                if (res.success) {
+                  that.$message.success(res.message)
+                  let htbh = {
+                    htbh: that.htbhs
+                  }
+                  that.loadData(0, htbh)
+                  that.onClearSelected()
+                } else {
+                  that.$message.warning(res.message)
+                }
+              })
+              .finally(() => {
+                that.loading = false
+              })
+          }
+        })
+      }
+    },
     loadData(arg, datas) {
       if (!this.url.list) {
         this.$message.error('请设置url.list属性!')
@@ -635,7 +676,7 @@ export default {
       var params = this.getQueryParams() //查询条件
       params = Object.assign(params, datas)
       this.loading = true
-      postAction(this.url.list, params).then((res) => {
+      postAction(this.url.list, params).then(res => {
         if (res.success) {
           console.log(res)
           this.dataSource = res.result.records
@@ -651,7 +692,7 @@ export default {
     modalFormOk() {
       // 新增/修改 成功时，重载列表
       let htbh = {
-        htbh: this.htbhs,
+        htbh: this.htbhs
       }
       this.loadData(0, htbh)
     },
@@ -673,11 +714,11 @@ export default {
       this.ipagination = pagination
       let shdw = this.supplier
       let htbh = {
-        htbh: this.htbhs,
+        htbh: this.htbhs
       }
       this.loadData(this.arg, htbh)
-    },
-  },
+    }
+  }
 }
 </script>
 <style scoped>

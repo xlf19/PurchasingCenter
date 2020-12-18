@@ -38,7 +38,11 @@
           <a-row :gutter="24">
             <a-col :xl="5" :lg="7" :md="8" :sm="24">
               <a-form-item label="合同编号">
-                <a-input placeholder="请输入合同编号" v-decorator="['contractNo', validatorRules.contractNo]"></a-input>
+                <a-input
+                  placeholder="请输入合同编号"
+                  v-decorator="['contractNo', validatorRules.contractNo]"
+                  disabled
+                ></a-input>
               </a-form-item>
             </a-col>
             <a-col :xl="5" :lg="7" :md="8" :sm="24">
@@ -91,7 +95,7 @@
           <a-row :gutter="24">
             <a-col :xl="5" :lg="7" :md="8" :sm="24">
               <a-form-item label="含税">
-                <a-radio-group v-decorator="['taxIncluded', { initialValue: 1 }]">
+                <a-radio-group v-decorator="['taxIncluded']">
                   <a-radio :value="1">
                     含税
                   </a-radio>
@@ -103,7 +107,7 @@
             </a-col>
             <a-col :xl="5" :lg="7" :md="8" :sm="24">
               <a-form-item label="税率">
-                <a-select placeholder="请选择税率" allowClear v-decorator="['taxRate', { initialValue: '13%' }]">
+                <a-select placeholder="请选择税率" allowClear v-decorator="['taxRate']">
                   <a-select-option value="11%">11%</a-select-option>
                   <a-select-option value="13%">13%</a-select-option>
                   <a-select-option value="16%">16%</a-select-option>
@@ -112,7 +116,7 @@
             </a-col>
             <a-col :xl="5" :lg="7" :md="8" :sm="24">
               <a-form-item label="币种">
-                <a-select placeholder="请选择币种" allowClear v-decorator="['currency', { initialValue: '￥' }]">
+                <a-select placeholder="请选择币种" allowClear v-decorator="['currency']">
                   <a-select-option value="￥">￥</a-select-option>
                   <a-select-option value="$">$</a-select-option>
                 </a-select>
@@ -120,58 +124,36 @@
             </a-col>
             <a-col :xl="5" :lg="7" :md="8" :sm="24">
               <a-form-item label="签订地点">
-                <a-input
-                  placeholder="请输入签订地点"
-                  v-decorator="['placeSigning', { initialValue: '新兴铸管芜湖工业区' }]"
-                ></a-input>
+                <a-input placeholder="请输入签订地点" v-decorator="['placeSigning']"></a-input>
               </a-form-item>
             </a-col>
           </a-row>
           <a-row :gutter="24">
             <a-col :xl="5" :lg="7" :md="8" :sm="24">
               <a-form-item label="交货地点">
-                <a-input
-                  placeholder="请输入交货地点"
-                  v-decorator="['tradingLocations', { initialValue: '新兴铸管芜湖工业区' }]"
-                ></a-input>
+                <a-input placeholder="请输入交货地点" v-decorator="['tradingLocations']"></a-input>
               </a-form-item>
             </a-col>
             <a-col :xl="5" :lg="7" :md="8" :sm="24">
               <a-form-item label="签订时间">
-                <a-date-picker
-                  placeholder="请选择签订时间"
-                  style="width:100%"
-                  v-decorator="['signingTime', { initialValue: moment(this.time, dateFormat) }]"
-                />
+                <a-date-picker placeholder="请选择签订时间" style="width:100%" v-decorator="['signingTime']" />
               </a-form-item>
             </a-col>
             <a-col :xl="5" :lg="7" :md="8" :sm="24">
               <a-form-item label="交货时间">
-                <a-date-picker
-                  placeholder="请选择交货时间"
-                  style="width:100%"
-                  v-decorator="['deliveryTime', { initialValue: moment(this.time, dateFormat) }]"
-                />
+                <a-date-picker placeholder="请选择交货时间" style="width:100%" v-decorator="['deliveryTime']" />
               </a-form-item>
             </a-col>
             <a-col :xl="5" :lg="7" :md="8" :sm="24">
               <a-form-item label="开始时间">
-                <a-date-picker
-                  placeholder="请选择开始时间"
-                  style="width:100%"
-                  v-decorator="['startingTime', { initialValue: moment(this.time, dateFormat) }]"
-                />
+                <a-date-picker placeholder="请选择开始时间" style="width:100%" v-decorator="['startingTime']" />
               </a-form-item>
             </a-col>
           </a-row>
           <a-row :gutter="24">
             <a-col :xl="5" :lg="7" :md="8" :sm="24">
               <a-form-item label="终止时间">
-                <a-date-picker
-                  placeholder="请选择终止时间"
-                  style="width:100%"
-                  v-decorator="['stopTime', { initialValue: moment(this.time, dateFormat) }]"
-                />
+                <a-date-picker placeholder="请选择终止时间" style="width:100%" v-decorator="['stopTime']" />
               </a-form-item>
             </a-col>
             <a-col :xl="5" :lg="7" :md="8" :sm="24">
@@ -203,6 +185,7 @@
           bordered
           :maxHeight="400"
           @valueChange="handleValueTwo"
+          rowKey="id"
           ref="editableTable"
         />
         <contract-product-modal ref="modalForm" @ok="modalFormOk"></contract-product-modal>
@@ -215,6 +198,7 @@
           bordered
           :maxHeight="400"
           @valueChange="handleValueChange"
+          rowKey="id"
           ref="editablelist"
         />
       </div>
@@ -224,7 +208,8 @@
 
 <script>
 import '@/assets/less/TableExpand.less'
-import { deleteAction, getAction, httpAction, downFile, getFileAccessHttpUrl } from '@/api/manage'
+import { deleteAction, getAction, httpAction, getFileAccessHttpUrl } from '@/api/manage'
+import pick from 'lodash.pick'
 import { initDictOptions, filterMultiDictText } from '@/components/dict/JDictSelectUtil'
 import { JeecgListMixin } from '@/mixins/JeecgListMixin'
 import { mixinDevice } from '@/utils/mixin'
@@ -235,10 +220,22 @@ import ContractProductModal from './modules/ContractProductModal'
 import { FormTypes } from '@/utils/JEditableTableUtil'
 import JEditableTable from '@/components/jeecg/JEditableTable'
 import { randomUUID } from '@/utils/util'
+import JDate from '@/components/jeecg/JDate'
 export default {
   name: 'ContractMain',
   mixins: [JeecgListMixin, mixinDevice],
-  components: { ContractProductModal, JEditableTable },
+  components: { ContractProductModal, JEditableTable, JDate },
+  props: {
+    contractid: {
+      type: String
+    }
+  },
+  watch: {
+    contractid: function(newVal, oldVal) {
+      this.contractid = newVal
+      this.contractone(newVal)
+    }
+  },
   data() {
     this.dateFormat = 'YYYY-MM-DD'
     return {
@@ -371,20 +368,20 @@ export default {
       dictOptions: {},
       url: {
         searchname: '/original/originalCharge/searchname',
-        hthfind: '/contractpurchase/contractPurchase/hthfind',
+        contractid: '/contractpurchase/contractPurchase/queryById',
         add: '/contractedit/contractedit/add',
         adddata: '/contractedit/contractedit/adddata',
         addlist: '/contractedit/contractedit/addlist',
+        productid: '/chargsearch/chargsearch/productid',
+        productidlist: '/chargsearch/chargsearch/productidlist',
         queryById: '/contractedit/contractedit/queryById',
         delete: '/contractedit/contractedit/delete'
       }
     }
   },
   created() {
-    // this.username = store.getters.userInfo.realname
-    // this.departname = store.getters.userInfo.orgCodeTxt
+    this.contractone(this.contractid)
     this.searchname('')
-    this.hthfind()
   },
   computed: {
     importExcelUrl: function() {
@@ -393,16 +390,45 @@ export default {
   },
   methods: {
     moment,
-    //生成合同号
-    hthfind() {
-      getAction(this.url.hthfind).then(res => {
+    //查询合同信息表
+    contractone(id) {
+      getAction(this.url.contractid, { id: id }).then(res => {
         if (res.success) {
           this.form.setFieldsValue({
-            contractNo: res.message
+            // id: res.result.id,
+            contractType: res.result.contractType,
+            templateId: res.result.templateId,
+            contractNo: res.result.contractNo,
+            supplier: res.result.supplier,
+            demandSideUnit: res.result.demandSideUnit,
+            contractTitle: res.result.contractTitle,
+            taxIncluded: res.result.taxIncluded,
+            taxRate: res.result.taxRate,
+            currency: res.result.currency,
+            placeSigning: res.result.placeSigning,
+            tradingLocations: res.result.tradingLocations,
+            signingTime: moment(res.result.signingTime, this.dateFormat),
+            deliveryTime: moment(res.result.deliveryTime, this.dateFormat),
+            startingTime: moment(res.result.startingTime, this.dateFormat),
+            stopTime: moment(res.result.stopTime, this.dateFormat),
+            contractNotes: res.result.contractNotes,
+            otherRemarks: res.result.otherRemarks
           })
-        }
-        if (res.code === 510) {
-          this.$message.warning(res.message)
+          getAction(this.url.productid, { contractid: id }).then(res => {
+            if (res.success) {
+              if (res.result.length > 0) {
+                this.data = res.result
+                let proid = res.result[0].id
+                if (proid !== '' && proid !== null && proid !== undefined) {
+                  getAction(this.url.productidlist, { pid: proid }).then(res => {
+                    if (res.success) {
+                      this.datalist = res.result
+                    }
+                  })
+                }
+              }
+            }
+          })
         }
       })
     },
@@ -422,37 +448,115 @@ export default {
       })
     },
     //新增产品
-    modalFormOk(data) {
-      this.data = []
-      this.datalist = []
-      this.data.push({
-        key: 1,
-        materialCode: data[0].materialCode,
-        materialName: data[0].materialName,
-        specificationModel: data[0].specification,
-        unit: data[0].unit,
-        unitPrice: 0,
-        quantity: 0,
-        totalPrice: 0,
-        taxes: 0,
-        remarks: ''
-      })
-      this.datalist.push({
-        key: 1,
-        total: 0,
-        january: 0,
-        february: 0,
-        march: 0,
-        april: 0,
-        may: 0,
-        june: 0,
-        july: 0,
-        august: 0,
-        september: 0,
-        october: 0,
-        november: 0,
-        december: 0
-      })
+    modalFormOk(datao) {
+      if (this.data.length === 0) {
+        this.data = []
+        this.datalist = []
+        this.data.push({
+          key: 1,
+          materialCode: datao[0].materialCode,
+          materialName: datao[0].materialName,
+          specificationModel: datao[0].specification,
+          unit: datao[0].unit,
+          unitPrice: 0,
+          quantity: 0,
+          totalPrice: 0,
+          taxes: 0,
+          remarks: ''
+        })
+        this.datalist.push({
+          key: 1,
+          total: 0,
+          january: 0,
+          february: 0,
+          march: 0,
+          april: 0,
+          may: 0,
+          june: 0,
+          july: 0,
+          august: 0,
+          september: 0,
+          october: 0,
+          november: 0,
+          december: 0
+        })
+      } else {
+        this.$refs.editableTable.getValues((error, values) => {
+          if (error === 0) {
+            let id = values[0].id
+            //先查询产品信息表是否存在信息
+            getAction(this.url.queryById, { id: id }).then(res => {
+              if (res.code == 200) {
+                deleteAction(this.url.delete, { id: id }).then(rtx => {
+                  if (rtx.code == 200) {
+                    this.data = []
+                    this.datalist = []
+                    this.data.push({
+                      key: 1,
+                      materialCode: datao[0].materialCode,
+                      materialName: datao[0].materialName,
+                      specificationModel: datao[0].specification,
+                      unit: datao[0].unit,
+                      unitPrice: 0,
+                      quantity: 0,
+                      totalPrice: 0,
+                      taxes: 0,
+                      remarks: ''
+                    })
+                    this.datalist.push({
+                      key: 1,
+                      total: 0,
+                      january: 0,
+                      february: 0,
+                      march: 0,
+                      april: 0,
+                      may: 0,
+                      june: 0,
+                      july: 0,
+                      august: 0,
+                      september: 0,
+                      october: 0,
+                      november: 0,
+                      december: 0
+                    })
+                  }
+                })
+              } else {
+                this.data = []
+                this.datalist = []
+                this.data.push({
+                  key: 1,
+                  materialCode: datao[0].materialCode,
+                  materialName: datao[0].materialName,
+                  specificationModel: datao[0].specification,
+                  unit: datao[0].unit,
+                  unitPrice: 0,
+                  quantity: 0,
+                  totalPrice: 0,
+                  taxes: 0,
+                  remarks: ''
+                })
+                this.datalist.push({
+                  key: 1,
+                  total: 0,
+                  january: 0,
+                  february: 0,
+                  march: 0,
+                  april: 0,
+                  may: 0,
+                  june: 0,
+                  july: 0,
+                  august: 0,
+                  september: 0,
+                  october: 0,
+                  november: 0,
+                  december: 0
+                })
+              }
+            })
+          }
+        })
+      }
     },
     //删除产品
     handledelete() {
@@ -466,7 +570,6 @@ export default {
             getAction(this.url.queryById, { id: id }).then(res => {
               if (res.code == 200) {
                 deleteAction(this.url.delete, { id: id }).then(rtx => {
-                  console.log(rtx)
                   if (rtx.code == 200) {
                     this.$message.success('删除成功')
                     this.data = []
@@ -482,9 +585,6 @@ export default {
           }
         }
       })
-      // console.log(this.data)
-      // this.data = []
-      // this.datalist = []
     },
     //修改副表总量
     handleValueChange(event) {
@@ -588,12 +688,24 @@ export default {
       // 触发表单验证
       this.form.validateFields((err, values) => {
         if (!err) {
-          if (!this.model.id) {
-            this.model.id = randomUUID()
-          }
           let httpurl = this.url.add
           let method = 'post'
+          this.model.id = this.contractid
+          if (values.signingTime !== '' && values.signingTime !== null && values.signingTime !== undefined) {
+            values.signingTime = moment(values.signingTime).format('YYYY-MM-DD')
+          }
+          if (values.deliveryTime !== '' && values.deliveryTime !== null && values.deliveryTime !== undefined) {
+            values.deliveryTime = moment(values.deliveryTime).format('YYYY-MM-DD')
+          }
+          if (values.startingTime !== '' && values.startingTime !== null && values.startingTime !== undefined) {
+            values.startingTime = moment(values.startingTime).format('YYYY-MM-DD')
+          }
+          if (values.stopTime !== '' && values.stopTime !== null && values.stopTime !== undefined) {
+            values.stopTime = moment(values.stopTime).format('YYYY-MM-DD')
+          }
+
           let formData = Object.assign(this.model, values)
+          console.log(formData)
           httpAction(httpurl, formData, method).then(res => {
             if (res.success) {
               that.$message.success(res.message)
@@ -610,7 +722,7 @@ export default {
         this.$message.error('你还没有添加产品，请添加产品！')
         return
       }
-      let modelid = this.model.id
+      let modelid = this.contractid
       if (modelid === undefined || modelid === '' || modelid === null) {
         this.$message.error('你还没有保存合同，请先保存合同！')
         return
