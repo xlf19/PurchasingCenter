@@ -119,7 +119,7 @@ export default {
       this.model = Object.assign({}, record)
       this.visible = true
       this.$nextTick(() => {
-        this.form.setFieldsValue(pick(this.model, 'id', 'contractNo', 'supplier', 'filePath'))
+        this.form.setFieldsValue(pick(this.model,  'contractNo', 'supplier', 'filePath'))
       })
     },
     //渲染流程表单数据
@@ -166,7 +166,7 @@ export default {
       })
     },
     popupCallback(row) {
-      this.form.setFieldsValue(pick(row, 'id', 'contractNo', 'supplier', 'filePath'))
+      this.form.setFieldsValue(pick(row,  'contractNo', 'supplier', 'filePath'))
     }
   }
 }

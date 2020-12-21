@@ -122,7 +122,7 @@ export default {
         {
           title: '签订时间',
           align: 'center',
-          dataIndex: 'signing_time',
+          dataIndex: 'signingdata',
           customRender: function(text) {
             return !text ? '' : text.length > 10 ? text.substr(0, 10) : text
           }
@@ -130,7 +130,7 @@ export default {
         {
           title: '交货时间',
           align: 'center',
-          dataIndex: 'delivery_time',
+          dataIndex: 'deliverydata',
           customRender: function(text) {
             return !text ? '' : text.length > 10 ? text.substr(0, 10) : text
           }
