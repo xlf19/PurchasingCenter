@@ -81,6 +81,11 @@
           <a-divider type="vertical" />
           <a @click="handleDetail(record)">详情</a>
         </span>
+        <!-- 状态值 -->
+        <span slot="status" slot-scope="text, record">
+          <a-button class="using_btn" v-if="record.useStatus == '1'">使用中</a-button>
+          <a-button class="ban_btn" v-if="record.useStatus == '2'">已禁用</a-button>
+        </span>
       </a-table>
     </div>
 
@@ -94,7 +99,7 @@ import { mixinDevice } from '@/utils/mixin'
 import { JeecgListMixin } from '@/mixins/JeecgListMixin'
 import OriginalChargeModal from './modules/OriginalChargeModal'
 import { deleteAction, getAction, downFile, getFileAccessHttpUrl } from '@/api/manage'
-import { initDictOptions , filterMultiDictText } from '@/components/dict/JDictSelectUtil'
+import { initDictOptions, filterMultiDictText } from '@/components/dict/JDictSelectUtil'
 import JEllipsis from '@/components/jeecg/JEllipsis'
 export default {
   name: 'OriginalChargeList',
@@ -143,12 +148,8 @@ export default {
           title: '使用状态',
           align: 'center',
           dataIndex: 'useStatus',
-          customRender: function(t, r, index) {
-            if (t === 1) {
-              return '使用中'
-            } else if (t === 2) {
-              return '已停用'
-            }
+          scopedSlots: {
+            customRender: 'status'
           }
         },
         {
@@ -366,4 +367,12 @@ export default {
 </script>
 <style scoped>
 @import '~@assets/less/common.less';
+  .using_btn{
+    background-color: #00BB00;
+    color: #f0f0f0;
+  }
+  .ban_btn{
+    background-color: #cccccc;
+    color: white;
+  }
 </style>
