@@ -3,16 +3,24 @@
 <mapper namespace="org.jeecg.modules.contract_management.contractattachment.mapper.ContractAttachmentMapper">
 
     <select id="list" resultType="map">
-        select cp.*,pif.total_price,cp.contract_no as contractNo,cp.file_path as filePath from contract_purchase as cp
-        left join product_information as pif on pif.contract_id =cp.id
+        select cp.id,cp.contract_no as contractNo,
+        cp.contract_type,cp.supplier,sum(pif.total_price) as total_price,
+        cp.contract_notes,cp.create_by,
+        cp.file_path as filePath,
+        cp.tax_rate,
+        CONVERT(varchar(100), cp.signing_time, 23)as signingdata,
+        CONVERT(varchar(100), cp.delivery_time, 23)as deliverydata
+        from contract_purchase as cp
+        left join product_information as pif on pif.contract_id =cp.id and pif.isdelete=1
         where cp.isdelete=1
         <if test="startdate !=null and startdate!=''">
-            and CONVERT(varchar(100), cp.create_time, 23)>=CONVERT(varchar(100), #{startdate}, 23)
+            and CONVERT(varchar(100), cp.signing_time, 23)>=CONVERT(varchar(100), #{startdate}, 23)
         </if>
         <if test="enddate !=null and enddate!=''">
-            and CONVERT(varchar(100), cp.create_time, 23) &lt;=CONVERT(varchar(100), #{enddate}, 23)
+            and CONVERT(varchar(100), cp.signing_time, 23) &lt;=CONVERT(varchar(100), #{enddate}, 23)
         </if>
+        group by  cp.id,cp.contract_no,cp.contract_type,cp.supplier,
+        cp.contract_notes,cp.create_by,cp.tax_rate,cp.file_path,
+        cp.signing_time,cp.delivery_time
     </select>
-
-
 </mapper>
