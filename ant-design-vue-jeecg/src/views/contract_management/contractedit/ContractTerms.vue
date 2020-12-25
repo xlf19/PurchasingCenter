@@ -8,7 +8,7 @@
       </div>
       <a-card :bordered="false" title="条款明细">
         <div v-for="(list, index) in list" :key="index">
-          {{list.title}}
+          {{ list.title }}
           <br />
           <a-input :value="list.value"></a-input>
         </div>
@@ -19,6 +19,7 @@
 
 <script>
 import '@/assets/less/TableExpand.less'
+import { deleteAction, getAction, httpAction } from '@/api/manage'
 export default {
   name: 'ContractTerms',
   data() {
@@ -26,7 +27,10 @@ export default {
       list: [
         { title: '一、合同效力', value: '123456' },
         { title: '二、违约责任', value: '123456' }
-      ]
+      ],
+      url: {
+        getHttpRequestData: '/chargsearch/chargsearch/getHttpRequestData'
+      }
     }
   },
   methods: {
@@ -39,5 +43,4 @@ export default {
 
 <style scoped>
 @import '~@assets/less/common.less';
-
 </style>
