@@ -147,11 +147,11 @@ spring:
           username: sa
           password: aq1`
           driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-#        multi-datasource2:
-#          url: jdbc:sqlserver://192.168.90.5:1433;SelectMethod=cursor;DatabaseName=质量管理
-#          username: CGB
-#          password: 123456
-#          driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+        multi-datasource2:
+          url: jdbc:sqlserver://192.168.3.250:1433;SelectMethod=cursor;DatabaseName=sbgl
+          username: sa
+          password: aq1`
+          driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
 
   #redis 配置
   redis:

@@ -4,7 +4,7 @@
 
     <select id="list" resultType="map">
         select cp.id,  CONVERT(varchar(100), cp.signing_time, 23)as signingdata,SUM(pif.total_price) as total_price,
-        cp.contract_no, cp.contract_type, cp.supplier, cp.contract_notes, cp.create_by, cp.tax_rate
+        cp.contract_no, cp.contract_type, cp.supplier, cp.contract_notes, cp.create_by, cp.tax_rate,cp.current_state
         from contract_purchase as cp
         left join product_information as pif on pif.contract_id =cp.id and pif.isdelete=1
         where cp.isdelete=1
@@ -15,7 +15,7 @@
             and CONVERT(varchar(100), cp.signing_time, 23) &lt;=CONVERT(varchar(100), #{enddate}, 23)
         </if>
         group by cp.id,cp.signing_time,cp.contract_no,cp.contract_type,cp.supplier,cp.contract_notes,cp.create_by
-        ,cp.tax_rate
+        ,cp.tax_rate,cp.current_state
     </select>
 
     <select id="findDetail" resultType="map" parameterType="java.lang.String">
@@ -39,4 +39,10 @@
              select top(1)* from product_list
              where product_id=#{pid} and isdelete=1
     </select>
+
+    <update id="updatestatus">
+     update contract_purchase
+     set current_state='生成合同'
+     where contract_no='WX2020120001'
+    </update>
 </mapper>

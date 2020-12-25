@@ -23,4 +23,14 @@ public class ContractPurchaseServiceImpl extends ServiceImpl<ContractPurchaseMap
     public String hthfind() {
         return contractPurchaseMapper.hthfind();
     }
+
+    @Override
+    public String findcontract(String contractNo) {
+        return contractPurchaseMapper.findcontract(contractNo);
+    }
+
+    @Override
+    public boolean updatecontract(String HeTongBianHao, String CurrentState, String SPHTCode, String SPLiuCheng, String SPNowState, Integer SPId) {
+        return contractPurchaseMapper.updatecontract(HeTongBianHao,CurrentState,SPHTCode,SPLiuCheng,SPNowState,SPId);
+    }
 }

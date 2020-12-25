@@ -51,6 +51,7 @@ public class ContractEditController extends JeecgController<T, IContractEditServ
         ContractPurchase cps = contractPurchaseService.getById(id);
         if(cps==null) {
             contractPurchase.setIsdelete(1);
+            contractPurchase.setCurrentState("生成合同");
             contractPurchaseService.save(contractPurchase);
         }else{
             contractPurchaseService.updateById(contractPurchase);

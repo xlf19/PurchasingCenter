@@ -12,5 +12,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface IContractPurchaseService extends IService<ContractPurchase> {
     //生成合同号
     String hthfind();
+    //根据合同号查询数据
+    String findcontract(String contractNo);
+
+    //根据合同编号修改合同信息状态
+    boolean updatecontract(String HeTongBianHao,String CurrentState,String SPHTCode,String SPLiuCheng,String SPNowState,Integer SPId);
 
 }

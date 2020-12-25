@@ -16,4 +16,9 @@ public interface ContractPurchaseMapper extends BaseMapper<ContractPurchase> {
 
     //生成合同号
     String hthfind();
+    //根据合同号查询数据
+    String findcontract(@Param("contractNo")String contractNo);
+
+    //根据合同编号修改合同信息状态
+    boolean updatecontract(@Param("HeTongBianHao")String HeTongBianHao,@Param("CurrentState")String CurrentState,@Param("SPHTCode")String SPHTCode,@Param("SPLiuCheng")String SPLiuCheng,@Param("SPNowState")String SPNowState,@Param("SPId")Integer SPId);
 }

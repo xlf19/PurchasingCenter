@@ -135,8 +135,22 @@ public class ContractPurchase implements Serializable {
 	@Excel(name = "文件", width = 15)
     @ApiModelProperty(value = "文件")
     private java.lang.String filePath;
+    /**当前状态*/
+    @Excel(name = "当前状态", width = 15)
+    @ApiModelProperty(value = "当前状态")
+    private java.lang.String currentState;
 	/**是否删除*/
 	@Excel(name = "是否删除", width = 15)
     @ApiModelProperty(value = "是否删除")
     private java.lang.Integer isdelete;
+
+
+    private java.lang.String sphtCode;
+
+    private java.lang.String spliuCheng;
+
+    private java.lang.String spnowState;
+
+    private java.lang.Integer spId;
+
 }
