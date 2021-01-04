@@ -1,7 +1,7 @@
 <!--
  * @descript: MountCao
  * @Date: 2020-12-12 09:06:52
- * @LastEditTime: 2020-12-30 10:55:04
+ * @LastEditTime: 2021-01-04 13:49:32
  * @version: 0.0.1
 -->
 <template>
@@ -19,7 +19,7 @@
             <a-col :xl="5" :lg="7" :md="8" :sm="24">
               <a-form-item label="物资名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
                 <a-input
-                  v-decorator="['materialName', { rules: [{ required: true, message: '请输入物资名称' }] }]"
+                  v-decorator="['templateName', { rules: [{ required: true, message: '请输入模板名称' }] }]"
                   placeholder="请输入物资名称"
                 ></a-input>
               </a-form-item>
@@ -38,6 +38,20 @@
                   </a-select-option>
                 </a-select>
               </a-form-item>
+            </a-col>            
+            <a-col :xl="5" :lg="7" :md="8" :sm="24">
+              <a-form-item label="使用状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                <a-select
+                  v-decorator="[
+                    'status',
+                    { rules: [{ required: true, message: '请选择使用状态' }], initialValue: '使用中' },
+                  ]"
+                >
+                  <a-select-option v-for="item in statusList" :key="item.key" :value="item.value">
+                    {{ item.value }}
+                  </a-select-option>
+                </a-select>
+              </a-form-item>
             </a-col>
             <a-col :xl="4" :lg="7" :md="8" :sm="24">
               <span style="float: left; overflow: hidden" class="table-page-search-submitButtons">
@@ -49,7 +63,7 @@
         </a-form>
       </div>
     </a-card>
-    <a-card :bordered="false" style="margin-top: -40px">
+    <a-card :bordered="false" style="margin-top: -25px">
       <!-- 内容区域 -->
       <div class="inputWarp" v-for="(item, index) in termsNumber" :key="index">
         <div>
@@ -100,12 +114,6 @@ export default {
         },
       },
       validatorRules: {},
-      url: {
-        list: '/materialcode/materialcode/list',
-        add: '/materialcode/materialcode/add',
-        edit: '/materialcode/materialcode/edit',
-        queryById: '/materialcode/materialcode/queryById',
-      },
       // 条款数列表
       termsList: [
         {
@@ -125,6 +133,17 @@ export default {
           value: '14',
         },
       ],
+      //使用状态
+      statusList: [
+        {
+          key: '使用中',
+          value: '使用中',
+        },
+        {
+          key: '已禁用',
+          value: '已禁用',
+        },
+      ],
       //条款数
       termsNumber: 11,
       //内容区域数据对象
@@ -137,8 +156,7 @@ export default {
         list: '/syslegaltemplatedetail/sysLegalTemplateDetail/list',
         add: '/syslegaltemplatedetail/sysLegalTemplateDetail/add',
         delete: '/syslegaltemplatedetail/sysLegalTemplateDetail/delete',
-        exportXlsUrl: '/syslegaltemplatedetail/sysLegalTemplateDetail/exportXls',
-        importExcelUrl: '/syslegaltemplatedetail/sysLegalTemplateDetail/importExcel',
+        templateAdd: '/syslegaltemplate/sysLegalTemplate/add',
       },
     }
   },
@@ -217,23 +235,23 @@ export default {
         let fullTitle = 0
         let fullContent = 0
         let titleArr = []
-        // for (let i = 0; i < this.termsNumber; i++) {
-        //   if (this.inputTitleData[i] == undefined) {
-        //     this.$message.error('请填写条款第' + (i + 1) + '项标题')
-        //     return (this.fullTitle = 1)
-        //   }
-        //   if (this.inputContentData[i] == undefined) {
-        //     this.$message.error('请填写条款第' + (i + 1) + '项内容')
-        //     return (this.fullContent = 1)
-        //   }
-        // }
+        for (let i = 0; i < this.termsNumber; i++) {
+          if (this.inputTitleData[i] == undefined) {
+            this.$message.error('请填写条款第' + (i + 1) + '项标题')
+            return (this.fullTitle = 1)
+          }
+          if (this.inputContentData[i] == undefined) {
+            this.$message.error('请填写条款第' + (i + 1) + '项内容')
+            return (this.fullContent = 1)
+          }
+        }
         if (fullTitle != 1 && fullContent != 1) {
           let min = 10000000
           let max = 99999999
+          let time = new Date().getTime()
           for (let i in this.inputTitleData) {
             let x = {}
             let genRandom = Math.floor(Math.random() * (max - min)) + min
-            let time = new Date().getTime()
             x.templateTitle = this.inputTitleData[i]
             x.id = 'wxfw' + genRandom
             x.templateId = 'wx' + time
@@ -249,9 +267,9 @@ export default {
           let obj = titleArr.map((item, index) => {
             return { ...item, ...contentArr[index] }
           })
-          console.log(obj)
-          //请求后台提交数据
-          this.sendData(obj)
+          // console.log(obj)
+          //请求模板详情后台提交数据
+          this.sendData(obj,time)
         }
       }
     },
@@ -259,12 +277,30 @@ export default {
       this.copyShare(index)
     },
     //提交后台数据
-    sendData(params) {
+    sendData(params,time) {
       httpAction(this.url.add, params, 'post').then((res) => {
         if (res.success) {
-          this.$message.success(res.message)
+          // this.$message.success(res.message)
+          //新增模板列表数据
+          this.addTemplate(time)
         } else {
           this.$message.warning(res.message)
+        }
+      })
+    },
+    //新增模板列表数据
+    addTemplate(time) {
+      this.form.validateFields((error, values) => {
+        values.id = 'wx'+time
+        // console.log(values)
+        if (!error) {
+          httpAction(this.url.templateAdd, values, 'post').then((res) => {
+            if (res.success) {
+              this.$message.success(res.message)
+            } else {
+              this.$message.warning(res.message)
+            }
+          })
         }
       })
     },

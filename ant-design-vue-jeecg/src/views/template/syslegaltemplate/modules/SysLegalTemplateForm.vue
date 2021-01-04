@@ -21,10 +21,10 @@
           <a-col :span="24">
             <a-form-item label="使用状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
               <a-select v-decorator="['status',{rules: [{required: true, message: '请选择使用状态'}]}]">
-                <a-select-option value="1">
+                <a-select-option value="使用中">
                   使用中
                 </a-select-option>
-                <a-select-option value="0">
+                <a-select-option value="已禁用">
                   已禁用
                 </a-select-option>
               </a-select>
