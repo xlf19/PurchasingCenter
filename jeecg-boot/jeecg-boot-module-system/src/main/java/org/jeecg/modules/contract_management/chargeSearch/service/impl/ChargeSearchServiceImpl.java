@@ -36,4 +36,9 @@ public class ChargeSearchServiceImpl extends ServiceImpl<ChargeSearchMapper, T> 
     public List<Map<Object, String>> productidlist(String pid) {
         return chargeSearchMapper.productidlist(pid);
     }
+
+    @Override
+    public boolean updatestatus(String contractNo) {
+        return chargeSearchMapper.updatestatus(contractNo);
+    }
 }

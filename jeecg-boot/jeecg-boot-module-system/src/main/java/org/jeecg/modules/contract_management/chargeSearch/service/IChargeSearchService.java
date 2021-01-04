@@ -3,7 +3,6 @@ package org.jeecg.modules.contract_management.chargeSearch.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.apache.poi.ss.formula.functions.T;
-import org.jeecg.modules.contract_management.productinformation.entity.ProductInformation;
 
 import java.util.List;
 import java.util.Map;
@@ -21,4 +20,7 @@ public interface IChargeSearchService extends IService<T> {
 
     //通过产品id查询产品明细表
     List<Map<Object, String>> productidlist(String pid);
+
+    //根据合同号改变合同状态
+    boolean updatestatus(String contractNo);
 }

@@ -6,4 +6,23 @@
     SELECT  SUBSTRING(MAX(contract_no),9,5)
 	FROM contract_purchase WHERE   LEFT(contract_no, 8)='WX'+CONVERT(varchar(6), GETDATE(), 112)
     </select>
+
+
+    <select id="findcontract" parameterType="java.lang.String" resultType="java.lang.String">
+    SELECT  top(1) current_state
+	FROM contract_purchase
+	WHERE   contract_no=#{contractNo}
+    </select>
+
+<!--    <update id="updatecontract">-->
+<!--          update contract_purchase-->
+<!--          set current_state=#{CurrentState},spht_code=#{SPHTCode},spliu_cheng=#{SPLiuCheng},spnow_state=#{SPNowState},sp_id=#{SPId}-->
+<!--          where contract_no=#{HeTongBianHao}-->
+<!--    </update>-->
+
+    <update id="updatecontract">
+          update contract_purchase
+          set spnow_state='郑川立123',spliu_cheng=NEWID()
+          where contract_no='WX2020120001'
+    </update>
 </mapper>

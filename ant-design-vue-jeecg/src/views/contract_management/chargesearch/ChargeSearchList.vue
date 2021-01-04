@@ -14,6 +14,9 @@
             <span style="float: left; overflow: hidden" class="table-page-search-submitButtons">
               <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
               <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+              <a-button type="primary" @click="getHttpRequestData" icon="reload" style="margin-left: 8px"
+                >状态刷新</a-button
+              >
             </span>
           </a-col>
         </a-row>
@@ -54,7 +57,7 @@
           <a href="javascript:;" @click="handleprint(record)">打印</a>
         </span>
         <a-table
-          slot="expandedRowRender"
+          slot="handleExpand"
           :columns="innerColumns"
           :dataSource="innerData"
           size="middle"
@@ -142,7 +145,21 @@ export default {
         },
         {
           title: '当前状态',
-          align: 'center'
+          align: 'center',
+          dataIndex: 'current_state',
+          customRender: function(t, r, index) {
+            if (t === '生成合同') {
+              return '合同制作'
+            } else if (t === '在办') {
+              return '正审批中'
+            } else if (t === '退回') {
+              return '领导退回'
+            } else if (t === '完成') {
+              return '审批完成'
+            } else {
+              return '状态未知'
+            }
+          }
         },
         {
           title: '税率',
@@ -273,7 +290,8 @@ export default {
         deleteBatch: '/contractpurchase/contractPurchase/deleteBatch',
         exportXlsUrl: '/contractpurchase/contractPurchase/exportXls',
         importExcelUrl: 'contractpurchase/contractPurchase/importExcel',
-        findDetail: '/chargsearch/chargsearch/findDetail'
+        findDetail: '/chargsearch/chargsearch/findDetail',
+        getHttpRequestData: '/chargsearch/chargsearch/getHttpRequestData'
       },
       dictOptions: {}
     }
@@ -331,7 +349,20 @@ export default {
     },
     //编辑
     handleEdit(record) {
-      this.$router.push({ path: '/contract_management/chargesearch/ContractEditTab', query: { data: record } })
+      let statue=record.current_state
+      if(statue==='生成合同'||statue==='退回'){
+        this.$router.push({ path: '/contract_management/chargesearch/ContractEditTab', query: { data: record } })
+      }else{
+         this.$message.error('这条合同不能修改，请重新选择！')
+      }
+    },
+    //状态刷新
+    getHttpRequestData() {
+      getAction(this.url.getHttpRequestData).then(res => {
+        if (res.success) {
+          this.loadData(1)
+        }
+      })
     }
   }
 }

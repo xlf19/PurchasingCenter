@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jeecg.modules.contract_management.contract_status.mapper.ContractStatusMapper">
+    <select id="listbh" resultType="map" >
+            select HeTongCode
+            from G_HeTongDelRecord
+            where IsDelete=0
+    </select>
+
+    <update id="updateisdelete">
+     update G_HeTongDelRecord
+     set IsDelete=1
+     where HeTongCode=#{HeTongCode} and IsDelete=0
+    </update>
+
+    <update id="updatecontract">
+           update  设备管理_合同_主表
+           set CurrentState='生成合同'
+           where 合同编号=#{HeTongCode}
+    </update>
+
+</mapper>

@@ -51,7 +51,7 @@
                   v-decorator="['supplier', validatorRules.supplier]"
                   placeholder="请选择供方单位"
                 >
-                  <a-select-option :value="item.companyName" v-for="(item, index) in depratlist" :key="index">{{
+                  <a-select-option :value="item.companyName" v-for="(item, index) in depratlist" :key="index" >{{
                     item.companyName
                   }}</a-select-option>
                 </a-select>
@@ -414,6 +414,7 @@ export default {
       }
       getAction(this.url.searchname, { companyName: companyName }).then(res => {
         if (res.success) {
+          console.log(res.result)
           this.depratlist = res.result
         }
         if (res.code === 510) {
@@ -482,9 +483,6 @@ export default {
           }
         }
       })
-      // console.log(this.data)
-      // this.data = []
-      // this.datalist = []
     },
     //修改副表总量
     handleValueChange(event) {
