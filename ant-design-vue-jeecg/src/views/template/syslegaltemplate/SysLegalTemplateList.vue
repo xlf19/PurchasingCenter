@@ -72,7 +72,7 @@
         </template>
 
         <span slot="action" slot-scope="text, record">
-          <a @click="handleEdit(record)">编辑</a>
+          <a @click="editTemplate(record)">编辑</a>
 
           <a-divider type="vertical" />
 
@@ -175,7 +175,17 @@
       //跳转到新增模板界面
       jumpAddTemplate(){
         this.$router.push({
-          path: '/template/syslegaltemplate/addtemplate'
+          name: 'template-syslegaltemplate-addtemplate'
+        })
+      },
+      //跳转到编辑模板界面
+      editTemplate(template){
+        // console.log(templateId)
+        this.$router.push({
+          name: 'template-syslegaltemplate-edittemplate',
+          query: {
+            id: template.id
+          } 
         })
       }
     }

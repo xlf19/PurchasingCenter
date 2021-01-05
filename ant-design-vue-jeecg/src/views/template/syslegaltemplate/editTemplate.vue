@@ -1,7 +1,7 @@
 <!--
  * @descript: MountCao
  * @Date: 2020-12-12 09:06:52
- * @LastEditTime: 2021-01-04 15:18:54
+ * @LastEditTime: 2021-01-05 09:37:16
  * @version: 0.0.1
 -->
 <template>
@@ -93,7 +93,7 @@ import pick from 'lodash.pick'
 import { validateDuplicateValue } from '@/utils/util'
 
 export default {
-  name: 'addTemplate',
+  name: 'editTemplate',
   data() {
     return {
       form: this.$form.createForm(this),
@@ -156,11 +156,16 @@ export default {
         add: '/syslegaltemplatedetail/sysLegalTemplateDetail/add',
         delete: '/syslegaltemplatedetail/sysLegalTemplateDetail/delete',
         templateAdd: '/syslegaltemplate/sysLegalTemplate/add',
+        queryByTemplateId: '/syslegaltemplate/sysLegalTemplate/queryById',
       },
     }
   },
-  watch: {},
-  created() {},
+  mounted() {
+    let templateId = this.$route.query.id
+    //根据id请求数据列表信息
+    this.getTemplateList(templateId)
+    this.getTemplateDetailList(templateId)
+  },
   methods: {
     setNumber(value) {
       this.termsNumber = parseInt(value)
@@ -274,6 +279,30 @@ export default {
     },
     getChange(index) {
       this.copyShare(index)
+    },
+    //获取模板列表数据
+    getTemplateList(templateId){
+      let params = {
+        id: templateId
+      }
+      getAction(this.url.queryByTemplateId,params).then(res => {
+        // console.log(res)
+        this.form.setFieldsValue({
+          department: res.result.department,
+          templateName: res.result.templateName,
+          termsNumber: res.result.termsNumber,
+          status: res.result.status
+        })
+      })
+    },
+    //获取模板详情数据
+    getTemplateDetailList(templateId){
+      let params = {
+        templateId: templateId
+      }
+      getAction(this.url.list,params).then(res => {
+        console.log(res)
+      })
     },
     //提交后台数据
     sendData(params,time) {
