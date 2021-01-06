@@ -55,9 +55,9 @@
           <a href="javascript:;" @click="handleEdit(record)">编辑</a>
           <a-divider type="vertical" />
           <a href="javascript:;" @click="handleprint(record)">打印</a>
-        </span>
+        </span>    
         <a-table
-          slot="handleExpand"
+          slot="expandedRowRender"
           :columns="innerColumns"
           :dataSource="innerData"
           size="middle"

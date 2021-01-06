@@ -346,7 +346,26 @@ export const constantRouterMap = [
   //     },
   //   ]
   // },
-
+  {
+    path: '/contract_management/chargesearch/ChargeSearchList',
+    name: 'ChargeSearchList',
+    component: TabLayout,
+    meta: { title: '原炉料合同查询打印' },
+    children: [
+      {
+        path: '/contract_management/chargesearch/ContractPrint',
+        name: 'ContractPrint',
+        component: () => import('@/views/contract_management/chargesearch/ContractPrint'),
+        meta: { title: '合同打印' }
+      },
+      {
+        path: '/contract_management/chargesearch/ContractEditTab',
+        name: 'ContractEditTab',
+        component: () => import('@/views/contract_management/chargesearch/ContractEditTab'),
+        meta: { title: '编辑采购合同' }
+      }
+    ]
+  },
   {
     path: '/test',
     component: BlankLayout,

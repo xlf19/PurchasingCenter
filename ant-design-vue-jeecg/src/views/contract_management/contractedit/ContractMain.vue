@@ -3,29 +3,18 @@
     <div class="table-page-search-wrapper">
       <a-form layout="inline" :form="form">
         <!-- 合同类别 -->
-        <a-card :bordered="false" title="合同类别">
+        <a-card :bordered="false" title="合同模板">
           <a-row :gutter="24">
-            <a-col :xl="5" :lg="7" :md="8" :sm="24">
-              <a-form-item label="合同类别">
-                <a-select
-                  placeholder="请选择合同类别"
-                  allowClear
-                  v-decorator="['contractType', validatorRules.contractType]"
-                >
-                  <a-select-option value="原料">原料</a-select-option>
-                  <a-select-option value="新原料">新原料</a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
             <a-col :xl="5" :lg="7" :md="8" :sm="24">
               <a-form-item label="合同模板">
                 <a-select
                   placeholder="请选择合同模板"
-                  allowClear
+                  @change="handleChange"
                   v-decorator="['templateId', validatorRules.templateId]"
                 >
-                  <a-select-option value="1">模板1</a-select-option>
-                  <a-select-option value="2">模板2</a-select-option>
+                  <a-select-option :value="item.id" v-for="item in templatelist" :key="item.id">{{
+                    item.templateName
+                  }}</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
@@ -45,13 +34,12 @@
               <a-form-item label="供方单位">
                 <a-select
                   @search="searchname"
-                  @change="searchname"
                   show-search
                   allowClear
                   v-decorator="['supplier', validatorRules.supplier]"
                   placeholder="请选择供方单位"
                 >
-                  <a-select-option :value="item.companyName" v-for="(item, index) in depratlist" :key="index" >{{
+                  <a-select-option :value="item.companyName" v-for="item in depratlist" :key="item.id">{{
                     item.companyName
                   }}</a-select-option>
                 </a-select>
@@ -235,6 +223,7 @@ import ContractProductModal from './modules/ContractProductModal'
 import { FormTypes } from '@/utils/JEditableTableUtil'
 import JEditableTable from '@/components/jeecg/JEditableTable'
 import { randomUUID } from '@/utils/util'
+
 export default {
   name: 'ContractMain',
   mixins: [JeecgListMixin, mixinDevice],
@@ -244,7 +233,6 @@ export default {
     return {
       form: this.$form.createForm(this),
       validatorRules: {
-        contractType: { rules: [{ required: true, message: '请选择合同类别!' }] },
         templateId: { rules: [{ required: true, message: '请选择合同模板!' }] },
         contractNo: { rules: [{ required: true, message: '请输入合同编号!' }] },
         supplier: { rules: [{ required: true, message: '请选择供方单位!' }] },
@@ -257,8 +245,12 @@ export default {
       modellist: {},
       data: [],
       datalist: [],
+      //合同模板
+      templatelist: [],
       //供方单位
       depratlist: [],
+      //合同id
+      cid: '',
       disableMixinCreated: true,
       // 表头
       columns: [
@@ -376,15 +368,16 @@ export default {
         adddata: '/contractedit/contractedit/adddata',
         addlist: '/contractedit/contractedit/addlist',
         queryById: '/contractedit/contractedit/queryById',
-        delete: '/contractedit/contractedit/delete'
+        delete: '/contractedit/contractedit/delete',
+        template: '/contractedit/contractedit/templatelist'
       }
     }
   },
   created() {
-    // this.username = store.getters.userInfo.realname
-    // this.departname = store.getters.userInfo.orgCodeTxt
     this.searchname('')
     this.hthfind()
+    this.templatelists()
+    this.cid = randomUUID()
   },
   computed: {
     importExcelUrl: function() {
@@ -406,6 +399,23 @@ export default {
         }
       })
     },
+    //查询合同模板表信息
+    templatelists() {
+      getAction(this.url.template).then(res => {
+        if (res.success) {
+          this.templatelist = res.result
+        }
+        if (res.code === 510) {
+          this.$message.warning(res.message)
+        }
+      })
+    },
+    //向父组件传值
+    handleChange(value) {
+      let cid = this.cid
+      this.$emit('search', value, cid)
+    },
+
     //查询供应商
     searchname(value) {
       let companyName = ''
@@ -414,7 +424,6 @@ export default {
       }
       getAction(this.url.searchname, { companyName: companyName }).then(res => {
         if (res.success) {
-          console.log(res.result)
           this.depratlist = res.result
         }
         if (res.code === 510) {
@@ -587,7 +596,7 @@ export default {
       this.form.validateFields((err, values) => {
         if (!err) {
           if (!this.model.id) {
-            this.model.id = randomUUID()
+            this.model.id = this.cid
           }
           let httpurl = this.url.add
           let method = 'post'

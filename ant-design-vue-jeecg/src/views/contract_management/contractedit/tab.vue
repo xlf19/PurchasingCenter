@@ -4,10 +4,10 @@
     <div>
       <a-tabs defaultActiveKey="1">
         <a-tab-pane tab="合同主项" key="1">
-          <contract-main></contract-main>
+          <contract-main ref="main" @search="templatesearch" forceRender></contract-main>
         </a-tab-pane>
         <a-tab-pane tab="合同条款" key="2">
-          <contract-terms></contract-terms>
+          <contract-terms ref="terms" :templateId="templateId" forceRender :cid='cid'></contract-terms>
         </a-tab-pane>
       </a-tabs>
     </div>
@@ -26,7 +26,9 @@ export default {
   },
   data() {
     return {
-      description: '编辑采购合同界面',
+      description: '添加采购合同界面',
+      templateId: '',
+      cid:'',
       dictOptions: {}
     }
   },
@@ -37,7 +39,11 @@ export default {
     }
   },
   methods: {
-    initDictConfig() {}
+    initDictConfig() {},
+    templatesearch(id,cid) {
+      this.templateId = id
+      this.cid=cid
+    }
   }
 }
 </script>

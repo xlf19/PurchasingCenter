@@ -7,4 +7,6 @@
        set isdelete=2
        where product_id=#{id}
     </update>
+
+
 </mapper>

@@ -3,7 +3,7 @@
 <mapper namespace="org.jeecg.modules.contract_management.chargeSearch.mapper.ChargeSearchMapper">
 
     <select id="list" resultType="map">
-        select cp.id,  CONVERT(varchar(100), cp.signing_time, 23)as signingdata,SUM(pif.total_price) as total_price,
+        select cp.id,  CONVERT(varchar(100), cp.signing_time, 23)as signingdata,SUM(pif.total_price) as total_price,cp.template_id,
         cp.contract_no, cp.contract_type, cp.supplier, cp.contract_notes, cp.create_by, cp.tax_rate,cp.current_state
         from contract_purchase as cp
         left join product_information as pif on pif.contract_id =cp.id and pif.isdelete=1
@@ -15,7 +15,7 @@
             and CONVERT(varchar(100), cp.signing_time, 23) &lt;=CONVERT(varchar(100), #{enddate}, 23)
         </if>
         group by cp.id,cp.signing_time,cp.contract_no,cp.contract_type,cp.supplier,cp.contract_notes,cp.create_by
-        ,cp.tax_rate,cp.current_state
+        ,cp.tax_rate,cp.current_state,cp.template_id
     </select>
 
     <select id="findDetail" resultType="map" parameterType="java.lang.String">

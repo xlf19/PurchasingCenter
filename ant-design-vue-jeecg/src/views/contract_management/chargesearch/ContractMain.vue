@@ -6,26 +6,15 @@
         <a-card :bordered="false" title="合同类别">
           <a-row :gutter="24">
             <a-col :xl="5" :lg="7" :md="8" :sm="24">
-              <a-form-item label="合同类别">
-                <a-select
-                  placeholder="请选择合同类别"
-                  allowClear
-                  v-decorator="['contractType', validatorRules.contractType]"
-                >
-                  <a-select-option value="原料">原料</a-select-option>
-                  <a-select-option value="新原料">新原料</a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
-            <a-col :xl="5" :lg="7" :md="8" :sm="24">
               <a-form-item label="合同模板">
                 <a-select
                   placeholder="请选择合同模板"
-                  allowClear
+                  @change="handleChange"
                   v-decorator="['templateId', validatorRules.templateId]"
                 >
-                  <a-select-option value="1">模板1</a-select-option>
-                  <a-select-option value="2">模板2</a-select-option>
+                  <a-select-option :value="item.id" v-for="item in templatelist" :key="item.id">{{
+                    item.templateName
+                  }}</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
@@ -241,7 +230,6 @@ export default {
     return {
       form: this.$form.createForm(this),
       validatorRules: {
-        contractType: { rules: [{ required: true, message: '请选择合同类别!' }] },
         templateId: { rules: [{ required: true, message: '请选择合同模板!' }] },
         contractNo: { rules: [{ required: true, message: '请输入合同编号!' }] },
         supplier: { rules: [{ required: true, message: '请选择供方单位!' }] },
@@ -256,6 +244,8 @@ export default {
       datalist: [],
       //供方单位
       depratlist: [],
+      //合同模板
+      templatelist: [],
       disableMixinCreated: true,
       // 表头
       columns: [
@@ -375,13 +365,15 @@ export default {
         productid: '/chargsearch/chargsearch/productid',
         productidlist: '/chargsearch/chargsearch/productidlist',
         queryById: '/contractedit/contractedit/queryById',
-        delete: '/contractedit/contractedit/delete'
+        delete: '/contractedit/contractedit/delete',
+        template: '/contractedit/contractedit/templatelist'
       }
     }
   },
   created() {
     this.contractone(this.contractid)
     this.searchname('')
+    this.templatelists()
   },
   computed: {
     importExcelUrl: function() {
@@ -390,13 +382,28 @@ export default {
   },
   methods: {
     moment,
+    //查询合同模板表信息
+    templatelists() {
+      getAction(this.url.template).then(res => {
+        if (res.success) {
+          this.templatelist = res.result
+        }
+        if (res.code === 510) {
+          this.$message.warning(res.message)
+        }
+      })
+    },
+    //向父组件传值
+    handleChange(value) {
+      let cid = this.contractid
+      this.$emit('search', value, cid)
+    },
     //查询合同信息表
     contractone(id) {
       getAction(this.url.contractid, { id: id }).then(res => {
         if (res.success) {
           this.form.setFieldsValue({
             // id: res.result.id,
-            contractType: res.result.contractType,
             templateId: res.result.templateId,
             contractNo: res.result.contractNo,
             supplier: res.result.supplier,
