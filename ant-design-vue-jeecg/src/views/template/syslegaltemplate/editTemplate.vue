@@ -1,7 +1,7 @@
 <!--
  * @descript: MountCao
  * @Date: 2020-12-12 09:06:52
- * @LastEditTime: 2021-01-06 10:57:57
+ * @LastEditTime: 2021-01-06 15:17:39
  * @version: 0.0.1
 -->
 <template>
@@ -27,6 +27,7 @@
             <a-col :xl="5" :lg="7" :md="8" :sm="24">
               <a-form-item label="条款数" :labelCol="labelCol" :wrapperCol="wrapperCol">
                 <a-select
+                  disabled=true
                   @select="setNumber"
                   v-decorator="[
                     'termsNumber',
@@ -42,6 +43,7 @@
             <a-col :xl="5" :lg="7" :md="8" :sm="24">
               <a-form-item label="使用状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
                 <a-select
+                  
                   v-decorator="[
                     'status',
                     { rules: [{ required: true, message: '请选择使用状态' }], initialValue: '使用中' },
