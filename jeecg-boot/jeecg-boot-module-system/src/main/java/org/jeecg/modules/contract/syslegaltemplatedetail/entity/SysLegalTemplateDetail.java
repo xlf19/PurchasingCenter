@@ -59,6 +59,10 @@ public class SysLegalTemplateDetail implements Serializable {
 	@Excel(name = "模板内容标题", width = 15)
     @ApiModelProperty(value = "模板内容标题")
     private java.lang.String templateTitle;
+	/**模板内容序号*/
+	@Excel(name = "模板内容序号", width = 15)
+    @ApiModelProperty(value = "模板内容序号")
+    private java.lang.Integer sortNum;
 	/**模板内容*/
 	@Excel(name = "模板内容", width = 15)
     @ApiModelProperty(value = "模板内容")

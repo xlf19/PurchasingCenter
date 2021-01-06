@@ -1,7 +1,7 @@
 <!--
  * @descript: MountCao
  * @Date: 2020-12-12 09:06:52
- * @LastEditTime: 2021-01-05 09:37:16
+ * @LastEditTime: 2021-01-06 10:57:57
  * @version: 0.0.1
 -->
 <template>
@@ -94,6 +94,7 @@ import { validateDuplicateValue } from '@/utils/util'
 
 export default {
   name: 'editTemplate',
+  inject:['closeCurrent'],
   data() {
     return {
       form: this.$form.createForm(this),
@@ -149,13 +150,18 @@ export default {
       inputContentData: {},
       //标题区域数据对象
       inputTitleData: {},
+      //详情id
+      inputId: {},      
+      //详情排序
+      inputSortNum: {},
       //内容错误标志
       contentMark: {},
       url: {
         list: '/syslegaltemplatedetail/sysLegalTemplateDetail/list',
         add: '/syslegaltemplatedetail/sysLegalTemplateDetail/add',
-        delete: '/syslegaltemplatedetail/sysLegalTemplateDetail/delete',
+        edit: '/syslegaltemplatedetail/sysLegalTemplateDetail/edit',
         templateAdd: '/syslegaltemplate/sysLegalTemplate/add',
+        templateEdit: '/syslegaltemplate/sysLegalTemplate/edit',
         queryByTemplateId: '/syslegaltemplate/sysLegalTemplate/queryById',
       },
     }
@@ -250,15 +256,12 @@ export default {
           }
         }
         if (fullTitle != 1 && fullContent != 1) {
-          let min = 10000000
-          let max = 99999999
-          let time = new Date().getTime()
           for (let i in this.inputTitleData) {
             let x = {}
-            let genRandom = Math.floor(Math.random() * (max - min)) + min
             x.templateTitle = this.inputTitleData[i]
-            x.id = 'wxfw' + genRandom
-            x.templateId = 'wx' + time
+            x.id = this.inputId[i]
+            x.templateId = this.$route.query.id
+            x.sortNum = this.inputSortNum[i]
             titleArr.push(x)
           }
           let contentArr = []
@@ -273,7 +276,7 @@ export default {
           })
           // console.log(obj)
           //请求模板详情后台提交数据
-          this.sendData(obj,time)
+          this.sendData(obj)
         }
       }
     },
@@ -287,6 +290,7 @@ export default {
       }
       getAction(this.url.queryByTemplateId,params).then(res => {
         // console.log(res)
+        this.termsNumber = parseInt(res.result.termsNumber)
         this.form.setFieldsValue({
           department: res.result.department,
           templateName: res.result.templateName,
@@ -300,31 +304,54 @@ export default {
       let params = {
         templateId: templateId
       }
-      getAction(this.url.list,params).then(res => {
-        console.log(res)
+      let isorter ={
+        column: 'sortNum',
+        order: 'asc',
+      }
+      let page = {
+        pageNo: 1,
+        pageSize: 30
+      }
+      let queryParam = Object.assign(params, isorter,page)
+      getAction(this.url.list,queryParam).then(res => {
+        // console.log(res.result.records)
+        let arr = res.result.records
+        for(let i =0;i<arr.length;i++){
+          // this.inputTitleData[i] = arr[i].templateTitle
+          //新增属性使视图更新
+          this.$set(this.inputTitleData,i, arr[i].templateTitle)
+          this.$set(this.inputContentData,i, arr[i].templateContent)         
+          this.$set(this.inputId,i, arr[i].id)         
+          this.$set(this.inputSortNum,i, arr[i].sortNum)         
+        }
       })
     },
     //提交后台数据
-    sendData(params,time) {
-      httpAction(this.url.add, params, 'post').then((res) => {
+    sendData(params) {
+      httpAction(this.url.edit, params, 'put').then((res) => {
         if (res.success) {
           // this.$message.success(res.message)
-          //新增模板列表数据
-          this.addTemplate(time)
+          //编辑模板列表数据
+          this.editTemplate()
         } else {
           this.$message.warning(res.message)
         }
       })
     },
-    //新增模板列表数据
-    addTemplate(time) {
+    //编辑模板列表数据
+    editTemplate() {
       this.form.validateFields((error, values) => {
-        values.id = 'wx'+time
+        values.id = this.$route.query.id
         // console.log(values)
         if (!error) {
-          httpAction(this.url.templateAdd, values, 'post').then((res) => {
+          httpAction(this.url.templateEdit, values, 'put').then((res) => {
             if (res.success) {
               this.$message.success(res.message)
+              //关闭当前标签页
+              this.closeCurrent()
+              this.$router.push({
+                name: 'template-syslegaltemplate-SysLegalTemplateList'
+              })
             } else {
               this.$message.warning(res.message)
             }

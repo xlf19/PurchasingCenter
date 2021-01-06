@@ -1,7 +1,7 @@
 <!--
  * @descript: MountCao
  * @Date: 2020-12-12 09:06:52
- * @LastEditTime: 2021-01-04 15:18:54
+ * @LastEditTime: 2021-01-06 10:58:24
  * @version: 0.0.1
 -->
 <template>
@@ -94,6 +94,7 @@ import { validateDuplicateValue } from '@/utils/util'
 
 export default {
   name: 'addTemplate',
+  inject:['closeCurrent'],
   data() {
     return {
       form: this.$form.createForm(this),
@@ -254,6 +255,7 @@ export default {
             x.templateTitle = this.inputTitleData[i]
             x.id = 'wxfw' + genRandom
             x.templateId = 'wx' + time
+            x.sortNum = i
             titleArr.push(x)
           }
           let contentArr = []
@@ -296,6 +298,11 @@ export default {
           httpAction(this.url.templateAdd, values, 'post').then((res) => {
             if (res.success) {
               this.$message.success(res.message)
+              //关闭当前标签页
+              this.closeCurrent()
+              this.$router.push({
+                name: 'template-syslegaltemplate-SysLegalTemplateList'
+              })
             } else {
               this.$message.warning(res.message)
             }

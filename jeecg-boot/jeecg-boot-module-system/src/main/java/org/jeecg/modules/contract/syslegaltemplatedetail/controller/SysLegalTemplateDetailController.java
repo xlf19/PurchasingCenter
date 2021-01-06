@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.util.oConvertUtils;
+import org.jeecg.modules.contract.Hetonggongshi.entity.SysHetonggongshi;
 import org.jeecg.modules.contract.syslegaltemplatedetail.entity.SysLegalTemplateDetail;
 import org.jeecg.modules.contract.syslegaltemplatedetail.service.ISysLegalTemplateDetailService;
 
@@ -97,8 +98,10 @@ public class SysLegalTemplateDetailController extends JeecgController<SysLegalTe
 	@AutoLog(value = "法务模板详情表-编辑")
 	@ApiOperation(value="法务模板详情表-编辑", notes="法务模板详情表-编辑")
 	@PutMapping(value = "/edit")
-	public Result<?> edit(@RequestBody SysLegalTemplateDetail sysLegalTemplateDetail) {
-		sysLegalTemplateDetailService.updateById(sysLegalTemplateDetail);
+	public Result<?> edit(@RequestBody SysLegalTemplateDetail[] sysLegalTemplateDetail) {
+		for (int i = 0; i < sysLegalTemplateDetail.length; i++) {
+			sysLegalTemplateDetailService.updateById(sysLegalTemplateDetail[i]);
+		}
 		return Result.ok("编辑成功!");
 	}
 	
