@@ -228,6 +228,11 @@ export default {
   name: 'ContractMain',
   mixins: [JeecgListMixin, mixinDevice],
   components: { ContractProductModal, JEditableTable },
+  props: {
+    whether: {
+      type: Boolean
+    }
+  },
   data() {
     this.dateFormat = 'YYYY-MM-DD'
     return {
@@ -410,10 +415,10 @@ export default {
         }
       })
     },
-    //向父组件传值
+   //合同模板发生改变（向父组件传值）
     handleChange(value) {
       let cid = this.cid
-      this.$emit('search', value, cid)
+      this.$emit('search', value, cid,false)
     },
 
     //查询供应商
@@ -590,7 +595,7 @@ export default {
       ])
     },
     //提交合同
-    submitForm() {
+    submitForm() { 
       const that = this
       // 触发表单验证
       this.form.validateFields((err, values) => {
@@ -603,7 +608,12 @@ export default {
           let formData = Object.assign(this.model, values)
           httpAction(httpurl, formData, method).then(res => {
             if (res.success) {
-              that.$message.success(res.message)
+              let whether = that.whether
+              if (whether) {
+                that.$message.success(res.message)
+              } else {
+                that.$emit('addtemplat', true)
+              }
             } else {
               that.$message.warning(res.message)
             }

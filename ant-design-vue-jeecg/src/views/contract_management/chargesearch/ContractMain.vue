@@ -217,6 +217,9 @@ export default {
   props: {
     contractid: {
       type: String
+    },
+    whether: {
+      type: Boolean
     }
   },
   watch: {
@@ -393,10 +396,10 @@ export default {
         }
       })
     },
-    //向父组件传值
+    //合同模板发生改变（向父组件传值）
     handleChange(value) {
       let cid = this.contractid
-      this.$emit('search', value, cid)
+      this.$emit('search', value, cid,false)
     },
     //查询合同信息表
     contractone(id) {
@@ -712,10 +715,14 @@ export default {
           }
 
           let formData = Object.assign(this.model, values)
-          console.log(formData)
           httpAction(httpurl, formData, method).then(res => {
             if (res.success) {
-              that.$message.success(res.message)
+              let whether = that.whether
+              if (whether) {
+                that.$message.success(res.message)
+              } else {
+                that.$emit('addtemplat', true)
+              }
             } else {
               that.$message.warning(res.message)
             }

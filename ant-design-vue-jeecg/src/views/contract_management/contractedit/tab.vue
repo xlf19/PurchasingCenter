@@ -2,12 +2,17 @@
   <a-card :bordered="false">
     <!-- table区域-begin -->
     <div>
-      <a-tabs defaultActiveKey="1">
-        <a-tab-pane tab="合同主项" key="1">
-          <contract-main ref="main" @search="templatesearch" forceRender></contract-main>
+      <a-tabs>
+        <a-tab-pane tab="合同主项" key="1" :forceRender="true">
+          <contract-main
+            ref="main"
+            :whether="whether"
+            @search="templatesearch"
+            @addtemplat="addtemplat"
+          ></contract-main>
         </a-tab-pane>
-        <a-tab-pane tab="合同条款" key="2">
-          <contract-terms ref="terms" :templateId="templateId" forceRender :cid='cid'></contract-terms>
+        <a-tab-pane tab="合同条款" key="2" :forceRender="true">
+          <contract-terms ref="contractTerms" :templateId="templateId" :cid="cid"></contract-terms>
         </a-tab-pane>
       </a-tabs>
     </div>
@@ -27,8 +32,12 @@ export default {
   data() {
     return {
       description: '添加采购合同界面',
+      //模板id
       templateId: '',
-      cid:'',
+      //合同id
+      cid: '',
+      //是否保存
+      whether: false,
       dictOptions: {}
     }
   },
@@ -40,9 +49,14 @@ export default {
   },
   methods: {
     initDictConfig() {},
-    templatesearch(id,cid) {
+    templatesearch(id, cid,whether) {
       this.templateId = id
-      this.cid=cid
+      this.cid = cid
+      this.whether=whether
+    },
+    addtemplat(whether) {
+      this.whether = whether
+      this.$refs.contractTerms.addlist()
     }
   }
 }

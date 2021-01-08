@@ -37,7 +37,7 @@ import { JeecgListMixin } from '@/mixins/JeecgListMixin'
 import { deleteAction, getAction, httpAction } from '@/api/manage'
 import TemplateModal from './tempmodules/TemplateModal'
 export default {
-  name: 'ContractTerms',
+  name: 'contractTerms',
   components: { TemplateModal },
   props: {
     templateId: {
@@ -82,6 +82,7 @@ export default {
     }
   },
   methods: {
+   
     //保存合同条款
     addlist() {
       let termsNumber = this.termsNumber

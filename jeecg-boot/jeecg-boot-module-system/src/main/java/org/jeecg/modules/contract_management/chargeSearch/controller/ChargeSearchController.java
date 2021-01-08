@@ -3,6 +3,7 @@ package org.jeecg.modules.contract_management.chargeSearch.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
@@ -13,12 +14,15 @@ import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.aspect.annotation.AutoLog;
 import org.jeecg.common.system.base.controller.JeecgController;
 import org.jeecg.common.util.oConvertUtils;
+import org.jeecg.modules.contract.syslegaltemplatedetail.entity.SysLegalTemplateDetail;
 import org.jeecg.modules.contract_management.chargeSearch.service.IChargeSearchService;
 import org.jeecg.modules.contract_management.contract_status.service.IContractStatusService;
 
 import org.jeecg.modules.contract_management.contractpurchase.entity.ContractSerach;
 import org.jeecg.modules.contract_management.contractpurchase.service.IContractPurchaseService;
 
+import org.jeecg.modules.contract_management.contractterms.entity.ContractTerms;
+import org.jeecg.modules.contract_management.contractterms.service.IContractTermsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,6 +57,9 @@ public class ChargeSearchController extends JeecgController<T, IChargeSearchServ
 
     @Autowired
     private IContractStatusService icontractStatusService;
+
+    @Autowired
+    private IContractTermsService contractTermsService;
 
     //分页列表查询
     @AutoLog(value = "原炉料表-分页列表查询")
@@ -196,5 +203,17 @@ public class ChargeSearchController extends JeecgController<T, IChargeSearchServ
     }
 
 
+    @AutoLog(value = "查询合同条款信息")
+    @ApiOperation(value="查询合同条款信息", notes="查询合同条款信息")
+    @GetMapping(value = "/templatelist")
+    public Result<?> templatelist(@RequestParam(name="cid") String cid) {
+        System.out.println(cid);
+        cid="fabe3a20828aff604d105032d337eb45";
+        QueryWrapper<ContractTerms> qcontract =new QueryWrapper<ContractTerms>();
+        qcontract.eq("contract_id",cid);
+        qcontract.orderByAsc("sort");
+        List<ContractTerms> list =contractTermsService.list(qcontract);
+        return Result.ok(list);
+    }
 
 }
