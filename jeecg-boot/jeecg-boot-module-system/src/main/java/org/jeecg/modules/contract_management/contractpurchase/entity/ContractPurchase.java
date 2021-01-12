@@ -70,6 +70,10 @@ public class ContractPurchase implements Serializable {
 	@Excel(name = "供方单位", width = 15)
     @ApiModelProperty(value = "供方单位")
     private java.lang.String supplier;
+    /**供方单位*/
+    @Excel(name = "供方单位名称", width = 15)
+    @ApiModelProperty(value = "供方单位名称")
+    private java.lang.String supplierName;
 	/**需方单位*/
 	@Excel(name = "需方单位", width = 15)
     @ApiModelProperty(value = "需方单位")

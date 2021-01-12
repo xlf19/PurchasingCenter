@@ -23,6 +23,8 @@ import org.jeecg.modules.contract_management.contractpurchase.service.IContractP
 
 import org.jeecg.modules.contract_management.contractterms.entity.ContractTerms;
 import org.jeecg.modules.contract_management.contractterms.service.IContractTermsService;
+import org.jeecg.modules.contract_management.productinformation.entity.ProductInformation;
+import org.jeecg.modules.contract_management.productinformation.service.IProductInformationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -60,6 +62,8 @@ public class ChargeSearchController extends JeecgController<T, IChargeSearchServ
 
     @Autowired
     private IContractTermsService contractTermsService;
+    @Autowired
+    private IProductInformationService productInformationService;
 
     //分页列表查询
     @AutoLog(value = "原炉料表-分页列表查询")
@@ -207,13 +211,33 @@ public class ChargeSearchController extends JeecgController<T, IChargeSearchServ
     @ApiOperation(value="查询合同条款信息", notes="查询合同条款信息")
     @GetMapping(value = "/templatelist")
     public Result<?> templatelist(@RequestParam(name="cid") String cid) {
-        System.out.println(cid);
         cid="fabe3a20828aff604d105032d337eb45";
         QueryWrapper<ContractTerms> qcontract =new QueryWrapper<ContractTerms>();
         qcontract.eq("contract_id",cid);
         qcontract.orderByAsc("sort");
         List<ContractTerms> list =contractTermsService.list(qcontract);
         return Result.ok(list);
+    }
+
+    /**
+     * 通过id查询
+     *
+     * @param cid
+     * @return
+     */
+    @AutoLog(value = "产品信息-通过id查询")
+    @ApiOperation(value="产品信息-通过id查询", notes="产品信息-通过id查询")
+    @GetMapping(value = "/productId")
+    public Result<?> productId(@RequestParam(name="cid",required=true) String cid) {
+        QueryWrapper<ProductInformation> queryWrapper =new QueryWrapper<ProductInformation>();
+        cid="6d28ea61bbd5fed57d4e1b6e86be2471";
+        queryWrapper.eq("contract_id",cid);
+//        queryWrapper.eq("isdelete",1);
+        ProductInformation productInformation =productInformationService.getOne(queryWrapper);
+        if(productInformation==null) {
+            return Result.error("未找到对应数据");
+        }
+        return Result.ok(productInformation);
     }
 
 }

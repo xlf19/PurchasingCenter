@@ -1,6 +1,6 @@
 <template>
   <a-card :bordered="false" :class="{ abcdefg: true }">
-    <div class="no-print" style="text-align: right">
+    <div class="no-print" style="text-align: right;">
       <a-button v-print="'#printContent'" ghost type="primary">打印</a-button>
     </div>
     <section ref="print" id="printContent" class="abcdefg">
@@ -16,22 +16,24 @@
         <a-row class="contract1">
           <a-col :span="12">
             <div style="margin-left:10%">
-              供货单位：<span style="text-decoration:underline">安庆市吉宽再生资源有限公司</span>
+              供货单位：<span style="text-decoration:underline">{{ contract.supplierName }}</span>
             </div>
           </a-col>
           <a-col :span="12">
-            <div style="margin-left:10%">合同编号：<span style="text-decoration:underline">WX20210100007</span></div>
+            <div style="margin-left:10%">
+              合同编号：<span style="text-decoration:underline">{{ contract.contractNo }}</span>
+            </div>
           </a-col>
         </a-row>
         <a-row style="margin-top: 20px" class="contract1">
           <a-col :span="12">
             <div style="margin-left:10%">
-              需方单位：<span style="text-decoration:underline">芜湖新兴铸管有限责任公司</span>
+              需方单位：<span style="text-decoration:underline">{{ demandSideUnitlist.companyName }}</span>
             </div>
           </a-col>
           <a-col :span="12">
             <div style="margin-left:10%">
-              签订地点：<span style="text-decoration:underline">新兴铸管芜湖工业区</span>
+              签订地点：<span style="text-decoration:underline">{{ contract.placeSigning }}</span>
             </div>
           </a-col>
         </a-row>
@@ -44,51 +46,51 @@
           </a-col>
           <a-col :span="12">
             <div style="margin-left:10%">
-              备&#12288;&#12288;注：<span style="text-decoration:underline">签订日期：2021-01-01</span>
+              备&#12288;&#12288;注：<span style="text-decoration:underline">{{ contract.contractNotes }}</span>
             </div>
           </a-col>
         </a-row>
         <a-row style="margin-top: 20px">
           <a-col :span="24" class="contract1">
-            <table border="1" style="margin-left:5%;width:90%">
+            <table border="1" style="margin-left:5%;width:90%;text-align:center;">
               <tr style="text-align:center">
                 <td>编号</td>
                 <td colspan="3">产品名称</td>
                 <td>质量指标</td>
               </tr>
-              <tr style="text-align:center;font-family:宋体">
-                <td>43010100005</td>
-                <td colspan="3">废钢（优质重废）</td>
-                <td>长度≤600mm、宽度≤600mm 、厚度≥8mm</td>
+              <tr style="text-align:center;">
+                <td>{{ product.materialCode }}</td>
+                <td colspan="3">{{ product.materialName }}</td>
+                <td>{{ product.specificationModel }}</td>
               </tr>
               <tr style="text-align:center">
                 <td>订货数量（吨）</td>
-                <td>单价（元/干吨）</td>
+                <td>单价（元/千吨）</td>
                 <td>税率（%）</td>
                 <td>税金</td>
                 <td>含税总金额（元）</td>
               </tr>
-              <tr style="text-align:center;font-family:宋体">
-                <td>300.00</td>
-                <td>3200.00</td>
-                <td>13%</td>
-                <td>110442.48</td>
-                <td>960000.00</td>
+              <tr style="text-align:center;">
+                <td>{{ product.quantity }}</td>
+                <td>{{ product.unitPrice }}</td>
+                <td>{{ contract.taxRate }}%</td>
+                <td>{{ product.taxes }}</td>
+                <td>{{ product.totalPrice }}</td>
               </tr>
               <tr>
-                <td colspan="5">合同金额大：玖拾陆万元整</td>
+                <td colspan="5" style="text-align:left;">&#12288;&#12288;合同金额大写：{{ money }}</td>
               </tr>
             </table>
           </a-col>
         </a-row>
-        <a-row class="contract2" v-for="(item ,index) in tlist" :key="index">
-          <a-col :span="24">{{item.templateTitle}}</a-col>
-          <a-col :span="24" style="text-decoration:underline"
-            >{{item.templateContent}}
-          </a-col>
+        <a-row class="contract2" v-for="(item, index) in tlist" :key="index">
+          <a-col :span="24">{{ item.templateTitle }}</a-col>
+          <a-col :span="24" style="text-decoration:underline">{{ item.templateContent }} </a-col>
         </a-row>
         <!-- 供方、需方详情 -->
-        <div style="text-align:left;height:inherit;font-size: 20px;margin-left:5%;margin-top: 20px;border:1px solid #000">
+        <div
+          style="text-align:left;height:inherit;font-size: 20px;margin-left:5%;margin-top: 20px;border:1px solid #000"
+        >
           <div>
             <div class="contract3">
               <table style="margin-left:20px;">
@@ -97,15 +99,15 @@
                 </tr>
                 <tr>
                   <td style="text-align:right;">单位名称(章)：</td>
-                  <td>安庆市吉宽再生资源有限公司</td>
+                  <td>{{ orgingal.companyName }}</td>
                 </tr>
                 <tr>
                   <td style="text-align:right;">单位地址：</td>
-                  <td>安庆市怀宁县月山镇黄岭村</td>
+                  <td>{{ orgingal.unitAddress }}</td>
                 </tr>
                 <tr>
                   <td style="text-align:right;">法定代表人 ：</td>
-                  <td>许吉宽</td>
+                  <td>{{ orgingal.contactPerson }}</td>
                 </tr>
                 <tr>
                   <td style="text-align:right;">委托代理人 ：</td>
@@ -113,31 +115,31 @@
                 </tr>
                 <tr>
                   <td style="text-align:right;">电 话 ：</td>
-                  <td>0556-4054946</td>
+                  <td>{{ orgingal.contactNumber }}</td>
                 </tr>
                 <tr>
                   <td style="text-align:right;">传 真 ：</td>
-                  <td></td>
+                  <td>{{ orgingal.contactFax }}</td>
                 </tr>
                 <tr>
                   <td style="text-align:right;">开 户 银 行 ：</td>
-                  <td>怀宁县工行月山分理处</td>
+                  <td>{{ orgingal.bankName }}</td>
                 </tr>
                 <tr>
                   <td style="text-align:right;">账 号 ：</td>
-                  <td>1309310709300003314</td>
+                  <td>{{ orgingal.bankAccount }}</td>
                 </tr>
                 <tr>
                   <td style="text-align:right;">增 值 税 号 ：</td>
-                  <td>340822746777596</td>
+                  <td>{{ orgingal.creditCode }}</td>
                 </tr>
                 <tr>
                   <td style="text-align:right;">邮 政 编 码 ：</td>
-                  <td></td>
+                  <td>{{ orgingal.postalCode }}</td>
                 </tr>
                 <tr>
                   <td style="text-align:right;">电 子 邮 件 ：</td>
-                  <td></td>
+                  <td>{{ orgingal.email }}</td>
                 </tr>
               </table>
             </div>
@@ -148,15 +150,15 @@
                 </tr>
                 <tr>
                   <td style="text-align:right;">单位名称(章)：</td>
-                  <td>芜湖新兴铸管有限责任公司</td>
+                  <td>{{ demandSideUnitlist.companyName }}</td>
                 </tr>
                 <tr>
                   <td style="text-align:right;">单位地址：</td>
-                  <td>芜湖市三山区经济开发区春洲路2号</td>
+                  <td>{{ demandSideUnitlist.unitAddress }}</td>
                 </tr>
                 <tr>
                   <td style="text-align:right;">法定代表人 ：</td>
-                  <td>刘涛</td>
+                  <td>{{ demandSideUnitlist.legalRepresentative }}</td>
                 </tr>
                 <tr>
                   <td style="text-align:right;">委托代理人 ：</td>
@@ -164,31 +166,31 @@
                 </tr>
                 <tr>
                   <td style="text-align:right;">电 话 ：</td>
-                  <td>0553-5698511</td>
+                  <td>{{ demandSideUnitlist.contactNumber }}</td>
                 </tr>
                 <tr>
                   <td style="text-align:right;">传 真 ：</td>
-                  <td>0553-5698531</td>
+                  <td>{{ demandSideUnitlist.contactFax }}</td>
                 </tr>
                 <tr>
                   <td style="text-align:right;">开 户 银 行 ：</td>
-                  <td>工行芜湖分行环城路支行</td>
+                  <td>{{ demandSideUnitlist.bankName }}</td>
                 </tr>
                 <tr>
                   <td style="text-align:right;">账 号 ：</td>
-                  <td>1307023219000109264</td>
+                  <td>{{ demandSideUnitlist.bankAccount }}</td>
                 </tr>
                 <tr>
                   <td style="text-align:right;">增 值 税 号 ：</td>
-                  <td>91340208748920392N</td>
+                  <td>{{ demandSideUnitlist.creditCode }}</td>
                 </tr>
                 <tr>
                   <td style="text-align:right;">邮 政 编 码 ：</td>
-                  <td>241081</td>
+                  <td>{{ demandSideUnitlist.postalCode }}</td>
                 </tr>
                 <tr>
                   <td style="text-align:right;">电 子 邮 件 ：</td>
-                  <td></td>
+                  <td>{{ demandSideUnitlist.email }}</td>
                 </tr>
               </table>
             </div>
@@ -260,23 +262,150 @@ export default {
       },
       previewVisible: false,
       previewImage: '',
-      tlist:[],
+      tlist: [],
+      contract: {},
+      product: {},
+      orgingal: {},
+      demandSideUnitlist:{},
+      money: '',
       url: {
         templatelist: '/chargsearch/chargsearch/templatelist',
-        loadRegisterFiles: '/sps/register/getRegisterFilesConfig'
+        contractid: '/contractpurchase/contractPurchase/queryById',
+        productid: '/chargsearch/chargsearch/productId',
+        orgingalid: '/original/originalCharge/queryById',
+        demandSideUnitid:'/original/originalCharge/queryById'
       }
     }
   },
   created() {
-    let id = this.$route.query.data.id 
+    //合同id
+    let id = this.$route.query.data.id
+    let oid = this.$route.query.data.supplier
+    let did=this.$route.query.data.demand_side_unit
     this.templatelist(id)
+    this.contractid(id)
+    this.productid(id)
+    this.supplierDetails(oid)
+    this.demandSideUnit(did)
   },
   methods: {
-
+    //获取合同条款
     templatelist(id) {
       getAction(this.url.templatelist, { cid: id }).then(res => {
         if (res.success) {
-          this.tlist=res.result
+          this.tlist = res.result
+        }
+      })
+    },
+    //获取合同信息
+    contractid(id) {
+      getAction(this.url.contractid, { id: id }).then(res => {
+        if (res.success) {
+          this.contract = res.result
+        }
+      })
+    },
+    //获取产品信息
+    productid(id) {
+      getAction(this.url.productid, { cid: id }).then(res => {
+        if (res.success) {
+          this.product = res.result
+          let moneyo = res.result.totalPrice
+          this.money = this.smallToBig(moneyo)
+        }
+      })
+    },
+    //将小写金额转为大写金额
+    smallToBig(money) {
+      //  将数字金额转换为大写金额
+      var cnNums = new Array('零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖') //汉字的数字
+      var cnIntRadice = new Array('', '拾', '佰', '仟') //基本单位
+      var cnIntUnits = new Array('', '万', '亿', '兆') //对应整数部分扩展单位
+      var cnDecUnits = new Array('角', '分', '毫', '厘') //对应小数部分单位
+      var cnInteger = '整' //整数金额时后面跟的字符
+      var cnIntLast = '元' //整数完以后的单位
+      //最大处理的数字
+      var maxNum = 999999999999999.9999
+      var integerNum //金额整数部分
+      var decimalNum //金额小数部分
+      //输出的中文金额字符串
+      var chineseStr = ''
+      var parts //分离金额后用的数组，预定义
+      if (money == '') {
+        return ''
+      }
+
+      money = parseFloat(money)
+      if (money >= maxNum) {
+        //超出最大处理数字
+        return '超出最大处理数字'
+      }
+      if (money == 0) {
+        chineseStr = cnNums[0] + cnIntLast + cnInteger
+        return chineseStr
+      }
+
+      //四舍五入保留两位小数,转换为字符串
+      money = Math.round(money * 100).toString()
+      integerNum = money.substr(0, money.length - 2)
+      decimalNum = money.substr(money.length - 2)
+
+      //获取整型部分转换
+      if (parseInt(integerNum, 10) > 0) {
+        var zeroCount = 0
+        var IntLen = integerNum.length
+        for (var i = 0; i < IntLen; i++) {
+          var n = integerNum.substr(i, 1)
+          var p = IntLen - i - 1
+          var q = p / 4
+          var m = p % 4
+          if (n == '0') {
+            zeroCount++
+          } else {
+            if (zeroCount > 0) {
+              chineseStr += cnNums[0]
+            }
+            //归零
+            zeroCount = 0
+            chineseStr += cnNums[parseInt(n)] + cnIntRadice[m]
+          }
+          if (m == 0 && zeroCount < 4) {
+            chineseStr += cnIntUnits[q]
+          }
+        }
+        chineseStr += cnIntLast
+      }
+      //小数部分
+      if (decimalNum != '') {
+        var decLen = decimalNum.length
+        for (var i = 0; i < decLen; i++) {
+          var n = decimalNum.substr(i, 1)
+          if (n != '0') {
+            chineseStr += cnNums[Number(n)] + cnDecUnits[i]
+          }
+        }
+      }
+      if (chineseStr == '') {
+        chineseStr += cnNums[0] + cnIntLast + cnInteger
+      } else if (decimalNum == '' || /^0*$/.test(decimalNum)) {
+        chineseStr += cnInteger
+      }
+      return chineseStr
+    },
+    //获取供应商信息
+    supplierDetails(oid) {
+      getAction(this.url.orgingalid, { id: oid }).then(res => {
+        if (res.success) {
+          this.orgingal = res.result
+        }
+      })
+    },
+    //获取需方单位信息
+    demandSideUnit(did) {
+      getAction(this.url.demandSideUnitid, { id: did }).then(res => {
+        if (res.success) {
+          console.log(res.result)
+          this.demandSideUnitlist = res.result
         }
       })
     }
@@ -309,6 +438,7 @@ export default {
 .sign .ant-input {
   font-weight: bolder;
   text-align: center;
+  font-family: 宋体;
   border-left-width: 0px !important;
   border-top-width: 0px !important;
   border-right-width: 0px !important;
@@ -328,15 +458,15 @@ export default {
   margin-left: 5%;
   margin-top: 20px;
 }
-.contract3{
-  width:50%;
-  float:left;
-  border-right:1px solid #000;
-  border-bottom:1px solid #000;
+.contract3 {
+  width: 50%;
+  float: left;
+  border-right: 1px solid #000;
+  border-bottom: 1px solid #000;
 }
-.contract4{
-  width:50%;
-  float:left;
-  border-bottom:1px solid #000; 
+.contract4 {
+  width: 50%;
+  float: left;
+  border-bottom: 1px solid #000;
 }
 </style>

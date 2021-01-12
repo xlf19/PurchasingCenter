@@ -55,7 +55,7 @@
           <a href="javascript:;" @click="handleEdit(record)">编辑</a>
           <a-divider type="vertical" />
           <a href="javascript:;" @click="handleprint(record)">打印</a>
-        </span>    
+        </span>
         <a-table
           slot="expandedRowRender"
           :columns="innerColumns"
@@ -89,6 +89,7 @@ export default {
       description: '采购合同表管理页面',
       rangeDate: [moment(this.date), moment(this.date)],
       namelist: [],
+      supplierlist: [],
       // 表头
       columns: [
         {
@@ -107,14 +108,13 @@ export default {
           dataIndex: 'contract_no'
         },
         {
-          title: '合同类型',
-          align: 'center',
-          dataIndex: 'contract_type'
-        },
-        {
           title: '供应商名称',
           align: 'center',
-          dataIndex: 'supplier'
+          dataIndex: 'supplier',
+          customRender: text => {
+            //字典值替换通用方法
+            return filterMultiDictText(this.supplierlist, text)
+          }
         },
         {
           title: '合同总金额',
@@ -164,7 +164,10 @@ export default {
         {
           title: '税率',
           align: 'center',
-          dataIndex: 'tax_rate'
+          dataIndex: 'tax_rate',
+          customRender: function(t, r, index) {
+            return t+'%'
+          }
         },
         {
           title: '操作',
@@ -309,7 +312,13 @@ export default {
         if (res.success) {
           this.namelist = res.result
         }
-      })
+      }),
+        //初始化字典 - 供应商名称
+        initDictOptions('original_charge,company_name,id').then(res => {
+          if (res.success) {
+            this.supplierlist = res.result
+          }
+        })
     },
 
     initRangeDate() {
@@ -349,11 +358,11 @@ export default {
     },
     //编辑
     handleEdit(record) {
-      let statue=record.current_state
-      if(statue==='生成合同'||statue==='退回'){
+      let statue = record.current_state
+      if (statue === '生成合同' || statue === '退回') {
         this.$router.push({ path: '/contract_management/chargesearch/ContractEditTab', query: { data: record } })
-      }else{
-         this.$message.error('这条合同不能修改，请重新选择！')
+      } else {
+        this.$message.error('这条合同不能修改，请重新选择！')
       }
     },
     //状态刷新

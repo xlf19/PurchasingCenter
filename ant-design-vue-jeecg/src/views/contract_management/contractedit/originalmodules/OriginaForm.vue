@@ -6,18 +6,8 @@
         <a-form layout="inline" @keyup.enter.native="searchQuery">
           <a-row :gutter="24">
             <a-col :xl="6" :lg="8" :md="8" :sm="24">
-              <a-form-item label="物资名称">
-                <a-input placeholder="请输入物资名称" v-model="queryParam.materialName"></a-input>
-              </a-form-item>
-            </a-col>
-            <a-col :xl="6" :lg="8" :md="8" :sm="24">
-              <a-form-item label="规格型号">
-                <a-input placeholder="请输入供货商规格型号" v-model="queryParam.specification"></a-input>
-              </a-form-item>
-            </a-col>
-            <a-col :xl="6" :lg="8" :md="8" :sm="24">
-              <a-form-item label="物资编码">
-                <a-input placeholder="请输入物资编码" v-model="queryParam.materialCode"></a-input>
+              <a-form-item label="供应商名称">
+                <a-input placeholder="请输入供应商名称" v-model="queryParam.companyName"></a-input>
               </a-form-item>
             </a-col>
             <a-col :xl="6" :lg="8" :md="8" :sm="24">
@@ -44,11 +34,6 @@
           class="j-table-force-nowrap"
           @change="handleTableChange"
         >
-          <!-- 状态值 -->
-          <span slot="status" slot-scope="text, record">
-            <a-button class="using_btn" v-if="record.status == '1'">使用中</a-button>
-            <a-button class="ban_btn" v-if="record.status == '0'">已禁用</a-button>
-          </span>
         </a-table>
       </div>
     </a-card>
@@ -64,7 +49,7 @@ import { JeecgListMixin } from '@/mixins/JeecgListMixin'
 import JDate from '@/components/jeecg/JDate'
 
 export default {
-  name: 'ContractPurchaseForm',
+  name: 'originaForm',
   mixins: [JeecgListMixin],
   components: {
     JFormContainer
@@ -73,46 +58,55 @@ export default {
   data() {
     return {
       confirmLoading: false,
-      queryParam: {
-        status: 1
-      },
       columns: [
         {
-          title: '物资编码',
+          title: '单位编码',
           align: 'center',
-          dataIndex: 'materialCode'
+          dataIndex: 'supplierCode'
         },
         {
-          title: '物资名称',
+          title: '单位名称',
           align: 'center',
-          dataIndex: 'materialName'
+          dataIndex: 'companyName'
         },
         {
-          title: '规格型号',
+          title: '联系人',
           align: 'center',
-          dataIndex: 'specification'
+          dataIndex: 'contactPerson'
         },
         {
-          title: '单位',
+          title: '单位地址',
           align: 'center',
-          dataIndex: 'unit'
+          dataIndex: 'unitAddress'
         },
         {
-          title: '使用状态',
+          title: '开户行',
           align: 'center',
-          dataIndex: 'status',
-          scopedSlots: {
-            customRender: 'status'
-          }
+          dataIndex: 'bankName'
         },
         {
-          title: '备注',
+          title: '银行账号',
           align: 'center',
-          dataIndex: 'remake'
+          dataIndex: 'bankAccount'
+        },
+        {
+          title: '联系电话',
+          align: 'center',
+          dataIndex: 'contactNumber'
+        },
+        {
+          title: '传真号码',
+          align: 'center',
+          dataIndex: 'contactFax'
+        },
+        {
+          title: '信用代码',
+          align: 'center',
+          dataIndex: 'creditCode'
         }
       ],
       url: {
-        list: '/materialcode/materialcode/list'
+        list: '/original/originalCharge/list'
       }
     }
   },
@@ -126,17 +120,6 @@ export default {
         this.$message.success('添加成功')
         this.$emit('ok', this.selectionRows)
       }
-    },
-    searchQuery() {
-      this.queryParam.status = 1
-      this.loadData(1)
-    },
-    searchReset() {
-      this.queryParam.status = 1
-      this.queryParam.materialName = ''
-      this.queryParam.specification = ''
-      this.queryParam.materialCode = ''
-      this.searchQuery()
     }
   }
 }

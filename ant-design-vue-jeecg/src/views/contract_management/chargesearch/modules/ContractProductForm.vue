@@ -109,12 +109,23 @@ export default {
   created() {},
   methods: {
     submitForm() {
-      if(this.selectionRows.length===0){
+      if (this.selectionRows.length === 0) {
         this.$message.error('请选择一条数据！')
-      }else{
-         this.$message.success('添加成功')
-          this.$emit('ok', this.selectionRows)
+      } else {
+        this.$message.success('添加成功')
+        this.$emit('ok', this.selectionRows)
       }
+    },
+    searchQuery() {
+      this.queryParam.status = 1
+      this.loadData(1)
+    },
+    searchReset() {
+      this.queryParam.status = 1
+      this.queryParam.materialName = ''
+      this.queryParam.specification = ''
+      this.queryParam.materialCode = ''
+      this.searchQuery()
     }
   }
 }

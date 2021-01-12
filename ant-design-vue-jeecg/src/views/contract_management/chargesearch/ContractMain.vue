@@ -36,18 +36,15 @@
             </a-col>
             <a-col :xl="5" :lg="7" :md="8" :sm="24">
               <a-form-item label="供方单位">
-                <a-select
-                  @search="searchname"
-                  @change="searchname"
-                  show-search
-                  allowClear
-                  v-decorator="['supplier', validatorRules.supplier]"
+                <a-input
                   placeholder="请选择供方单位"
-                >
-                  <a-select-option :value="item.companyName" v-for="(item, index) in depratlist" :key="index">{{
-                    item.companyName
-                  }}</a-select-option>
-                </a-select>
+                  v-decorator="['supplierName', validatorRules.supplierName]"
+                  @click="orgmodal"
+                ></a-input>
+              </a-form-item>
+
+              <a-form-item label="供方单位" v-show="false">
+                <a-input placeholder="请选择供方单位" v-decorator="['supplier']"></a-input>
               </a-form-item>
             </a-col>
             <a-col :xl="5" :lg="7" :md="8" :sm="24">
@@ -57,7 +54,9 @@
                   allowClear
                   v-decorator="['demandSideUnit', validatorRules.demandSideUnit]"
                 >
-                  <a-select-option value="芜湖新兴铸管有限责任公司">芜湖新兴铸管有限责任公司</a-select-option>
+                  <a-select-option v-for="item in demandSideUnitlist" :key="item.id" :value="item.id">{{
+                    item.companyName
+                  }}</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
@@ -68,15 +67,9 @@
                   allowClear
                   v-decorator="['contractTitle', validatorRules.contractTitle]"
                 >
-                  <a-select-option value="原料购销合同">原料购销合同</a-select-option>
-                  <a-select-option value="氧化铁皮购销合同">氧化铁皮购销合同</a-select-option>
-                  <a-select-option value="富粉购销合同">富粉购销合同</a-select-option>
-                  <a-select-option value="精矿粉购销合同">精矿粉购销合同</a-select-option>
-                  <a-select-option value="球团购销合同">球团购销合同</a-select-option>
-                  <a-select-option value="废钢购销合同">废钢购销合同</a-select-option>
-                  <a-select-option value="制钢铁购销合同">制钢铁购销合同</a-select-option>
-                  <a-select-option value="块矿购销合同">块矿购销合同</a-select-option>
-                  <a-select-option value="生铁购销合同">生铁购销合同</a-select-option>
+                  <a-select-option v-for="(item, index) in titlelist" :key="index" :value="item.HTName">{{
+                    item.HTName
+                  }}</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
@@ -84,7 +77,7 @@
           <a-row :gutter="24">
             <a-col :xl="5" :lg="7" :md="8" :sm="24">
               <a-form-item label="含税">
-                <a-radio-group v-decorator="['taxIncluded']">
+                <a-radio-group v-decorator="['taxIncluded']" @change="changetax">
                   <a-radio :value="1">
                     含税
                   </a-radio>
@@ -96,7 +89,7 @@
             </a-col>
             <a-col :xl="5" :lg="7" :md="8" :sm="24">
               <a-form-item label="税率">
-                <a-select placeholder="请选择税率" allowClear v-decorator="['taxRate']">
+                <a-select placeholder="请选择税率" allowClear v-decorator="['taxRate']" @change="changetaxrate">
                   <a-select-option value="11%">11%</a-select-option>
                   <a-select-option value="13%">13%</a-select-option>
                   <a-select-option value="16%">16%</a-select-option>
@@ -192,6 +185,7 @@
         />
       </div>
     </a-card>
+    <original-modal ref="orgmodalForm" @ok="addorginal"></original-modal>
   </div>
 </template>
 
@@ -206,14 +200,16 @@ import JEllipsis from '@/components/jeecg/JEllipsis'
 import moment from 'moment'
 import store from '@/store'
 import ContractProductModal from './modules/ContractProductModal'
+import OriginalModal from './originalmodules/OriginalModal'
 import { FormTypes } from '@/utils/JEditableTableUtil'
 import JEditableTable from '@/components/jeecg/JEditableTable'
 import { randomUUID } from '@/utils/util'
 import JDate from '@/components/jeecg/JDate'
+import * as math from 'mathjs'
 export default {
   name: 'ContractMain',
   mixins: [JeecgListMixin, mixinDevice],
-  components: { ContractProductModal, JEditableTable, JDate },
+  components: { ContractProductModal, JEditableTable, JDate, OriginalModal },
   props: {
     contractid: {
       type: String
@@ -235,7 +231,7 @@ export default {
       validatorRules: {
         templateId: { rules: [{ required: true, message: '请选择合同模板!' }] },
         contractNo: { rules: [{ required: true, message: '请输入合同编号!' }] },
-        supplier: { rules: [{ required: true, message: '请选择供方单位!' }] },
+        supplierName: { rules: [{ required: true, message: '请选择供方单位!' }] },
         demandSideUnit: { rules: [{ required: true, message: '请选择需方单位!' }] },
         contractTitle: { rules: [{ required: true, message: '请选择合同标题!' }] }
       },
@@ -245,10 +241,13 @@ export default {
       modellist: {},
       data: [],
       datalist: [],
-      //供方单位
-      depratlist: [],
+
       //合同模板
       templatelist: [],
+      //需方单位
+      demandSideUnitlist: [],
+      //合同标题
+      titlelist: [],
       disableMixinCreated: true,
       // 表头
       columns: [
@@ -369,14 +368,16 @@ export default {
         productidlist: '/chargsearch/chargsearch/productidlist',
         queryById: '/contractedit/contractedit/queryById',
         delete: '/contractedit/contractedit/delete',
-        template: '/contractedit/contractedit/templatelist'
+        template: '/contractedit/contractedit/templatelist',
+        contracttitle: '/contractstatus/contractstatus/searchTitle'
       }
     }
   },
   created() {
     this.contractone(this.contractid)
-    this.searchname('')
     this.templatelists()
+    this.searchname()
+    this.searchTitle()
   },
   computed: {
     importExcelUrl: function() {
@@ -399,7 +400,7 @@ export default {
     //合同模板发生改变（向父组件传值）
     handleChange(value) {
       let cid = this.contractid
-      this.$emit('search', value, cid,false)
+      this.$emit('search', value, cid, false)
     },
     //查询合同信息表
     contractone(id) {
@@ -410,6 +411,7 @@ export default {
             templateId: res.result.templateId,
             contractNo: res.result.contractNo,
             supplier: res.result.supplier,
+            supplierName: res.result.supplierName,
             demandSideUnit: res.result.demandSideUnit,
             contractTitle: res.result.contractTitle,
             taxIncluded: res.result.taxIncluded,
@@ -442,15 +444,35 @@ export default {
         }
       })
     },
-    //查询供应商
-    searchname(value) {
-      let companyName = ''
-      if (value !== '' && value !== null && value !== undefined) {
-        companyName = value
-      }
-      getAction(this.url.searchname, { companyName: companyName }).then(res => {
+    //查询供应商（模态框）
+    orgmodal() {
+      this.$refs.orgmodalForm.add()
+      this.$refs.orgmodalForm.title = '查询供应商'
+      this.$refs.orgmodalForm.disableSubmit = false
+    },
+    //添加供应商
+    addorginal(value) {
+      this.form.setFieldsValue({
+        supplier: value[0].id,
+        supplierName: value[0].companyName
+      })
+    },
+    //查询需方单位
+    searchname() {
+      getAction(this.url.searchname, { companyName: '' }).then(res => {
         if (res.success) {
-          this.depratlist = res.result
+          this.demandSideUnitlist = res.result
+        }
+        if (res.code === 510) {
+          this.$message.warning(res.message)
+        }
+      })
+    },
+    //查询合同标题
+    searchTitle() {
+      getAction(this.url.contracttitle).then(res => {
+        if (res.success) {
+          this.titlelist = res.result
         }
         if (res.code === 510) {
           this.$message.warning(res.message)
@@ -647,8 +669,10 @@ export default {
       if (!isNaN(parseFloat(row.december))) {
         december = parseFloat(row.december)
       }
-      let totals =
+      let totals = this.printFn(
         january + february + march + april + may + june + july + august + september + october + november + december
+      )
+
       // 设置总量
       target.setValues([
         {
@@ -658,7 +682,7 @@ export default {
       ])
       this.handleValuefirst(totals)
     },
-    //设置数量、总价、税金
+    //副表设置数量、总价、税金
     handleValuefirst(datas) {
       this.$refs.editableTable.getValues((error, values) => {
         if (error === 0) {
@@ -666,8 +690,17 @@ export default {
           if (!isNaN(parseFloat(values[0].unitPrice))) {
             unitPrice = parseFloat(values[0].unitPrice)
           }
+          let sl = this.form.getFieldValue('taxRate') / 100 //税率
+          let hs = this.form.getFieldValue('taxIncluded') //是否含税
+          let sj = 0 //税金
+          if (hs === 1) {
+            sj = this.printFn((datas * unitPrice * sl) / (1 + sl))
+          } else {
+            sj = this.printFn(datas * unitPrice * sl)
+          }
+          values[0].taxes = parseFloat(sj).toFixed(2)
           values[0].quantity = datas
-          values[0].totalPrice = datas * unitPrice
+          values[0].totalPrice = this.printFn(datas * unitPrice)
           this.data = values
         }
       })
@@ -683,12 +716,22 @@ export default {
       if (!isNaN(parseFloat(row.quantity))) {
         quantity = parseFloat(row.quantity)
       }
-      let totalPrice = unitPrice * quantity
+      let totalPrice = this.printFn(unitPrice * quantity)
+      let sl = this.form.getFieldValue('taxRate') / 100 //税率
+      let hs = this.form.getFieldValue('taxIncluded') //是否含税
+      let sj = 0 //税金
+      let hsje = 0
+      if (hs === 1) {
+        sj = this.printFn((totalPrice * sl) / (1 + sl))
+      } else {
+        sj = this.printFn(totalPrice * sl)
+      }
+      hsje = parseFloat(sj).toFixed(2)
       // 设置总价
       target.setValues([
         {
           rowKey: row.id,
-          values: { totalPrice: totalPrice }
+          values: { totalPrice: totalPrice, taxes: hsje }
         }
       ])
     },
@@ -761,6 +804,60 @@ export default {
           })
         }
       })
+    },
+    //是否含税
+    changetax(e) {
+      this.$refs.editableTable.getValues((error, values) => {
+        if (error === 0) {
+          let hs = e.target.value
+          let unitPrice = 0
+          let quantity = 0
+          let sl = this.form.getFieldValue('taxRate') / 100 //税率
+          let sj = 0 //税金
+          if (!isNaN(parseFloat(values[0].unitPrice))) {
+            unitPrice = parseFloat(values[0].unitPrice)
+          }
+          if (!isNaN(parseFloat(values[0].quantity))) {
+            quantity = parseFloat(values[0].quantity)
+          }
+          if (hs === 1) {
+            sj = this.printFn((quantity * unitPrice * sl) / (1 + sl))
+          } else {
+            sj = this.printFn(quantity * unitPrice * sl)
+          }
+          values[0].taxes = parseFloat(sj).toFixed(2)
+          this.data = values
+        }
+      })
+    },
+    //税率改变
+    changetaxrate(value) {
+      this.$refs.editableTable.getValues((error, values) => {
+        if (error === 0) {
+          let hs = this.form.getFieldValue('taxIncluded') //是否含税
+          let unitPrice = 0
+          let quantity = 0
+          let sl = value / 100 //税率
+          let sj = 0 //税金
+          if (!isNaN(parseFloat(values[0].unitPrice))) {
+            unitPrice = parseFloat(values[0].unitPrice)
+          }
+          if (!isNaN(parseFloat(values[0].quantity))) {
+            quantity = parseFloat(values[0].quantity)
+          }
+          if (hs === 1) {
+            sj = this.printFn((quantity * unitPrice * sl) / (1 + sl))
+          } else {
+            sj = this.printFn(quantity * unitPrice * sl)
+          }
+          values[0].taxes = parseFloat(sj).toFixed(2)
+          this.data = values
+        }
+      })
+    },
+    printFn(value) {
+      const precision = 14
+      return Number(math.format(value, precision))
     }
   }
 }

@@ -34,8 +34,8 @@
     </select>
 
     <select id="searchname" parameterType="java.lang.String" resultType="org.jeecg.modules.basicdata.original.entity.OriginalCharge">
-        select top(20) * from original_charge
-        where isdelete=1 and use_status=1 and company_category=1
+        select  * from original_charge
+        where isdelete=1 and use_status=1 and company_category=2
         <if test="companyName!=null and  companyName!=''">
             and company_name like '%'+#{companyName}+'%'
         </if>

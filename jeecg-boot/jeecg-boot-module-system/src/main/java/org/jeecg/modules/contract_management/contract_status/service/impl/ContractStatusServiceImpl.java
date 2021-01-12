@@ -33,4 +33,9 @@ public class ContractStatusServiceImpl extends ServiceImpl<ContractStatusMapper,
     public boolean updatecontract(String HeTongCode) {
         return contractStatusMapper.updatecontract(HeTongCode);
     }
+
+    @Override
+    public List<Map<String, Object>> searchTitle(String bumen) {
+        return contractStatusMapper.searchTitle(bumen);
+    }
 }

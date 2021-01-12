@@ -19,4 +19,11 @@
            where 合同编号=#{HeTongCode}
     </update>
 
+    <select id="searchTitle" resultType="map" parameterType="java.lang.String">
+           select HTName
+            from G_HeTongName
+            where IsDelete=0 and SuoShuBuMen=#{bumen}
+            order by PXId,Id
+    </select>
+
 </mapper>

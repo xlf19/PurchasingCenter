@@ -16,4 +16,7 @@ public interface IContractStatusService extends IService<T> {
 
     // //根据合同号改变设备管理_合同_主表合同状态
     boolean updatecontract(String HeTongCode);
+
+    //查询合同标题
+    List<Map<String,Object>> searchTitle(String bumen);
 }
