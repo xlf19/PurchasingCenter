@@ -27,7 +27,7 @@
             <a-col :xl="5" :lg="7" :md="8" :sm="24">
               <a-form-item label="条款数" :labelCol="labelCol" :wrapperCol="wrapperCol">
                 <a-select
-                  disabled=true
+                  :disabled="true"
                   @select="setNumber"
                   v-decorator="[
                     'termsNumber',

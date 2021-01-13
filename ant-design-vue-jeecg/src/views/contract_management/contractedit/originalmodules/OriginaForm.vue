@@ -58,6 +58,9 @@ export default {
   data() {
     return {
       confirmLoading: false,
+      queryParam: {
+        companyCategory: 1
+      },
       columns: [
         {
           title: '单位编码',
@@ -120,6 +123,15 @@ export default {
         this.$message.success('添加成功')
         this.$emit('ok', this.selectionRows)
       }
+    },
+    searchQuery() {
+      this.queryParam.companyCategory = 1
+      this.loadData(1)
+    },
+    searchReset() {
+      this.queryParam.companyCategory = 1
+      this.queryParam.companyName = ''
+      this.searchQuery()
     }
   }
 }

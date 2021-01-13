@@ -347,7 +347,7 @@ export const constantRouterMap = [
   //   ]
   // },
   {
-    path: '/contract_management/chargesearch/ChargeSearchList',
+    path: '/contract_management/chargesearch',
     name: 'ChargeSearchList',
     component: TabLayout,
     meta: { title: '原炉料合同查询打印' },

@@ -69,6 +69,7 @@ import { JeecgListMixin } from '@/mixins/JeecgListMixin'
 import JUpload from '@/components/jeecg/JUpload'
 import moment from 'moment'
 import ContractAttachmentModal from './modules/ContractAttachmentModal'
+import { initDictOptions, filterMultiDictText } from '@/components/dict/JDictSelectUtil'
 export default {
   name: 'ContractPurchaseList',
   mixins: [JeecgListMixin, mixinDevice],
@@ -102,7 +103,11 @@ export default {
         {
           title: '供应商名称',
           align: 'center',
-          dataIndex: 'supplier'
+          dataIndex: 'supplier',
+          customRender: text => {
+            //字典值替换通用方法
+            return filterMultiDictText(this.supplierlist, text)
+          }
         },
         {
           title: '合同总金额',
@@ -117,7 +122,11 @@ export default {
         {
           title: '业务员',
           align: 'center',
-          dataIndex: 'create_by'
+          dataIndex: 'create_by',
+          customRender: text => {
+            //字典值替换通用方法
+            return filterMultiDictText(this.namelist, text)
+          }
         },
         {
           title: '签订时间',
@@ -144,7 +153,11 @@ export default {
         {
           title: '税率',
           align: 'center',
-          dataIndex: 'tax_rate'
+          dataIndex: 'tax_rate',
+          customRender: function(text) {
+            return text+'%'
+          }
+
         },
         {
           title: '操作',
@@ -154,6 +167,8 @@ export default {
           scopedSlots: { customRender: 'action' }
         }
       ],
+      namelist: [],
+      supplierlist: [],
       expandedRowKeys: [],
       url: {
         list: '/contractattachment/contractattachment/list'
@@ -168,7 +183,20 @@ export default {
     }
   },
   methods: {
-    initDictConfig() {},
+    initDictConfig() {
+      //初始化字典 - 业务员
+      initDictOptions('sys_user,realname,username').then(res => {
+        if (res.success) {
+          this.namelist = res.result
+        }
+      }),
+        //初始化字典 - 供应商名称
+        initDictOptions('original_charge,company_name,id').then(res => {
+          if (res.success) {
+            this.supplierlist = res.result
+          }
+        })
+    },
     initRangeDate() {
       this.rangeDate = [moment(this.date), moment(this.date)]
     },

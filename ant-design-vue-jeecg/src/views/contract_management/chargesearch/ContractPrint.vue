@@ -9,7 +9,7 @@
         <a-row>
           <a-col :span="24">
             <div style="text-align: center">
-              <p style="font-size: 30px;font-weight: 800">废钢购销合同</p>
+              <p style="font-size: 30px;font-weight: 800">{{ contract.contractTitle }}</p>
             </div>
           </a-col>
         </a-row>
@@ -83,7 +83,7 @@
             </table>
           </a-col>
         </a-row>
-        <a-row class="contract2" v-for="(item, index) in tlist" :key="index">
+        <a-row class="contract2" v-for="(item, index) in tlist" :key="index" :style="{'margin-top': (number >=12 ? '15px':'20px')}">
           <a-col :span="24">{{ item.templateTitle }}</a-col>
           <a-col :span="24" style="text-decoration:underline">{{ item.templateContent }} </a-col>
         </a-row>
@@ -233,16 +233,16 @@
 </template>
 
 <script>
-import ACol from 'ant-design-vue/es/grid/Col'
-import ARow from 'ant-design-vue/es/grid/Row'
-import ATextarea from 'ant-design-vue/es/input/TextArea'
+// import ACol from 'ant-design-vue/es/grid/Col'
+// import ARow from 'ant-design-vue/es/grid/Row'
+// import ATextarea from 'ant-design-vue/es/input/TextArea'
 import { getAction } from '@/api/manage'
 export default {
   name: 'ContractPrint',
   components: {
-    ATextarea,
-    ARow,
-    ACol
+    // ATextarea,
+    // ARow,
+    // ACol
   },
   props: {
     reBizCode: {
@@ -266,14 +266,15 @@ export default {
       contract: {},
       product: {},
       orgingal: {},
-      demandSideUnitlist:{},
+      demandSideUnitlist: {},
+      number: 0,
       money: '',
       url: {
         templatelist: '/chargsearch/chargsearch/templatelist',
         contractid: '/contractpurchase/contractPurchase/queryById',
         productid: '/chargsearch/chargsearch/productId',
         orgingalid: '/original/originalCharge/queryById',
-        demandSideUnitid:'/original/originalCharge/queryById'
+        demandSideUnitid: '/original/originalCharge/queryById'
       }
     }
   },
@@ -281,7 +282,7 @@ export default {
     //合同id
     let id = this.$route.query.data.id
     let oid = this.$route.query.data.supplier
-    let did=this.$route.query.data.demand_side_unit
+    let did = this.$route.query.data.demand_side_unit
     this.templatelist(id)
     this.contractid(id)
     this.productid(id)
@@ -294,6 +295,7 @@ export default {
       getAction(this.url.templatelist, { cid: id }).then(res => {
         if (res.success) {
           this.tlist = res.result
+          this.number = res.result.length
         }
       })
     },
@@ -404,7 +406,6 @@ export default {
     demandSideUnit(did) {
       getAction(this.url.demandSideUnitid, { id: did }).then(res => {
         if (res.success) {
-          console.log(res.result)
           this.demandSideUnitlist = res.result
         }
       })
@@ -469,4 +470,5 @@ export default {
   float: left;
   border-bottom: 1px solid #000;
 }
+
 </style>

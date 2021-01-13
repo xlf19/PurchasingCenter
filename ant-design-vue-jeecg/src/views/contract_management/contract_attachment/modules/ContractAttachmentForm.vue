@@ -8,11 +8,7 @@
               <a-input v-decorator="['contractNo']" placeholder="请输入合同编号" disabled></a-input>
             </a-form-item>
           </a-col>
-          <a-col :span="24">
-            <a-form-item label="供应商名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <a-input v-decorator="['supplier']" placeholder="请输入供方单位" disabled></a-input>
-            </a-form-item>
-          </a-col>
+
           <a-col :span="24">
             <a-form-item label="文件" :labelCol="labelCol" :wrapperCol="wrapperCol">
               <j-upload
@@ -119,7 +115,7 @@ export default {
       this.model = Object.assign({}, record)
       this.visible = true
       this.$nextTick(() => {
-        this.form.setFieldsValue(pick(this.model,  'contractNo', 'supplier', 'filePath'))
+        this.form.setFieldsValue(pick(this.model,  'contractNo', 'filePath'))
       })
     },
     //渲染流程表单数据
@@ -166,7 +162,7 @@ export default {
       })
     },
     popupCallback(row) {
-      this.form.setFieldsValue(pick(row,  'contractNo', 'supplier', 'filePath'))
+      this.form.setFieldsValue(pick(row,  'contractNo', 'filePath'))
     }
   }
 }

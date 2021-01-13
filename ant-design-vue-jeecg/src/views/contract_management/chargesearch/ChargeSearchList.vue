@@ -40,7 +40,6 @@
       <a-table
         ref="table"
         size="middle"
-        :scroll="{ x: true }"
         bordered
         rowKey="id"
         :columns="columns"
@@ -76,10 +75,9 @@
 import '@/assets/less/TableExpand.less'
 import { mixinDevice } from '@/utils/mixin'
 import { deleteAction, getAction, getFileAccessHttpUrl } from '@/api/manage'
-import { initDictOptions, filterDictText, filterMultiDictText } from '@/components/dict/JDictSelectUtil'
+import { initDictOptions, filterMultiDictText } from '@/components/dict/JDictSelectUtil'
 import { JeecgListMixin } from '@/mixins/JeecgListMixin'
 import moment from 'moment'
-
 export default {
   name: 'ContractPurchaseList',
   mixins: [JeecgListMixin, mixinDevice],
@@ -90,6 +88,7 @@ export default {
       rangeDate: [moment(this.date), moment(this.date)],
       namelist: [],
       supplierlist: [],
+      disableMixinCreated:false,
       // 表头
       columns: [
         {
@@ -124,7 +123,8 @@ export default {
         {
           title: '合同备注',
           align: 'center',
-          dataIndex: 'contract_notes'
+          dataIndex: 'contract_notes',
+          scopedSlots: { customRender: 'ellipsisSlot' }
         },
         {
           title: '业务员',
@@ -166,7 +166,7 @@ export default {
           align: 'center',
           dataIndex: 'tax_rate',
           customRender: function(t, r, index) {
-            return t+'%'
+            return t + '%'
           }
         },
         {
@@ -290,21 +290,16 @@ export default {
       url: {
         list: '/chargsearch/chargsearch/list',
         delete: '/contractpurchase/contractPurchase/delete',
-        deleteBatch: '/contractpurchase/contractPurchase/deleteBatch',
-        exportXlsUrl: '/contractpurchase/contractPurchase/exportXls',
-        importExcelUrl: 'contractpurchase/contractPurchase/importExcel',
         findDetail: '/chargsearch/chargsearch/findDetail',
         getHttpRequestData: '/chargsearch/chargsearch/getHttpRequestData'
       },
       dictOptions: {}
     }
   },
-  created() {},
-  computed: {
-    importExcelUrl: function() {
-      return `${window._CONFIG['domianURL']}/${this.url.importExcelUrl}`
-    }
+  created() {
+    
   },
+  computed: {},
   methods: {
     initDictConfig() {
       //初始化字典 - 业务员
