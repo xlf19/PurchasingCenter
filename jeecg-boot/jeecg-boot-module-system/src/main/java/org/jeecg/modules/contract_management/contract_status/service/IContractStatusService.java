@@ -18,5 +18,5 @@ public interface IContractStatusService extends IService<T> {
     boolean updatecontract(String HeTongCode);
 
     //查询合同标题
-    List<Map<String,Object>> searchTitle(String bumen);
+    List<Map<String,Object>> searchTitle(List<String> bumen);
 }

@@ -14,7 +14,7 @@ import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.aspect.annotation.AutoLog;
 import org.jeecg.common.system.base.controller.JeecgController;
 import org.jeecg.common.util.oConvertUtils;
-import org.jeecg.modules.contract.syslegaltemplatedetail.entity.SysLegalTemplateDetail;
+
 import org.jeecg.modules.contract_management.chargeSearch.service.IChargeSearchService;
 import org.jeecg.modules.contract_management.contract_status.service.IContractStatusService;
 
@@ -211,7 +211,6 @@ public class ChargeSearchController extends JeecgController<T, IChargeSearchServ
     @ApiOperation(value="查询合同条款信息", notes="查询合同条款信息")
     @GetMapping(value = "/templatelist")
     public Result<?> templatelist(@RequestParam(name="cid") String cid) {
-        cid="fabe3a20828aff604d105032d337eb45";
         QueryWrapper<ContractTerms> qcontract =new QueryWrapper<ContractTerms>();
         qcontract.eq("contract_id",cid);
         qcontract.orderByAsc("sort");
@@ -230,9 +229,8 @@ public class ChargeSearchController extends JeecgController<T, IChargeSearchServ
     @GetMapping(value = "/productId")
     public Result<?> productId(@RequestParam(name="cid",required=true) String cid) {
         QueryWrapper<ProductInformation> queryWrapper =new QueryWrapper<ProductInformation>();
-        cid="6d28ea61bbd5fed57d4e1b6e86be2471";
         queryWrapper.eq("contract_id",cid);
-//        queryWrapper.eq("isdelete",1);
+        queryWrapper.eq("isdelete",1);
         ProductInformation productInformation =productInformationService.getOne(queryWrapper);
         if(productInformation==null) {
             return Result.error("未找到对应数据");

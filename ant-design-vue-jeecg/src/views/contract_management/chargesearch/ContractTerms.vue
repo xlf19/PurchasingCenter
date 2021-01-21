@@ -173,7 +173,6 @@ export default {
           let obj = titleArr.map((item, index) => {
             return { ...item, ...contentArr[index] }
           })
-          // console.log(obj)
           //请求模板详情后台提交数据
           this.sendData(obj)
         }
@@ -234,7 +233,6 @@ export default {
           let obj = titleArr.map((item, index) => {
             return { ...item, ...contentArr[index] }
           })
-          // console.log(obj)
           //请求模板详情后台提交数据
           this.termsData(obj)
         }

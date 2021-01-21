@@ -505,7 +505,6 @@ export default {
             getAction(this.url.queryById, { id: id }).then(res => {
               if (res.code == 200) {
                 deleteAction(this.url.delete, { id: id }).then(rtx => {
-                  console.log(rtx)
                   if (rtx.code == 200) {
                     this.$message.success('删除成功')
                     this.data = []

@@ -104,6 +104,8 @@ public class ShiroConfig {
 		filterChainDefinitionMap.put("/**/*.woff2", "anon");
 		// update-begin--Author:sunjianlei Date:20190813 for：排除字体格式的后缀
 
+
+
 		filterChainDefinitionMap.put("/druid/**", "anon");
 		filterChainDefinitionMap.put("/swagger-ui.html", "anon");
 		filterChainDefinitionMap.put("/swagger**/**", "anon");

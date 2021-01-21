@@ -20,5 +20,5 @@ public interface ContractStatusMapper extends BaseMapper<T> {
     boolean updatecontract(@Param("HeTongCode")String HeTongCode);
 
     //查询合同标题
-    List<Map<String,Object>> searchTitle(@Param("bumen")String bumen);
+    List<Map<String,Object>> searchTitle(@Param("bumen")List<String> bumen);
 }
