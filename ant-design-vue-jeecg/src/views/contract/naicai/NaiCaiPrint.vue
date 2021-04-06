@@ -181,7 +181,7 @@ export default {
           dataIndex: 'taxRate',
         },
         {
-          title: '贷款',
+          title: '货款',
           align: 'center',
           dataIndex: 'loan',
         },

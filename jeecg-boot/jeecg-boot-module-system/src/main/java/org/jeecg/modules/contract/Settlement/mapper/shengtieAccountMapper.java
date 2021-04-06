@@ -69,7 +69,7 @@ public interface shengtieAccountMapper extends BaseMapper<T> {
   //计算每次结算中的元素个数
   List<countElementNum> countElementNum(String[] ci_id);
 
-  //通过筛选后的合同唯一ID获取合同数量对比公式
+  //通过筛选后，根据合同唯一ID获取合同数量对比公式
   List<ContractNumber> cotractNumberById(List<String> cid);
 
   //<!--删除合同信息表中的结算信息假删除

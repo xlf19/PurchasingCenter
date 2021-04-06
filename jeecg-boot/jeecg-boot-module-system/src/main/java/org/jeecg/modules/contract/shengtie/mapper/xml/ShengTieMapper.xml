@@ -9,4 +9,12 @@
 	    #{pzh,jdbcType=INTEGER,mode=IN}
 	    )}
     </select>
+
+    <select id="dyhj" statementType="CALLABLE" resultType="map" >
+        {call dbo.ht_shengtie_dyhj(
+                #{htbh,jdbcType=VARCHAR,mode=IN},
+                #{pzh,jdbcType=INTEGER,mode=IN}
+            )}
+    </select>
+
 </mapper>

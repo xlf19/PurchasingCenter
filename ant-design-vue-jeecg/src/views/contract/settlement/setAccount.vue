@@ -73,6 +73,7 @@
         @expand="handleExpand"
         class="j-table-force-nowrap"
         @change="handleTableChange"
+        :rowClassName ="setRowClassName"
       >
         <template slot="ellipsisSlot" slot-scope="text">
           <j-ellipsis :value="text" :length="5"></j-ellipsis>
@@ -108,6 +109,7 @@ const DetailListItem = DetailList.Item
 
 export default {
   name: 'shengtieAccount',
+  inject: ['reload'],
   mixins: [JeecgListMixin, mixinDevice],
   components: {
     DetailList,
@@ -254,6 +256,11 @@ export default {
           dataIndex: 'settlementQuantity',
         },
         {
+          title: '贷款',
+          align: 'center',
+          dataIndex: 'loan',
+        },
+        {
           title: '税金',
           align: 'center',
           dataIndex: 'taxes',
@@ -319,6 +326,10 @@ export default {
   computed: {},
   methods: {
     initDictConfig() {},
+    //根据结算状态给出每行不同的颜色
+    setRowClassName(record) {
+      console.log(record);
+    },
 
     //高权限的人删除结算失败的合同
     deleteAccountSettle() {
@@ -431,8 +442,10 @@ export default {
                 this.$message.success('结算成功！')
               }
             })
+
             this.selectedRowKeys = []
             this.selectionRows = []
+
           }
           if (res.code === 500) {
             this.$message.warning(res.message)
@@ -440,6 +453,7 @@ export default {
             this.selectedRowKeys = []
             this.selectionRows = []
           }
+
           this.loading = false
         })
       }

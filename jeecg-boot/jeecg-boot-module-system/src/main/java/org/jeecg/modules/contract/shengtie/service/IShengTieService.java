@@ -13,5 +13,8 @@ public interface IShengTieService  extends IService<T> {
 
     //生铁打印查询
     IPage<Map<Object, String>> selectstdy(IPage<Map<Object, String>> page, String htbh,Integer pzh);
+
+    //生铁打印加权平均合计
+    Map<String,Object> dyhj(String htbh,Integer pzh);
 }
 

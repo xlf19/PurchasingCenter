@@ -78,7 +78,7 @@
        <foreach collection="list" item="bean" index="index" open="" close="" separator=";">
           update contract_elements
            set
-           <if test="bean.deductionResult !=null and bean.deductionResult != ''">
+           <if test="bean.deductionResult !=null">
               deduction_result = #{bean.deductionResult}
            </if>
           where  ci_id = #{bean.ciId}
@@ -95,13 +95,13 @@
               <if test="bean.settlementDate !=null ">
               settlement_date = #{bean.settlementDate},
               </if>
-              <if test="bean.settlementQuantity !=null and bean.settlementQuantity !=''">
+              <if test="bean.settlementQuantity !=null">
                   settlement_quantity = #{bean.settlementQuantity},
               </if>
-              <if test="bean.settlemenPrice !=null and bean.settlemenPrice !=''">
+              <if test="bean.settlemenPrice !=null">
                   settlemen_price = #{bean.settlemenPrice},
               </if>
-              <if test="bean.settlementResults !=null and bean.settlementResults !=''">
+              <if test="bean.settlementResults !=null">
                   settlement_results = #{bean.settlementResults},
               </if>
               <if test="bean.clearingHouse !=null and bean.clearingHouse !=''">
@@ -115,6 +115,9 @@
               </if>
               <if test="bean.settlementNotes !=null">
                   settlement_notes = #{bean.settlementNotes},
+              </if>
+              <if test="bean.loan !=null">
+                  loan = #{bean.loan},
               </if>
           </set>
             where id = #{bean.id}
@@ -171,7 +174,7 @@
         GROUP by ci_id
     </select>
 
-    <!--通过筛选后的合同唯一ID获取合同数量对比公式-->
+    <!--通过筛选后，根据合同唯一ID获取合同数量对比公式-->
     <select id="cotractNumberById" parameterType="java.util.List" resultType="org.jeecg.modules.contract.Settlement.entity.ContractNumber">
       select a.id as cid,a.contract_no as contractNo,a.weighing as contractWeight ,
       s.basedata as baseData,s.leftnum as leftNumber,s.deductions as numberDeductions,

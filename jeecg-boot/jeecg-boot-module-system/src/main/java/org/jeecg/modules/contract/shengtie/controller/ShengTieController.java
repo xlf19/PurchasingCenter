@@ -173,4 +173,14 @@ public class ShengTieController extends JeecgController<T, IShengTieService> {
         IPage<Map<Object, String>> pageList = shengTieService.selectstdy(page, contractInformation.getContractNo(),contractInformation.getVoucherNo());
         return Result.ok(pageList);
     }
+
+    //打印查询列表
+    @AutoLog(value = "生铁打印加权平均合计")
+    @ApiOperation(value="生铁打印加权平均合计", notes="生铁打印加权平均合计")
+    @GetMapping(value = "/dyhj")
+    public Result<?> dyhj(@RequestParam(name = "contractNo") String contractNo,
+                          @RequestParam(name = "voucherNo") Integer voucherNo) {
+        Map<String, Object> map = shengTieService.dyhj(contractNo,voucherNo);
+        return Result.ok(map);
+    }
 }

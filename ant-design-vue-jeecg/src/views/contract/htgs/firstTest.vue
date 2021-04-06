@@ -124,13 +124,13 @@ export default {
   mixins: [JeecgListMixin, mixinDevice],
   props: {
     contrac: {
-      type: String,
+      type: String
       // required: true,
       // default: 'WX20200900031',
     },
     contracttype: {
-      type: String,
-    },
+      type: String
+    }
   },
   watch: {
     // contrac(newVal, oldVal) {
@@ -151,8 +151,8 @@ export default {
       },
       //深度监听
       deep: true,
-      immediate: true,
-    },
+      immediate: true
+    }
   },
   data() {
     return {
@@ -176,15 +176,17 @@ export default {
 
       SysbolOptions: [
         { title: '<', value: '0' },
-        { title: '≤', value: '1' },
+        { title: '≤', value: '1' }
       ],
       deductionOptions: [
         { title: '单价', value: '0' },
-        { title: '数量(吨)', value: '1' },
+        { title: '数量(吨)', value: '1' }
       ],
       isReduceOptions: [
         { title: '扣除', value: '0' },
         { title: '增加', value: '1' },
+        { title: '不扣', value: '2' },
+        { title: '拒收', value: '3' }
       ],
       columns: [
         // {
@@ -209,7 +211,7 @@ export default {
             //   required: true, // 必填
             //   message: '请输入${title}', // 显示的文本
             // },
-          ],
+          ]
         },
         {
           title: '左符号',
@@ -221,7 +223,7 @@ export default {
           placeholder: '请选择${title}',
           validateRules: [
             // { required: true, message: '请选择${title}' }
-          ],
+          ]
         },
         {
           title: '元素',
@@ -233,7 +235,7 @@ export default {
           placeholder: '请选择${title}',
           validateRules: [
             // { required: true, message: '请选择${title}' }
-          ],
+          ]
         },
         {
           title: '右符号',
@@ -245,7 +247,7 @@ export default {
           placeholder: '请选择${title}',
           validateRules: [
             // { required: true, message: '请选择${title}' }
-          ],
+          ]
         },
         {
           title: '右区间值',
@@ -267,7 +269,7 @@ export default {
                 //遍历查询数据
                 let left
                 let right
-                values.forEach((item) => {
+                values.forEach(item => {
                   if (row.id == item.id) {
                     //通过id找到自己的数据
                     left = parseFloat(item.leftnum)
@@ -280,15 +282,15 @@ export default {
                   }
                 })
               },
-              message: '${title}默认提示',
-            },
-          ],
+              message: '${title}默认提示'
+            }
+          ]
         },
         {
           title: '基准数值',
           key: 'basedata',
           width: '140px',
-          type: FormTypes.inputNumber,
+          type: FormTypes.inputNumber
           // disabled: true,
         },
         {
@@ -296,7 +298,7 @@ export default {
           key: 'isreduce',
           width: '140px',
           defaultValue: '扣除',
-          type: FormTypes.select,
+          type: FormTypes.select
         },
         {
           title: '款额(元)',
@@ -304,7 +306,7 @@ export default {
           width: '140px',
           type: FormTypes.inputNumber,
           // slotName: 'deductions'
-          validateRules: [{ required: true, message: '请选择${title}' }],
+          validateRules: [{ required: true, message: '请选择${title}' }]
         },
         {
           title: '操作',
@@ -312,8 +314,8 @@ export default {
           // width: '8%',
           width: '140px',
           type: FormTypes.slot,
-          slotName: 'action',
-        },
+          slotName: 'action'
+        }
       ],
       //数据库传入的数据
       dataSource: [],
@@ -328,16 +330,16 @@ export default {
         queryById: '/Hetonggongshi/sysHetonggongshi/queryById',
         queryTemplateByName: '/SysTemplate/sysTemplate/list',
         elemetslist: '/elements/contractElements/findListhth',
-        queryContractType: '/contract/contractInformation/list',
+        queryContractType: '/contract/contractInformation/list'
       },
       selectedRowIds: [],
       labelCol: {
         xs: { span: 24 },
-        sm: { span: 5 },
+        sm: { span: 5 }
       },
       wrapperCol: {
         xs: { span: 24 },
-        sm: { span: 16 },
+        sm: { span: 16 }
       },
       //关闭mixins的加载
       disableMixinCreated: true,
@@ -348,18 +350,18 @@ export default {
             { required: false },
             {
               validator: (rule, value, callback) =>
-                validateDuplicateValue('sys_template', 'templatename', value, this.model.id, callback),
-            },
-          ],
-        },
+                validateDuplicateValue('sys_template', 'templatename', value, this.model.id, callback)
+            }
+          ]
+        }
       },
       /* 排序参数 */
       isorter: {
         column: 'sortnum',
-        order: 'asc',
+        order: 'asc'
       },
       params: {
-        hetongId: this.contrac,
+        hetongId: this.contrac
       },
       templatename: '',
       dictOptions: [
@@ -375,7 +377,7 @@ export default {
         //   text:"选项三",
         //   value:"3"
         // }
-      ],
+      ]
     }
   },
   created() {
@@ -389,17 +391,17 @@ export default {
     //查询合同编号
     queryContractType() {
       let params = {
-        contractType: this.contracttype,
+        contractType: this.contracttype
       }
-      getAction(this.url.queryContractType, params).then((res) => {
+      getAction(this.url.queryContractType, params).then(res => {
         // console.log(res.result)
         let hetongIdArr = []
-        res.result.records.forEach((item) => {
+        res.result.records.forEach(item => {
           hetongIdArr.push(item.contractNo)
         })
         let arr = [...new Set(hetongIdArr)]
         let dictItem = []
-        arr.forEach((item) => {
+        arr.forEach(item => {
           let itx = {}
           ;(itx.text = item), (itx.value = item), (itx.title = item), dictItem.push(itx)
         })
@@ -410,10 +412,10 @@ export default {
 
     //合同元素加载数据
     setSyselements(hth) {
-      getAction(this.url.elemetslist, { hth: hth }).then((res) => {
+      getAction(this.url.elemetslist, { hth: hth }).then(res => {
         if (res.success) {
           let xdata = []
-          res.result.forEach((item) => {
+          res.result.forEach(item => {
             let x = {}
             x.title = item
             x.value = item
@@ -448,7 +450,7 @@ export default {
       // var params = this.getQueryParams();//查询条件
       this.loading = true
       if (param.hetongId != '') {
-        getAction(this.url.list, param).then((res) => {
+        getAction(this.url.list, param).then(res => {
           // console.log(res)
           if (res.success) {
             this.dataSourceSec = res.result.records
@@ -466,7 +468,7 @@ export default {
     getQueryField() {
       //TODO 字段权限控制
       var str = 'id,'
-      this.columns.forEach(function (value) {
+      this.columns.forEach(function(value) {
         str += ',' + value.dataIndex
       })
       return str
@@ -491,11 +493,11 @@ export default {
       for (let i = 0; i < this.selectedRowIds.length; i++) {
         // console.log(this.selectedRowIds[i])
         let params = {
-          id: this.selectedRowIds[i],
+          id: this.selectedRowIds[i]
         }
-        getAction(this.url.queryById, params).then((res) => {
+        getAction(this.url.queryById, params).then(res => {
           if (res.code == 200) {
-            deleteAction(this.url.delete, params).then((rtx) => {
+            deleteAction(this.url.delete, params).then(rtx => {
               // console.log(rtx)
               if (rtx.code == 200) {
                 this.$message.success('删除成功')
@@ -533,6 +535,10 @@ export default {
               values[idx].isreduce = '0'
             } else if (item.isreduce == '增加') {
               values[idx].isreduce = '1'
+            } else if (item.isreduce == '不扣') {
+              values[idx].isreduce = '2'
+            } else if (item.isreduce == '拒收') {
+              values[idx].isreduce = '3'
             }
             values[idx].hetongId = this.hetongId1
 
@@ -698,7 +704,7 @@ export default {
                 }
               }
             })
-            this.elementsOptions.forEach((itx) => {
+            this.elementsOptions.forEach(itx => {
               if (itx.title == item.elements) {
                 elementsMarkArr.push(item.elements)
               }
@@ -719,7 +725,7 @@ export default {
           console.log('提交标志', submitMark)
           // console.log('2222', values)
           if (submitMark == 1 && values.length != 0 && notHasGs == 1) {
-            httpAction(this.url.savaHtGongShi, values, 'post').then((res) => {
+            httpAction(this.url.savaHtGongShi, values, 'post').then(res => {
               this.$message.success(res.message)
             })
           } else if (submitMark == 1 && values.length == 0) {
@@ -761,10 +767,14 @@ export default {
               values[idx].isreduce = '0'
             } else if (item.isreduce == '增加') {
               values[idx].isreduce = '1'
+            } else if (item.isreduce == '不扣') {
+              values[idx].isreduce = '2'
+            } else if (item.isreduce == '拒收') {
+              values[idx].isreduce = '3'
             }
             ;(values[idx].id = randomUUID()), (values[idx].templatename = modal.templatename)
           })
-          httpAction(this.url.saveTemplate, values, 'post').then((res) => {
+          httpAction(this.url.saveTemplate, values, 'post').then(res => {
             this.$message.success(res.message)
           })
         } else {
@@ -783,9 +793,9 @@ export default {
         this.$message.error('请先选择模板')
       } else {
         let params = {
-          templatename: this.templatename,
+          templatename: this.templatename
         }
-        getAction(this.url.queryTemplateByName, params).then((res) => {
+        getAction(this.url.queryTemplateByName, params).then(res => {
           this.dataSourceSec = res.result.records
           this.$message.success(res.message)
         })
@@ -805,12 +815,12 @@ export default {
     handleDelete(props) {
       let { rowId, target } = props
       let params = {
-        id: rowId,
+        id: rowId
       }
       //先查询公式表里面有没有这条数据（防止是导入数据）
-      getAction(this.url.queryById, params).then((res) => {
+      getAction(this.url.queryById, params).then(res => {
         if (res.code == 200) {
-          deleteAction(this.url.delete, params).then((rtx) => {
+          deleteAction(this.url.delete, params).then(rtx => {
             // console.log(rtx)
             if (rtx.code == 200) {
               this.$message.success('删除成功')
@@ -860,7 +870,7 @@ export default {
     formatData(data) {
       // console.log(data)
       let newData = []
-      data.forEach((item) => {
+      data.forEach(item => {
         let itx = {}
         ;(itx.id = item.id),
           (itx.elements = item.elements),
@@ -870,7 +880,7 @@ export default {
           (itx.deductiontype = item.deductiontype == '0' ? '单价' : '数量(吨)'),
           (itx.leftsysbol = item.leftsysbol == '0' ? '<' : '≤'),
           (itx.rightsysbol = item.rightsysbol == '0' ? '<' : '≤'),
-          (itx.isreduce = item.isreduce == '0' ? '扣除' : '增加'),
+          (itx.isreduce = item.isreduce == '0' ? '扣除' : item.isreduce == '1'? '增加' : item.isreduce == '2'? '不扣' :'拒收'),
           (itx.deductions = item.deductions)
         newData.push(itx)
       })
@@ -880,8 +890,8 @@ export default {
     //选择维护公式类型
     callback(value) {
       console.log(value)
-    },
-  },
+    }
+  }
 }
 </script>
 

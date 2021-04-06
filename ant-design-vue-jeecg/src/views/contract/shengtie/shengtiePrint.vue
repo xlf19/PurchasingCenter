@@ -41,7 +41,7 @@
 
     <section ref="print" id="printContent" class="abcdefg">
       <div style="text-align: center">
-        <p style="font-size: 24px; font-weight: 800">炼钢生铁&nbsp;&nbsp;&nbsp;自动结算单</p>
+        <p style="font-size: 24px; font-weight: 800">炼钢生铁&nbsp;&nbsp;&nbsp;结算单</p>
       </div>
       <a-row :gutter="24" style="text-align: left">
         <a-col :span="6"></a-col>
@@ -77,7 +77,7 @@
       <div>
         <a-row :gutter="24" style="text-align: center; margin-top: 10px">
           <a-col :span="24">
-            <span>总贷款：{{ loan }}+{{ taxes }}={{ zprice }}</span>
+            <span>总货款：{{ loan }}+{{ taxes }}={{ zprice }}</span>
           </a-col>
         </a-row>
       </div>
@@ -104,19 +104,19 @@ import { getAction, postAction } from '@/api/manage'
 import { validateDuplicateValue, randomUUID, handleStatus, filterObj } from '@/utils/util'
 import { mixinDevice } from '@/utils/mixin'
 import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-
+import * as math from 'mathjs'
 export default {
   mixins: [JeecgListMixin, mixinDevice],
   components: {
     ATextarea,
     ARow,
-    ACol,
+    ACol
   },
   name: 'shentieprint',
   props: {
     contrac: {
-      type: String,
-    },
+      type: String
+    }
   },
   watch: {
     contrac(newVal, oldVal) {
@@ -124,7 +124,7 @@ export default {
       this.queryParam.voucherNo = null
       this.findHt(newVal)
       this.findOne(newVal)
-    },
+    }
   },
   data() {
     return {
@@ -133,7 +133,7 @@ export default {
       form: this.$form.createForm(this),
       //   /* 查询条件-请不要在queryParam中声明非字符串值的属性 */
       queryParam: {
-        contractNo: this.contrac,
+        contractNo: this.contrac
       },
       /* 数据源 */
       dataSource: [],
@@ -150,104 +150,107 @@ export default {
       //结算人
       clearingHouse: '',
       //贷款
-      loan: 0,
+      loan: 0.0,
       //税金
-      taxes: 0,
+      taxes: 0.0,
       //总金额
-      zprice: 0,
+      zprice: 0.0,
+      //行数
+      numberhs: 0,
       // 表头
       columns: [
         {
           title: '取样日期',
           align: 'center',
           dataIndex: 'weighingDate',
-          customRender: function (text) {
+          customRender: function(text) {
             return !text ? '' : text.length > 10 ? text.substr(0, 10) : text
-          },
+          }
         },
         {
           title: '检斤',
           align: 'center',
-          dataIndex: 'weighing',
+          dataIndex: 'weighing'
         },
         {
           title: 'Si',
           align: 'center',
-          dataIndex: 'Si',
+          dataIndex: 'Si'
         },
         {
           title: 'Mn',
           align: 'center',
-          dataIndex: 'Mn',
+          dataIndex: 'Mn'
         },
         {
           title: 'S',
           align: 'center',
-          dataIndex: 'S',
+          dataIndex: 'S'
         },
         {
           title: 'P',
           align: 'center',
-          dataIndex: 'P',
+          dataIndex: 'P'
         },
 
         {
           title: 'KSi',
           align: 'center',
-          dataIndex: 'KSi',
+          dataIndex: 'KSi'
         },
         {
           title: 'KMn',
           align: 'center',
-          dataIndex: 'KMn',
+          dataIndex: 'KMn'
         },
         {
           title: 'KS',
           align: 'center',
-          dataIndex: 'KS',
+          dataIndex: 'KS'
         },
         {
           title: 'KP',
           align: 'center',
-          dataIndex: 'KP',
+          dataIndex: 'KP'
         },
         {
           title: '结算单价',
           align: 'center',
-          dataIndex: 'settlemenPrice',
+          dataIndex: 'settlemenPrice'
         },
         {
           title: '结算数量',
           align: 'center',
-          dataIndex: 'settlementQuantity',
+          dataIndex: 'settlementQuantity'
         },
         {
           title: '结算金额',
           align: 'center',
-          dataIndex: 'settlementResults',
+          dataIndex: 'settlementResults'
         },
         {
-          title: '贷款',
+          title: '货款',
           align: 'center',
-          dataIndex: 'loan',
+          dataIndex: 'loan'
         },
         {
           title: '税率',
           align: 'center',
-          dataIndex: 'taxRate',
+          dataIndex: 'taxRate'
         },
         {
           title: '税金',
           align: 'center',
-          dataIndex: 'taxes',
-        },
+          dataIndex: 'taxes'
+        }
       ],
       url: {
         list: '/shengtie/shengtie/selectstdy',
         selectHtbh: '/contract/contractInformation/selectHtbh',
         selectHtpzh: '/contract/contractInformation/selectHtpzh',
+        dyhj: '/shengtie/shengtie/dyhj'
       },
-      dictOptions: {},
+      dictOptions: {}
     }
   },
   created() {
@@ -263,7 +266,7 @@ export default {
   methods: {
     //获取合同号
     findHt(hth) {
-      getAction(this.url.selectHtbh, { htbh: hth, httype: '生铁' }).then((res) => {
+      getAction(this.url.selectHtbh, { htbh: hth, httype: '生铁' }).then(res => {
         if (res.success) {
           this.contractNos = res.result
         }
@@ -274,7 +277,7 @@ export default {
       })
     },
     findOne(hth) {
-      getAction(this.url.selectHtpzh, { htbh: hth, httype: '生铁' }).then((res) => {
+      getAction(this.url.selectHtpzh, { htbh: hth, httype: '生铁' }).then(res => {
         if (res.success) {
           this.voucherNos = res.result
         }
@@ -297,22 +300,16 @@ export default {
       }
       var params = this.getQueryParams() //查询条件
       this.loading = true
-      getAction(this.url.list, params).then((res) => {
+      getAction(this.url.list, params).then(res => {
         if (res.success) {
           if (res.result.records.length > 0) {
+            this.numberhs = res.result.records.length
             this.supplier = res.result.records[0].supplier
             this.receivingUnit = res.result.records[0].receivingUnit
             this.settlementDate = res.result.records[0].settlementDate
             this.clearingHouse = res.result.records[0].clearingHouse
             this.dataSource = res.result.records
             this.ipagination.total = res.result.total
-            this.loan = this.dataSource.reduce(function (preValue, cont) {
-              return preValue + cont.loan
-            }, 0)
-            this.taxes = this.dataSource.reduce(function (preValue, cont) {
-              return preValue + cont.taxes
-            }, 0)
-            this.zprice = this.loan + this.taxes
             this.tableAddTotalRow(this.columns, this.dataSource)
           }
         }
@@ -323,29 +320,69 @@ export default {
         this.loading = false
       })
     },
+    printFn(value) {
+      const precision = 14
+      return Number(math.format(value, precision))
+    },
     /** 表格增加合计行 */
     tableAddTotalRow(columns, dataSource) {
+      let numberhs = this.numberhs //行数
       let numKey = 'weighingDate'
       let totalRow = { [numKey]: '合计' }
-      columns.forEach((column) => {
+      columns.forEach(column => {
         let { key, dataIndex } = column
         if (![key, dataIndex].includes(numKey)) {
           let total = 0
-          dataSource.forEach((data) => {
-            total += /^[-+]?(([0-9]+)([.]([0-9]+))?|([.]([0-9]+))?)$/.test(data[dataIndex])
-              ? Number.parseFloat(data[dataIndex])
-              : Number.NaN
+          dataSource.forEach(data => {
+            if (data[dataIndex] === null || data[dataIndex] === '' || dataIndex === undefined) {
+              data[dataIndex] = 0
+            }
+            total = this.printFn(
+              total +
+                (/^[-+]?(([0-9]+)([.]([0-9]+))?|([.]([0-9]+))?)$/.test(data[dataIndex])
+                  ? Number.parseFloat(data[dataIndex])
+                  : Number.NaN)
+            )
           })
           if (Number.isNaN(total)) {
             total = '-'
           }
-          console.log([dataIndex])
           totalRow[dataIndex] = total
         }
       })
+      let taxrate = this.printFn(totalRow['taxRate'] / numberhs)
+      let contractNo = this.queryParam.contractNo
+      let voucherNo = this.queryParam.voucherNo
+      getAction(this.url.dyhj, { contractNo: contractNo, voucherNo: voucherNo }).then(res => {
+        if (res.success) {
+          totalRow['Si'] = parseFloat(res.result.Si.toFixed(3))
+          totalRow['KSi'] = parseFloat(res.result.KSi.toFixed(3))
+          totalRow['Mn'] = parseFloat(res.result.Mn.toFixed(3))
+          totalRow['KMn'] = parseFloat(res.result.KMn.toFixed(3))
+          totalRow['S'] = parseFloat(res.result.S.toFixed(3))
+          totalRow['KS'] = parseFloat(res.result.KS.toFixed(3))
+          totalRow['P'] = parseFloat(res.result.P.toFixed(3))
+          totalRow['KP'] = parseFloat(res.result.KP.toFixed(3))
+          totalRow['settlemenPrice'] = parseFloat(res.result.settlemenPrice.toFixed(3))
+        }
+        if (res.code === 510) {
+          this.$message.warning(res.message)
+        }
+      })
+      this.taxes = totalRow['taxes']
+      if (totalRow['loan'] === '-') {
+        this.loan = 0
+      } else {
+        this.loan = totalRow['loan']
+      }
+      this.taxes = parseFloat(this.taxes.toFixed(2))
+      this.loan = parseFloat(this.loan.toFixed(2))
+      this.zprice = this.printFn(this.taxes + this.loan)
+      this.zprice = parseFloat(this.zprice.toFixed(2))
+      totalRow['taxRate'] = taxrate
       dataSource.push(totalRow)
-    },
-  },
+    }
+  }
 }
 </script>
 <style scoped>
@@ -398,5 +435,4 @@ export default {
   margin-top: 8px;
   color: #666;
 }
-
 </style>

@@ -199,28 +199,47 @@ public class shengtieAccountService extends ServiceImpl<shengtieAccountMapper, T
                 //减少
                 elementCaculationById.get(li.get(i).getCid()).add(li.get(i).getElements()+"=="+deductions.negate());
 
+              }else if (IsReduce.equals("2")) {
+                //不做增加减少
+                elementCaculationById.get(li.get(i).getCid()).add(li.get(i).getElements()+"==0");
+
+              }else if (IsReduce.equals("3")) {
+                //拒收
+               // elementCaculationById.get(li.get(i).getCid()).add(li.get(i).getElements()+"==false");
+                elementInformation.get(li.get(i).getCid()).add(li.get(i).getElements()+":元素含量超出规定要求所以拒收！");
+                System.out.println(li.get(i).getElements()+":元素含量超出规定要求所以拒收！");
+
               }else {
                 elementInformation.get(li.get(i).getCid()).add(li.get(i).getElements()+":元素对应是否扣款选项出现错误！");
                 System.out.println(li.get(i).getElements()+":元素对应是否扣款选项出现错误！");
               }
-
 
             }else{
               //根据基数值来判断
               if (IsReduce.equals("1")){
                 //增加
-                BigDecimal res = ((elelmentData.subtract(li.get(i).getLeftElementData())).divide(basedatas,10,BigDecimal.ROUND_HALF_UP)).multiply(deductions);
+                BigDecimal res = ((elelmentData.subtract(li.get(i).getLeftElementData())).divide(basedatas,4,BigDecimal.ROUND_HALF_UP)).multiply(deductions);
                 elementCaculationById.get(li.get(i).getCid()).add(li.get(i).getElements()+"=="+res);
 
               }else if (IsReduce.equals("0")) {
                 //减少
-                BigDecimal res = ((elelmentData.subtract(li.get(i).getLeftElementData())).divide(basedatas,10,BigDecimal.ROUND_HALF_UP)).multiply(deductions);
+                BigDecimal res = ((elelmentData.subtract(li.get(i).getLeftElementData())).divide(basedatas,4,BigDecimal.ROUND_HALF_UP)).multiply(deductions);
                 elementCaculationById.get(li.get(i).getCid()).add(li.get(i).getElements()+"=="+res.negate());
+
+              }else if (IsReduce.equals("2")) {
+                //不做增加减少
+                elementCaculationById.get(li.get(i).getCid()).add(li.get(i).getElements()+"==0");
+
+              }else if (IsReduce.equals("3")) {
+                //拒收
+                elementInformation.get(li.get(i).getCid()).add(li.get(i).getElements()+":元素含量超出规定要求所以拒收！");
+                System.out.println(li.get(i).getElements()+":元素含量超出规定要求所以拒收！");
 
               }else {
                 elementInformation.get(li.get(i).getCid()).add(li.get(i).getElements()+":元素对应是否扣款选项出现错误！");
                 System.out.println(li.get(i).getElements()+":元素对应是否扣款选项出现错误！");
               }
+
 
             }
 
@@ -237,6 +256,16 @@ public class shengtieAccountService extends ServiceImpl<shengtieAccountMapper, T
                 //减少
                 elementCaculationById.get(li.get(i).getCid()).add(li.get(i).getElements()+"=="+deductions.negate());
 
+              }else if (IsReduce.equals("2")) {
+                //不做增加减少
+                elementCaculationById.get(li.get(i).getCid()).add(li.get(i).getElements()+"==0");
+
+              }else if (IsReduce.equals("3")) {
+                //拒收
+
+                elementInformation.get(li.get(i).getCid()).add(li.get(i).getElements()+":元素含量超出合同规定要求所以拒收！");
+                System.out.println(li.get(i).getElements()+":元素含量超出规定要求所以拒收！");
+
               }else {
                 elementInformation.get(li.get(i).getCid()).add(li.get(i).getElements()+":元素对应是否扣款选项出现错误！");
                 System.out.println(li.get(i).getElements()+":元素对应是否扣款选项出现错误！");
@@ -247,18 +276,28 @@ public class shengtieAccountService extends ServiceImpl<shengtieAccountMapper, T
               //根据基数值来判断
               if (IsReduce.equals("1")){
                 //增加
-                BigDecimal res = ((elelmentData.subtract(li.get(i).getLeftElementData())).divide(basedatas,10,BigDecimal.ROUND_HALF_UP)).multiply(deductions);
+                BigDecimal res = ((elelmentData.subtract(li.get(i).getLeftElementData())).divide(basedatas,4,BigDecimal.ROUND_HALF_UP)).multiply(deductions);
                 elementCaculationById.get(li.get(i).getCid()).add(li.get(i).getElements()+"=="+res);
 
               }else if (IsReduce.equals("0")) {
                 //减少
-                BigDecimal res = ((elelmentData.subtract(li.get(i).getLeftElementData())).divide(basedatas,10,BigDecimal.ROUND_HALF_UP)).multiply(deductions);
+                BigDecimal res = ((elelmentData.subtract(li.get(i).getLeftElementData())).divide(basedatas,4,BigDecimal.ROUND_HALF_UP)).multiply(deductions);
                 elementCaculationById.get(li.get(i).getCid()).add(li.get(i).getElements()+"=="+res.negate());
+
+              }else if (IsReduce.equals("2")) {
+                //不做增加减少
+                elementCaculationById.get(li.get(i).getCid()).add(li.get(i).getElements()+"==0");
+
+              }else if (IsReduce.equals("3")) {
+                //拒收
+                elementInformation.get(li.get(i).getCid()).add(li.get(i).getElements()+":元素含量超出规定要求，拒收！");
+                System.out.println(li.get(i).getElements()+":元素含量超出规定要求所以拒收！");
 
               }else {
                 elementInformation.get(li.get(i).getCid()).add(li.get(i).getElements()+":元素对应是否扣款选项出现错误！");
                 System.out.println(li.get(i).getElements()+":元素对应是否扣款选项出现错误！");
               }
+
 
             }
             System.out.println("在元素公式右边为空！");
@@ -293,9 +332,18 @@ public class shengtieAccountService extends ServiceImpl<shengtieAccountMapper, T
                 //减少
                 elementCaculationById.get(li.get(i).getCid()).add(li.get(i).getElements()+"=="+deductions.negate());
 
+              }else if (IsReduce.equals("2")) {
+                //不做增加减少
+                elementCaculationById.get(li.get(i).getCid()).add(li.get(i).getElements()+"==0");
+
+              }else if (IsReduce.equals("3")) {
+                //拒收
+                elementInformation.get(li.get(i).getCid()).add(li.get(i).getElements()+":元素含量超出规定要求所以拒收！");
+                System.out.println(li.get(i).getElements()+":元素含量超出规定要求所以拒收！");
+
               }else {
                 elementInformation.get(li.get(i).getCid()).add(li.get(i).getElements()+":元素对应是否扣款选项出现错误！");
-                System.out.println(li.get(i).getElements()+":元素对应是否扣款选项出现错误！");
+                System.out.println(li.get(i).getElements()+":元素对应是否扣款选项出现错误！！");
               }
 
             }else{
@@ -336,7 +384,6 @@ public class shengtieAccountService extends ServiceImpl<shengtieAccountMapper, T
 
       for (int i=0;i<countElementNum.size();i++) {
 
-
         if(countElementNum.get(i).getElementNum().equals(elementCaculationById.get(countElementNum.get(i).getCid()).size())){
 
           int num = elementCaculationById.get(countElementNum.get(i).getCid()).size();
@@ -344,15 +391,19 @@ public class shengtieAccountService extends ServiceImpl<shengtieAccountMapper, T
           for (int j=0;j<num;j++) {
 
             String[] str = elementCaculationById.get(countElementNum.get(i).getCid()).get(j).split("==");
-            BigDecimal eData = new BigDecimal(str[1]);
-            countContractPrice = countContractPrice.add(eData);
-            // System.out.println(str[0]);
-            // System.out.println(Arrays.toString(str));
 
+            BigDecimal eData = new BigDecimal(str[1]);
+            System.out.println(eData);
+            if(eData.compareTo(BigDecimal.ZERO) == 0){
+               System.out.println("为0！！！！！！！！！");
+               countContractPrice = countContractPrice.add(new BigDecimal("0"));
+            }else {
+               countContractPrice = countContractPrice.add(eData);
+            }
           }
 
+          //这是元素未出现错误时候的每个元素的叠加
           contractNumber.add(countElementNum.get(i).getCid());
-
           contracts = new ContractInformation();
           contracts.setSettlemenPrice(countContractPrice);
           contracts.setSettlementIdentification(1);
@@ -477,7 +528,7 @@ public class shengtieAccountService extends ServiceImpl<shengtieAccountMapper, T
 
                 }else {
                   //根据基数值来判断
-                  BigDecimal res = ((contractWeight.subtract(leftNumber)).divide(baseDataNum,10,BigDecimal.ROUND_HALF_UP)).multiply(numberDeductions);
+                  BigDecimal res = ((contractWeight.subtract(leftNumber)).divide(baseDataNum,4,BigDecimal.ROUND_HALF_UP)).multiply(numberDeductions);
                   contractWeight = contractWeight.subtract(res);
                   numberCount.put(conNumber.get(i).getCid(), contractWeight);
                 }
@@ -491,7 +542,7 @@ public class shengtieAccountService extends ServiceImpl<shengtieAccountMapper, T
 
                 }else {
                   //根据基数值来判断
-                  BigDecimal res = ((contractWeight.subtract(leftNumber)).divide(baseDataNum,10,BigDecimal.ROUND_HALF_UP)).multiply(numberDeductions);
+                  BigDecimal res = ((contractWeight.subtract(leftNumber)).divide(baseDataNum,4,BigDecimal.ROUND_HALF_UP)).multiply(numberDeductions);
                   contractWeight = contractWeight.subtract(res);
 
                   numberCount.put(conNumber.get(i).getCid(), contractWeight);
@@ -543,6 +594,7 @@ public class shengtieAccountService extends ServiceImpl<shengtieAccountMapper, T
             }
 
           }else{
+            numberErroInformation.get(conNumber.get(i).getCid()).add("合同"+conNumber.get(i).getContractNo()+":请完善合同数量公式！");
             System.out.println("请完善合同数量公式");
           }
 
@@ -561,33 +613,48 @@ public class shengtieAccountService extends ServiceImpl<shengtieAccountMapper, T
       for(int i=0;i<informationList.size();i++){
 
         if(informationList.get(i).getSettlementIdentification().equals(1)){
-
-          if (numberCount.get(informationList.get(i).getId()) !=null) {
+          //进行合同中材料的数量判断
+          if (numberCount.get(informationList.get(i).getId()).compareTo(new BigDecimal("0"))!=0) {
             List<ContractInformation> con = shengtieHth.selectContractInformation(informationList.get(i).getId());
             BigDecimal contractPrice = con.get(0).getContractPrice();
             BigDecimal result = contractPrice.add(informationList.get(i).getSettlemenPrice());
             BigDecimal settlementResults = numberCount.get(informationList.get(i).getId()).multiply(result);
-            BigDecimal taxes = (settlementResults.divide(new BigDecimal("1").add(con.get(0).getTaxRate().divide(new BigDecimal("100"),5,BigDecimal.ROUND_HALF_UP)),5,BigDecimal.ROUND_HALF_UP)).multiply(con.get(0).getTaxRate().divide(new BigDecimal("100"),5,BigDecimal.ROUND_HALF_UP));
+            BigDecimal taxes = (settlementResults.divide(new BigDecimal("1").add(con.get(0).getTaxRate().divide(new BigDecimal("100"),4,BigDecimal.ROUND_HALF_UP)),4,BigDecimal.ROUND_HALF_UP)).multiply(con.get(0).getTaxRate().divide(new BigDecimal("100"),4,BigDecimal.ROUND_HALF_UP));
             //更新元素表中的数据
             List<ContractElements> ces = accountSettlementUtil.updataElement(informationList.get(i).getId(),elementCaculationById.get(informationList.get(i).getId()));
             //存入计算好的元素数据
             flag = shengtieHth.depositElementData(ces);
-
+            //贷款金额
+            BigDecimal loan = settlementResults.divide(new BigDecimal("1").add(con.get(0).getTaxRate().divide(new BigDecimal("100"),4,BigDecimal.ROUND_HALF_UP)),4,BigDecimal.ROUND_HALF_UP);
+            informationList.get(i).setLoan(loan);
+            //结算单价
             informationList.get(i).setSettlemenPrice(result);
+            //结算日期
             informationList.get(i).setSettlementDate(accountSettlementUtil.getSettlementDate());
+            //结算数量
             informationList.get(i).setSettlementQuantity(numberCount.get(informationList.get(i).getId()));
+            //结算结果
             informationList.get(i).setSettlementResults(settlementResults);
-            informationList.get(i).setClearingHouse(sysUser.getUsername());
+            //结算人
+            informationList.get(i).setClearingHouse(sysUser.getRealname());
+            //结算标识
             informationList.get(i).setSettlementIdentification(1);
+            //结算税金
             informationList.get(i).setTaxes(taxes);
+
             System.out.println("进行最终计算！flag"+flag);
           }else {
+
+            informationList.get(i).setSettlementDate(accountSettlementUtil.getSettlementDate());
+            informationList.get(i).setSettlementNotes("数量公式出现错误！请维护！");
+            informationList.get(i).setSettlementIdentification(2);
             System.out.println("最终计算失败！");
           }
 
         }else{
            //结算失败
-          informationList.get(i).setClearingHouse(sysUser.getUsername());
+          informationList.get(i).setClearingHouse(sysUser.getUsername());//结算失败
+          informationList.get(i).setClearingHouse(sysUser.getRealname());
           informationList.get(i).setSettlementDate(accountSettlementUtil.getSettlementDate());
           informationList.get(i).setSettlementIdentification(2);
         }

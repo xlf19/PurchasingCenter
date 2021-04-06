@@ -16,5 +16,6 @@ public interface ShengTieMapper  extends BaseMapper<T> {
     //生铁打印查询
     IPage<Map<Object, String>> selectstdy(IPage<Map<Object, String>> page, @Param("htbh") String htbh, @Param("pzh") Integer pzh);
 
-
+    //生铁打印加权平均合计
+    Map<String,Object> dyhj(@Param("htbh") String htbh, @Param("pzh") Integer pzh);
 }

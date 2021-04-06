@@ -23,6 +23,10 @@ public class ShengTieServiceImpl extends ServiceImpl<ShengTieMapper, T> implemen
         return st.selectstdy(page,htbh,pzh);
     }
 
+    @Override
+    public Map<String, Object> dyhj(String htbh, Integer pzh) {
+        return st.dyhj(htbh,pzh);
+    }
 
 
 }

@@ -41,7 +41,7 @@
 
     <section ref="print" id="printContent" class="abcdefg">
       <div style="text-align: center">
-        <p style="font-size: 24px; font-weight: 800">废钢自动结算单</p>
+        <p style="font-size: 24px; font-weight: 800">废钢结算单</p>
       </div>
       <a-row :gutter="24" style="text-align: left">
         <a-col :span="6"></a-col>
@@ -83,7 +83,7 @@
         </a-row>
         <a-row :gutter="24" style="text-align: center; margin-top: 10px">
           <a-col :span="24">
-            <span style="font-size: 18px">总计：贷款:￥{{ loan }}+税金:￥{{ taxes }}=结算金额：￥{{ zprice }}</span>
+            <span style="font-size: 18px">总计：货款:￥{{ loan }}+税金:￥{{ taxes }}=结算金额：￥{{ zprice }}</span>
           </a-col>
         </a-row>
       </div>
@@ -110,19 +110,19 @@ import { getAction, postAction } from '@/api/manage'
 import { validateDuplicateValue, randomUUID, handleStatus, filterObj } from '@/utils/util'
 import { mixinDevice } from '@/utils/mixin'
 import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-
+import * as math from 'mathjs'
 export default {
   mixins: [JeecgListMixin, mixinDevice],
   components: {
     ATextarea,
     ARow,
-    ACol,
+    ACol
   },
   name: 'shentieprint',
   props: {
     contrac: {
-      type: String,
-    },
+      type: String
+    }
   },
   watch: {
     contrac(newVal, oldVal) {
@@ -130,7 +130,7 @@ export default {
       this.queryParam.voucherNo = null
       this.findHt(newVal)
       this.findOne(newVal)
-    },
+    }
   },
   data() {
     return {
@@ -139,8 +139,10 @@ export default {
       form: this.$form.createForm(this),
       //   /* 查询条件-请不要在queryParam中声明非字符串值的属性 */
       queryParam: {
-        contractNo: this.contrac,
+        contractNo: this.contrac
       },
+      //行数
+      numberhs: 0,
       /* 数据源 */
       dataSource: [],
       //合同号
@@ -155,7 +157,7 @@ export default {
       settlementDate: '',
       //结算人
       clearingHouse: '',
-      //贷款
+      //货款
       loan: 0,
       //税金
       taxes: 0,
@@ -169,47 +171,47 @@ export default {
           title: '入库日期',
           align: 'center',
           dataIndex: 'settlementDate',
-          customRender: function (text) {
+          customRender: function(text) {
             return !text ? '' : text.length > 10 ? text.substr(0, 10) : text
-          },
+          }
         },
         {
           title: '检斤',
           align: 'center',
-          dataIndex: 'settlementQuantity',
+          dataIndex: 'settlementQuantity'
         },
         {
           title: '备注',
           align: 'center',
-          dataIndex: 'remarks',
+          dataIndex: 'remarks'
         },
         {
-          title: '贷款',
+          title: '货款',
           align: 'center',
-          dataIndex: 'loan',
+          dataIndex: 'loan'
         },
         {
           title: '税率',
           align: 'center',
-          dataIndex: 'taxRate',
+          dataIndex: 'taxRate'
         },
         {
           title: '结算税金',
           align: 'center',
-          dataIndex: 'settlementTaxes',
+          dataIndex: 'settlementTaxes'
         },
         {
           title: '结算金额',
           align: 'center',
-          dataIndex: 'settlementResults',
-        },
+          dataIndex: 'settlementResults'
+        }
       ],
       url: {
         list: '/feigang/feigang/selectfgdy',
         selectHtbh: '/contract/contractInformation/selectHtbh',
-        selectHtpzh: '/contract/contractInformation/selectHtpzh',
+        selectHtpzh: '/contract/contractInformation/selectHtpzh'
       },
-      dictOptions: {},
+      dictOptions: {}
     }
   },
   created() {
@@ -225,7 +227,7 @@ export default {
   methods: {
     //获取合同号
     findHt(hth) {
-      getAction(this.url.selectHtbh, { htbh: hth, httype: '废钢' }).then((res) => {
+      getAction(this.url.selectHtbh, { htbh: hth, httype: '废钢' }).then(res => {
         if (res.success) {
           this.contractNos = res.result
         }
@@ -236,7 +238,7 @@ export default {
       })
     },
     findOne(hth) {
-      getAction(this.url.selectHtpzh, { htbh: hth, httype: '废钢' }).then((res) => {
+      getAction(this.url.selectHtpzh, { htbh: hth, httype: '废钢' }).then(res => {
         if (res.success) {
           this.voucherNos = res.result
         }
@@ -259,25 +261,26 @@ export default {
       }
       var params = this.getQueryParams() //查询条件
       this.loading = true
-      getAction(this.url.list, params).then((res) => {
+      getAction(this.url.list, params).then(res => {
         if (res.success) {
           if (res.result.records.length > 0) {
+            this.numberhs = res.result.records.length
             this.supplier = res.result.records[0].supplier
             this.receivingUnit = res.result.records[0].receivingUnit
             this.settlementDate = res.result.records[0].settlementDate
             this.clearingHouse = res.result.records[0].clearingHouse
             this.dataSource = res.result.records
             this.ipagination.total = res.result.total
-            this.loan = this.dataSource.reduce(function (preValue, cont) {
-              return preValue + cont.loan
-            }, 0)
-            this.taxes = this.dataSource.reduce(function (preValue, cont) {
-              return preValue + cont.settlementTaxes
-            }, 0)
-            this.weighing = this.dataSource.reduce(function (preValue, cont) {
-              return preValue + cont.settlementQuantity
-            }, 0)
-            this.zprice = this.loan + this.taxes
+            // this.loan = this.dataSource.reduce(function (preValue, cont) {
+            //   return preValue + cont.loan
+            // }, 0)
+            // this.taxes = this.dataSource.reduce(function (preValue, cont) {
+            //   return preValue + cont.settlementTaxes
+            // }, 0)
+            // this.weighing = this.dataSource.reduce(function (preValue, cont) {
+            //   return preValue + cont.settlementQuantity
+            // }, 0)
+            // this.zprice = this.loan + this.taxes
             this.tableAddTotalRow(this.columns, this.dataSource)
           }
         }
@@ -291,26 +294,46 @@ export default {
     /** 表格增加合计行 */
     tableAddTotalRow(columns, dataSource) {
       let numKey = 'settlementDate'
+      this.numberhs = res.result.records.length
       let totalRow = { [numKey]: '合计' }
-      columns.forEach((column) => {
+      columns.forEach(column => {
         let { key, dataIndex } = column
         if (![key, dataIndex].includes(numKey)) {
           let total = 0
-          dataSource.forEach((data) => {
-            total += /^[-+]?(([0-9]+)([.]([0-9]+))?|([.]([0-9]+))?)$/.test(data[dataIndex])
-              ? Number.parseFloat(data[dataIndex])
-              : Number.NaN
+          dataSource.forEach(data => {
+             if (data[dataIndex] === null || data[dataIndex] === '' || dataIndex === undefined) {
+              data[dataIndex] = 0
+            }
+            total = this.printFn(
+              total +
+                (/^[-+]?(([0-9]+)([.]([0-9]+))?|([.]([0-9]+))?)$/.test(data[dataIndex])
+                  ? Number.parseFloat(data[dataIndex])
+                  : Number.NaN)
+            )
           })
           if (Number.isNaN(total)) {
             total = '-'
           }
-          console.log([dataIndex])
+
           totalRow[dataIndex] = total
         }
       })
+      let taxrate = this.printFn(totalRow['taxRate'] / numberhs)
+      this.weighing = totalRow['weighing']
+      if (totalRow['loan'] === '-') {
+        this.loan = 0
+      } else {
+        this.loan = totalRow['loan']
+      }
+      this.weighing=parseFloat(this.weighing.toFixed(2))
+      this.loan=parseFloat(this.loan.toFixed(2))
+      this.zprice = this.printFn(this.weighing + this.loan)
+      this.zprice=parseFloat(this.zprice.toFixed(2))
+
+      totalRow['taxRate'] = taxrate
       dataSource.push(totalRow)
-    },
-  },
+    }
+  }
 }
 </script>
 <style scoped>
