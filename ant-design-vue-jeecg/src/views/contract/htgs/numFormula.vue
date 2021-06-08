@@ -89,13 +89,14 @@ export default {
           ],
         },
         {
-          title: '数量',
+          title: '元素',
           key: 'elements',
           width: '140px',
-          type: FormTypes.input,
+          type: FormTypes.select,
           options: [],
-          disabled: true,
-          defaultValue: '合同数值',
+          placeholder: '请选择${title}',
+          // disabled: true,
+          // defaultValue: '合同数值',
         },
         {
           title: '右符号',
@@ -179,6 +180,10 @@ export default {
       SysbolOptions: [
         { title: '<', value: '0' },
         { title: '≤', value: '1' },
+      ],
+      numOptions: [
+        { title: '含粉',value: '含粉'},
+        { title: 'H2O',value: 'H2O'},
       ],
       //数据库传入的数据
       dataSource: [],
@@ -566,6 +571,8 @@ export default {
           this.columns[idx].options = this.SysbolOptions
         } else if (item.key == 'isreduce') {
           this.columns[idx].options = this.isReduceOptions
+        } else if (item.key == 'elements') {
+          this.columns[idx].options = this.numOptions
         }
       })
     },
