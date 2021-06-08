@@ -42,6 +42,22 @@ public class ZhiJianXinXiController extends JeecgController<T, IZhiJianXinXiServ
             @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
             @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
             HttpServletRequest req) {
+        System.out.println(startTime);
+        Page<Map<Object, String>> page = new Page<Map<Object, String>>(pageNo, pageSize);
+        IPage<Map<Object, String>> pageList = zjxxservice.listzjxx(page, startTime, endTime, supplier);
+        return Result.ok(pageList);
+    }
+    //获取生铁质检信息(加权平均)
+    @AutoLog(value = "获取生铁质检信息(加权平均)")
+    @ApiOperation(value = "获取生铁质检信息(加权平均)", notes = "获取生铁质检信息(加权平均)")
+    @PostMapping(value = "/listzjst")
+    public Result<?> listzjst(@RequestBody String jfzjst)  throws ParseException{
+        JSONObject zjxx = JSONObject.parseObject(jfzjst);
+        String startTime = zjxx.getString("startTime");//取样开始日期
+        String endTime = zjxx.getString("endTime");//取样开始日期
+        String supplier = zjxx.getString("supplier");//供货单位
+        Integer pageNo = zjxx.getInteger("pageNo");//页码
+        Integer pageSize = zjxx.getInteger("pageSize");//条数
         Page<Map<Object, String>> page = new Page<Map<Object, String>>(pageNo, pageSize);
         IPage<Map<Object, String>> pageList = zjxxservice.listzjxx(page, startTime, endTime, supplier);
         return Result.ok(pageList);

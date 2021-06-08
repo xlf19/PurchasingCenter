@@ -18,4 +18,19 @@ public interface ShengTieMapper  extends BaseMapper<T> {
 
     //生铁打印加权平均合计
     Map<String,Object> dyhj(@Param("htbh") String htbh, @Param("pzh") Integer pzh);
+
+
+    /**
+     加权平均：可选
+     pgdh：派工单号
+     **/
+     void addjqlist(@Param("pgdh")String pgdh,@Param("htbh")String htbh);
+
+    /**
+     加权平均：按天
+     startTime：取样开始日期
+     endTime：取样结束日期
+     gudw：供货单位
+     **/
+     void addjqlistat(@Param("startTime")String startTime,@Param("endTime")String endTime,@Param("gudw")String gudw,@Param("htbh")String htbh);
 }

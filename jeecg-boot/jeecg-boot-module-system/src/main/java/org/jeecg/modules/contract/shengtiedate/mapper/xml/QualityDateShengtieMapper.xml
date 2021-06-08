@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jeecg.modules.contract.shengtiedate.mapper.QualityDateShengtieMapper">
+    <select id="queryPagelistst" resultType="map">
+        SELECT  *,CONVERT(varchar(100),qy_date, 23)  as 取样日期,supplier as 供货单位,
+        receivingunit  as  使用单位,material_name as 名称,weighing as 检验量,si as Si,mn as Mn,
+        ss as S,pp as P
+        FROM quality_date_shengtie
+        where contract_no = #{htbh}
+         and id not in (SELECT distinct jq_id
+         FROM contract_information
+         where contract_type='生铁' and is_delete =0)
+    </select>
+</mapper>

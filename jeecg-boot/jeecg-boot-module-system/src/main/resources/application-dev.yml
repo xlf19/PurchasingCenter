@@ -153,6 +153,7 @@ spring:
           password: aq1`
           driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
 
+
   #redis 配置
   redis:
     database: 0

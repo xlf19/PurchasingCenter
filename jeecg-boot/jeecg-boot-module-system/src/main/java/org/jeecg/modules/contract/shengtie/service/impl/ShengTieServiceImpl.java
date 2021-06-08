@@ -28,5 +28,15 @@ public class ShengTieServiceImpl extends ServiceImpl<ShengTieMapper, T> implemen
         return st.dyhj(htbh,pzh);
     }
 
+    @Override
+    public void addjqlist(String pgdh, String htbh) {
+         st.addjqlist(pgdh,htbh);
+    }
+
+    @Override
+    public void addjqlistat(String startTime, String endTime, String gudw, String htbh) {
+         st.addjqlistat(startTime,endTime,gudw,htbh);
+    }
+
 
 }

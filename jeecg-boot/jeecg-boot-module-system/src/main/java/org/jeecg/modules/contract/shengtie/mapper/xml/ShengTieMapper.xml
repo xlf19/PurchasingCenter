@@ -17,4 +17,28 @@
             )}
     </select>
 
+    <!--	加权平均：可选-->
+    <!--	pgdh：派工单号-->
+
+    <select id="addjqlist" resultType="java.lang.String" statementType="CALLABLE">
+        {call dbo.ht_jiaquanpingjun_st_kx(
+                #{pgdh,jdbcType=VARCHAR,mode=IN},
+                #{htbh,jdbcType=VARCHAR,mode=IN}
+            )}
+    </select>
+
+    <!--	加权平均：按天-->
+    <!--	startTime：取样开始日期-->
+    <!--	endTime：取样结束日期-->
+    <!--	gudw：供货单位-->
+
+    <select id="addjqlistat" resultType="java.lang.String" statementType="CALLABLE">
+        {call dbo.ht_jiaquanpingjun_st_at(
+                #{startTime,jdbcType=VARCHAR,mode=IN},
+                #{endTime,jdbcType=VARCHAR,mode=IN},
+                #{gudw,jdbcType=VARCHAR,mode=IN},
+                #{htbh,jdbcType=VARCHAR,mode=IN}
+            )}
+    </select>
+
 </mapper>

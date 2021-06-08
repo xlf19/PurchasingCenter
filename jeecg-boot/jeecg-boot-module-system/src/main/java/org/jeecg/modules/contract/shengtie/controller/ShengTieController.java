@@ -80,6 +80,38 @@ public class ShengTieController extends JeecgController<T, IShengTieService> {
         IPage<ContractInformation> pageList = contractInformationService.page(page, queryWrapper);
         return Result.ok(pageList);
     }
+
+    //加权平均
+    @AutoLog(value = "加权平均")
+    @ApiOperation(value = "-加权平均", notes = "-加权平均")
+    @PostMapping(value = "/addlistst")
+    public Result<?> addlistst(@RequestBody String stxx) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        JSONObject jf = JSONObject.parseObject(stxx);
+        String fangshi = jf.getString("fangshi");//提交方式
+        String htbh = jf.getString("htbh");//合同编号
+        if (fangshi.equals("可选")) {
+            String pgdh = "";
+            JSONArray jfarray = jf.getJSONArray("jfjaxx");
+            for (int i = 0; i < jfarray.size(); i++) {
+                JSONObject jiaquan = jfarray.getJSONObject(i);
+                if (i == 0) {
+                    pgdh = jiaquan.getString("派工单号");
+                } else {
+                    pgdh += "," + jiaquan.getString("派工单号");
+                }
+            }
+            shengTieService.addjqlist(pgdh, htbh);//加权平均
+        } else {
+            String startTime = jf.getString("startTime");//取样开始日期
+            String endTime = jf.getString("endTime");//取样结束日期
+            String gudw = jf.getString("shdw");//供货单位
+            shengTieService.addjqlistat(startTime, endTime, gudw, htbh);
+        }
+        return Result.ok("添加成功！");
+    }
+
+
     //导入质检数据
     @AutoLog(value = "导入质检数据")
     @ApiOperation(value = "-添加", notes = "-添加")
@@ -106,16 +138,14 @@ public class ShengTieController extends JeecgController<T, IShengTieService> {
         for (int i = 0; i < htarray.size(); i++) {
             JSONObject htone = htarray.getJSONObject(i);
             String ghdw = htone.getString("供货单位");//供货单位
-
             String wzname = htone.getString("名称");//物资名称
-            String hybz = htone.getString("化验备注");//化验备注
-            String pgdh = htone.getString("派工单号");//派工单号
             String data = htone.getString("取样日期");
             BigDecimal jyl = htone.getBigDecimal("检验量");
             BigDecimal Si = htone.getBigDecimal("Si");
             BigDecimal Mn = htone.getBigDecimal("Mn");
             BigDecimal p = htone.getBigDecimal("P");
             BigDecimal S = htone.getBigDecimal("S");
+            String jqid=htone.getString("id");//加权表id
             //添加合同信息表
             ContractInformation cinfo = new ContractInformation();
             String uuid = UUID.randomUUID().toString();
@@ -125,8 +155,6 @@ public class ShengTieController extends JeecgController<T, IShengTieService> {
             cinfo.setContractNo(htbh);
             cinfo.setVoucherNo(pzh);
             cinfo.setContractType("生铁");
-            cinfo.setRemarks(hybz);
-            cinfo.setWorkNumber(pgdh);
             cinfo.setMaterialCode(wzcode);
             cinfo.setContractPrice(dj);
             cinfo.setTaxRate(sl);
@@ -136,6 +164,7 @@ public class ShengTieController extends JeecgController<T, IShengTieService> {
             cinfo.setWeighing(jyl);
             cinfo.setIsDelete(0);
             cinfo.setSettlementIdentification(0);
+            cinfo.setJqId(jqid);
             contractInformationService.save(cinfo);
             //添加合同元素表
             saveelement(uuid, htbh, pzh, "P", p);
